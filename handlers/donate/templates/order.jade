@@ -78,6 +78,10 @@ block content
 
           include ../../payments/common/templates/payment-methods
 
+          +e.submit-line
+            +b('button')(type="submit").button._action
+              +e('span').text Продолжить
+
           p Если у вас возникли какие-либо вопросы, присылайте их на <a href="#{mailto}">orders@javascript.ru</a>.
 
 
