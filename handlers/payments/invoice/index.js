@@ -31,5 +31,6 @@ exports.createTransaction = function*(order, body) {
 exports.info = {
   title:   "Счёт на компанию",
   subtitle: '(для юрлиц из России)',
-  name:    path.basename(__dirname)
+  name:    path.basename(__dirname),
+  currency: 'RUB'
 };

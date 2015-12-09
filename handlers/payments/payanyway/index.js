@@ -27,6 +27,7 @@ exports.info = {
   name:     path.basename(__dirname),
   subtitle: "и много других методов",
   cards:    ['visa-mastercard'],
-  hasIcon:  false
+  hasIcon:  false,
+  currency: 'RUB'
 };
 

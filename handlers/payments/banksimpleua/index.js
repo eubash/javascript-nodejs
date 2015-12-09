@@ -24,5 +24,6 @@ exports.createTransaction = function*(order) {
 exports.info = {
   title:   "Банковский перевод в Украине (в гривнах)",
   name:    path.basename(__dirname),
-  hasIcon: false
+  hasIcon: false,
+  currency: 'UAH'
 };
