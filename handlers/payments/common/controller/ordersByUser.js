@@ -22,7 +22,7 @@ exports.get = function*(next) {
     status: {
       $ne: Order.STATUS_CANCEL
     }
-  }).sort({created: 1}).populate('user').exec();
+  }).sort({created: 1}).populate('user');
 
   var ordersToShow = [];
 
