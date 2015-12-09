@@ -27,7 +27,7 @@ block content
       +e(p).description= orderTemplate.description
 
       +b.text-input
-        +e('input').control._big(name="amount", required, type="number")
+        +e('input').control._big(name="amount", required, type="number", min="1", step="1")
 
       +b('select').input-select._big(name="currency" data-order-currency)
        option(value="RUB") RUB
