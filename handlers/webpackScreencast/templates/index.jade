@@ -29,13 +29,12 @@ block content
             +e("strong")  Youtube
           +e.description  Плейлист 40 записей
 
-      if 0
-        +e("li").button
-          +b("a")(href="/webpack-screencast/webpack-mp4-low.zip").simple-button
-            +e.text
-              | Скачать скринкаст
-            +e.description  Компактный размер
-              +e("strong").description-accent  (178Mb)
+      +e("li").button
+        +b("a")(href="/webpack-screencast/webpack-mp4-low.zip").simple-button
+          +e.text
+            | Скачать скринкаст
+          +e.description  Компактный размер
+            +e("strong").description-accent  (178Mb)
 
       +e("li").button
         +b("a")(href="/webpack-screencast/webpack-mp4.zip").simple-button
@@ -51,11 +50,10 @@ block content
         |:
       include /blocks/social-icons
 
-    if 0
-      +b.donate-links
-        +e('span').title= t('Donate')
-          |:
-        +e("a").link(href="/donate/webpack")
+    +b.donate-links
+      +e('span').title= t('Donate')
+        |:
+      +e("a").link(href="/donate/webpack")
 
 
     +e("p").foot Ниже вы можете ознакомиться более детально с содержанием скринкаста
