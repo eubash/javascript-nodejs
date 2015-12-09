@@ -9,7 +9,7 @@ block append ga
   if orderInfo.status == 'fail'
     script window.ga('ec:setAction', 'refund', { id: #{order.number} });
 
-  script window.ga('send', 'event', 'payment', 'return-#{orderInfo.status}', 'ebook');
+  script window.ga('send', 'event', 'payment', 'return-#{orderInfo.status}', 'donate');
 
 block append head
   !=js("donate", {defer: true})
@@ -18,9 +18,9 @@ block content
 
   script var orderNumber = #{order.number};
 
-  script window.metrika.reachGoal('ORDER', { product: 'ebook', status: '#{orderInfo.status}', number: '#{orderInfo.number}' });
+  script window.metrika.reachGoal('ORDER', { product: 'donate', status: '#{orderInfo.status}', number: '#{orderInfo.number}' });
 
-  - var mailto = "mailto:orders@javascript.ru?subject=" + encodeURIComponent('Заказ ' + order.number);
+  - var mailto = "mailto:orders@javascript.ru?subject=" + encodeURIComponent('Оплата ' + order.number);
 
   +b('form').complex-form(data-order-form data-order-info-status=orderInfo.status)
 
@@ -38,11 +38,11 @@ block content
         +e.receipt
           +e.receipt-body
             +e.receipt-content
-              +e.type Заказ:
+              +e.type Оплата:
               +e.title!= order.title
               +e.note!= order.description
             +e.receipt-aside
-              +e.price #{order.amount + 'р.'}
+              +e.price #{order.amount} #{order.currency}
         if ~['paid', 'success', 'pending'].indexOf(orderInfo.status)
           +e.receipt
             +e.receipt-body
@@ -53,7 +53,7 @@ block content
                 else if (orderInfo.status == 'pending')
                   +e.status._ok Ожидается подтверждение
               +e.receipt-aside
-                +e(class=["pay-method", "_" + paymentMethods[orderInfo.transaction.paymentMethod].name])
+                +e(class=["pay-method", orderInfo.transaction ? "_" + paymentMethods[orderInfo.transaction.paymentMethod].name : ""])
 
 
     if ~['fail', 'pending'].indexOf(orderInfo.status)
@@ -67,8 +67,8 @@ block content
               +e.aside._price._center
                 | Стоимость
                 +b.price.__price
-                  | #{order.amount + ' RUB'}
-                  +e('span').secondary (≈&nbsp;#{currencyConvertRound(order.amount, "RUB", "USD")}$)
+                  | #{order.amount} #{order.currency}
+                  +e('span').secondary (≈&nbsp;#{order.convertAmount("USD")}$)
 
           if orderInfo.status == 'fail'
             +e('h2').alternate-title Выберите метод оплаты
@@ -84,12 +84,12 @@ block content
     if orderInfo.status == 'success'
       +e.step._current(data-order-form-step-confirm)
         +b.order-confirm
-          +e('h2').title__step-title Спасибо за покупку!
-          +e.accent._ok В ближайшее время на электронный адрес #{order.email} придёт подтверждение.
+          +e('h2').title__step-title Спасибо за поддержку!
           +e.content
             +e.text
-              p Вы можете скачать учебник прямо сейчас, по ссылке <a href="#{order.data.downloadLink}">#{order.data.downloadLink}</a>.
-              p Если у вас возникли какие-либо вопросы, присылайте их на <a href="#{mailto}">orders@javascript.ru</a>.
+              p Лучи благодарности от @iliakan и @sokra. Обязательно напишем для вас что-то ещё хорошее!
+              if order.data && order.data.name
+                p Ваше имя <b>#{order.data.name}</b> будет на странице поддержавших проект.
 
     else if ~['error', 'cancel', 'pending', 'paid'].indexOf(orderInfo.status)
       +e.step._current(data-order-form-step-confirm)

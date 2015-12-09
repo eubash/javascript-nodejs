@@ -174,6 +174,11 @@ function* askParticipantDetails(invite) {
       yield participant.persist();
 
     } catch (e) {
+      if (e.errors.group) {
+        log.error(`group error (not unique?) for (${participant.group}, ${participant.user})`);
+        throw e;
+      }
+
       var errors = {};
       for (var key in e.errors) {
         errors[key] = e.errors[key].message;

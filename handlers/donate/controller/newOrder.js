@@ -13,6 +13,7 @@ exports.get = function*() {
     this.throw(404);
   }
 
+  this.locals.paymentMethodShowDefaultCurrency = true;
   this.locals.orderTemplate = orderTemplate;
 
   this.locals.sitetoolbar = true;

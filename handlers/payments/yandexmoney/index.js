@@ -25,5 +25,6 @@ exports.createTransaction = function*(order) {
 exports.info = {
   title: "Яндекс.Деньги",
   name:    path.basename(__dirname),
-  hasIcon: true
+  hasIcon: true,
+  currency: 'RUB'
 };

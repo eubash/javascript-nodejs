@@ -15,7 +15,10 @@ module.exports = function* (orderTemplate, user, requestBody) {
     description: orderTemplate.description,
     amount:      +requestBody.amount,
     currency:    currency,
-    module:      orderTemplate.module
+    module:      orderTemplate.module,
+    data: {
+      name: requestBody.name
+    }
   });
 
   if (user) {

@@ -25,5 +25,6 @@ exports.info = {
   name:    path.basename(__dirname),
   hasIcon: false,
   cards: ['sberbank'],
-  subtitle: 'или другой банк'
+  subtitle: 'или другой банк',
+  currency: 'RUB'
 };

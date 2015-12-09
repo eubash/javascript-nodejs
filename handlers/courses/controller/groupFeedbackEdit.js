@@ -71,7 +71,7 @@ exports.all = function*() {
     group = yield CourseGroup.findById(courseFeedback.group);
     teacher = yield User.findById(group.teacher);
 
-    if (!this.user._id.equals(participant._id) &&
+    if (!this.user._id.equals(participant.user) &&
       !this.user._id.equals(teacher._id) &&
       !this.isAdmin
     ) {
