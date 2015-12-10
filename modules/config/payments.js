@@ -34,6 +34,14 @@ module.exports = {
       secret: secret.interkassa.secret
     },
 
-    invoice: secret.invoice
+    invoice: secret.invoice,
+
+    fail: {
+      // dev only
+    },
+
+    success: {
+      // dev only
+    }
   }
 };
