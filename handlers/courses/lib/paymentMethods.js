@@ -14,6 +14,4 @@ methodsEnabled.forEach(function(key) {
   paymentMethods[key] = payments.methods[key].info;
 });
 
-
-
 module.exports = paymentMethods;
