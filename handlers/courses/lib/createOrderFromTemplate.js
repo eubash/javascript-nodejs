@@ -49,7 +49,7 @@ module.exports = function*(orderTemplate, user, requestBody) {
   var discount;
   if (requestBody.discountCode) {
     discount = yield* Discount.findByCodeAndModule(requestBody.discountCode, 'courses');
-    if (discount && discount.data.slug != group.slug) {
+    if (discount && !discount.data.slug.test(group.slug)) {
       discount = null;
     }
 
