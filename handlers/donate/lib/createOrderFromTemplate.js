@@ -17,7 +17,8 @@ module.exports = function* (orderTemplate, user, requestBody) {
     currency:    currency,
     module:      orderTemplate.module,
     data: {
-      name: requestBody.name
+      name: requestBody.name,
+      url: requestBody.url
     }
   });
 
