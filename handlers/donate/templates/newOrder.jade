@@ -40,10 +40,11 @@ block content
         +b.text-input.__email
           +e('input').control._big(placeholder="my@email.com", name="email", required, type="email")
 
-      +e('h2').alternate-title Имя
+      +e('h2').alternate-title Имя и ссылка
         +b.text-input.__name
           +e('input').control._big(placeholder="Джон Смит", name="name" type="text")
-        +e(p).description Если вы хотите, чтобы мы указали его вместе с суммой на странице поддержавших проект.
+          +e('input').control._big(placeholder="http://site.com", name="url" type="url")
+        +e(p).description Если вы хотите, чтобы мы указали их вместе с суммой на странице поддержавших проект.
 
       +e('h2').alternate-title Выберете метод оплаты
       +e.body
