@@ -6,7 +6,7 @@ var paymentMethods = {};
 
 var methodsEnabled = [ 'paypal', 'webmoney', 'yandexmoney', 'payanyway', 'interkassa', 'banksimple', 'banksimpleua', 'invoice'];
 
-if (config.env != 'production') {
+if (process.env.NODE_ENV != 'production') {
   methodsEnabled.push('fail', 'success');
 }
 
