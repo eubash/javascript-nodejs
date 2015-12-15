@@ -115,6 +115,10 @@ exports.post = function*() {
   } else if (this.order.status == Order.STATUS_PENDING) {
     if (this.request.body.action == 'paid-tx') {
       yield* paidTx();
+    } else if (this.request.body.action == 'paid-free') {
+      this.order.amount = 0;
+      yield* order.onPaid();
+      order.status = Order.STATUS_SUCCESS;
     } else if (this.request.body.action == 'paid-direct') {
       yield* paidDirect();
     }
