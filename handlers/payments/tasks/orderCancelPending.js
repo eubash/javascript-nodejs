@@ -1,11 +1,6 @@
 var co = require('co');
-var gutil = require('gulp-util');
 var Order = require('../models/order');
 
-/**
- * Update prod build dir from master, rebuild and commit to prod
- * @returns {Function}
- */
 module.exports = function() {
 
   return function() {

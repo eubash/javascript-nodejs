@@ -36,7 +36,10 @@ module.exports = function* (order) {
   // send current user's invite in payment confirmation letter
   if (orderUserIsParticipant) {
     // probably generated above, but maybe(?) not, ensure we get it anyway
-    orderUserInvite = yield CourseInvite.findOne({email: order.user.email}).exec();
+    orderUserInvite = yield CourseInvite.findOne({
+      order: order._id,
+      email: order.user.email
+    });
     assert(orderUserInvite);
     invites = invites.filter(function(invite) {
       return invite.email != order.user.email;

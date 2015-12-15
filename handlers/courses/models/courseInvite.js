@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+var crypto = require('crypto');
 
 var schema = new Schema({
 
@@ -26,7 +27,7 @@ var schema = new Schema({
     type: String,
     required: true,
     default: function() {
-      return Math.random().toString(36).slice(2, 10);
+      return parseInt(crypto.randomBytes(4).toString('hex'), 16).toString(36);
     }
   },
 

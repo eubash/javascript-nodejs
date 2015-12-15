@@ -51,6 +51,11 @@ var schema = new Schema({
     required: true
   },
 
+  videoKeyTagCached: {
+    type: String,
+    index: true
+  },
+
   // group w/o materials can set this to undefined
   // otherwise there will be a link to the page (maybe without files yet)
   materials: {

@@ -1,3 +1,5 @@
+'use strict';
+
 const CourseGroup = require('../models/courseGroup');
 const log = require('log')();
 const CourseParticipant = require('../models/courseParticipant');
@@ -36,24 +38,50 @@ function* grantVideoKeys(group, participants) {
   // everyone has the key => exit
   if (!participantsWithoutKeys.length) return;
 
-  var videoKeys = yield VideoKey.find({
-    tag: group.course.videoKeyTag,
-    used: false
-  }).limit(participantsWithoutKeys.length).exec();
+  var otherSameVideoTagGroups = yield CourseGroup.find({
+    videoKeyTagCached: group.videoKeyTagCached,
+    _id: {
+      $ne: group._id
+    }
+  }, {_id: 1});
 
-  log.debug("Keys selected", videoKeys && videoKeys.toArray());
+  var otherSameVideoTagGroupIds = otherSameVideoTagGroups.map(group => group._id);
 
-  if (!videoKeys || videoKeys.length != participantsWithoutKeys.length) {
-    throw new Error(`Недостаточно серийных номеров ${group.course.videoKeyTag} ${participantsWithoutKeys.length}`);
-  }
+  log.debug("Other same course groups", otherSameVideoTagGroupIds);
 
   for (var i = 0; i < participantsWithoutKeys.length; i++) {
     var participant = participantsWithoutKeys[i];
-    participant.videoKey = videoKeys[i].key;
+
+    // try to find same user participanting in same course before
+    var pastParticipantWithKey = yield CourseParticipant.findOne({
+      user: participant.user,
+      group: {
+        $in: otherSameVideoTagGroupIds
+      }
+    }, {videoKey: 1}).sort({created: -1}).limit(1);
+
+
+    if (pastParticipantWithKey) {
+      participant.videoKey = pastParticipantWithKey.videoKey;
+    } else {
+
+      let videoKey = yield VideoKey.findOne({
+        tag: group.videoKeyTagCached,
+        used: false
+      });
+
+      if (!videoKey) {
+        throw new Error(`Недостаточно серийных номеров ${group.videoKeyTagCached}`);
+      }
+
+      participant.videoKey = videoKey.key;
+      videoKey.used = true;
+      yield videoKey.persist();
+    }
+
     yield participant.persist();
-    videoKeys[i].used = true;
-    yield videoKeys[i].persist();
   }
+
 
 }
 
