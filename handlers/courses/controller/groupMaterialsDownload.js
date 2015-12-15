@@ -16,6 +16,9 @@ exports.get = function*() {
     this.throw(404);
   }
 
+  // materials may be updated with the same name
+  this.nocache();
+
   this.set({
     'Content-Type': 'application/octet-stream',
     'Content-Disposition': 'attachment; filename=' + path.basename(material.filename),

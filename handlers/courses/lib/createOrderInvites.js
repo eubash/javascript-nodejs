@@ -45,6 +45,8 @@ module.exports = function*(order) {
     });
     invites.push(invite);
 
+    log.debug("created invite", invite.toObject());
+
     yield invite.persist();
 
     // not only send invite, but enable the tab so that the user can manually accept it
