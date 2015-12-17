@@ -46,7 +46,7 @@ exports.get = function*() {
     filter.stars = +this.query.stars;
   }
 
-  let feedbacks = yield CourseFeedback.find(filter).sort({created: -1}).skip(skip).limit(limit);
+  let feedbacks = yield CourseFeedback.find(filter).sort({created: 1}).skip(skip).limit(limit);
 
 
   let feedbacksRendered = [];
