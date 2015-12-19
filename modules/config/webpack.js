@@ -146,6 +146,12 @@ var webpackConfig = {
     }
   },
 
+  resolveLoader: {
+    modulesDirectories: ['node_modules'],
+    moduleTemplates: ['*-loader', ''],
+    extensions: ['', '.js']
+  },
+
   node: {
     fs: 'empty'
   },

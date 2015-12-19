@@ -10,6 +10,7 @@ var money = require('money');
 var moment = require('momentWithLocale');
 const Subscription = require('newsletter').Subscription;
 const Newsletter = require('newsletter').Newsletter;
+const Order = require('payments').Order;
 
 exports.get = function*() {
   this.locals.siteToolbarCurrentSection = "webpack-screencast";
@@ -20,6 +21,21 @@ exports.get = function*() {
       email: this.user.email
     });
   }
+
+  let donateOrders = yield Order.find({
+    module: 'donate',
+    status: Order.STATUS_SUCCESS,
+    'data.name': {$exists: true}
+  }).sort({usdAmount: -1});
+
+  this.locals.donations = donateOrders.map(order => {
+    return {
+      url: order.data.url,
+      name: order.data.name,
+      amount: order.amount,
+      currency: order.currency
+    };
+  });
 
   var newsletters = yield Newsletter.find({}).sort({weight: 1}).exec();
 

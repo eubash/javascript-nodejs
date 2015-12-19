@@ -64,7 +64,24 @@ block content
 
     include /blocks/subscriptionsForm
 
-    include:simpledown donates.md
+    +e('h2') Поддержка проекта
+
+    p.
+      Если вы хотите поддержать проект, у вас есть такая возможность.
+      Полученные средства делятся 50/50 между @iliakan, автором скринкаста по Webpack и
+      @sokra, автором самого Webpack.
+
+    +e('h3') Люди, которые уже помогли
+
+    +b.donate-list
+      +e('ol').items
+        each donation in donations
+          +e('li').item
+            if donation.url
+              +e('a').link(href=url)= donation.name
+            else
+              +e.link= donation.name
+            +e.amount #{donation.amount} #{donation.currency}
 
     +b('a')(href="/donate/webpack").donate-button Поддержать Webpack
 
