@@ -6,7 +6,8 @@ module.exports = function() {
 
   return function(callback) {
 
-    var config = require('config/webpack');
+    var config = require('config').webpack;
+
     webpack(config, function(err, stats) {
       if (!err) {
         // errors in files do not stop webpack watch
