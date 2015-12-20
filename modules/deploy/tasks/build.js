@@ -33,6 +33,7 @@ module.exports = function() {
 
         // unless --no-build
         if (args.build !== false) {
+          yield* client.runInBuild(`rm node_modules/*`); // delete handlers symlinks, gulp will recreate
           yield* client.runInBuild(`NODE_ENV=production ASSET_VERSIONING=file gulp build`);
           yield* client.runInBuild('git add -A --force public manifest');
         }
