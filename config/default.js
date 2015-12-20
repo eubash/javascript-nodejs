@@ -18,7 +18,7 @@ if (env.DEV_TRACE) {
   require('clarify');
 }
 
-module.exports = {
+var config = module.exports = {
   // production domain, for tutorial imports, descriptions, etc
   // for the places where in-dev we must use a real domain
   domain: {
@@ -157,17 +157,16 @@ module.exports = {
   courseRoot:            path.join(process.cwd(), 'course'),
   tmpRoot:               path.join(process.cwd(), 'tmp'),
   localesRoot:           path.join(process.cwd(), 'locales'),
-  // extra handlers from outside of the main repo
-  extraHandlersRoot:     path.join(process.cwd(), 'extra/handlers'),
   // js/css build versions
   manifestRoot:          path.join(process.cwd(), 'manifest'),
   migrationsRoot:        path.join(process.cwd(), 'migrations'),
-  tutorialGithubBaseUrl: 'https://github.com/iliakan/javascript-tutorial/blob/' + lang
+  tutorialGithubBaseUrl: 'https://github.com/iliakan/javascript-tutorial/blob/' + lang,
 
+  handlers: require('./handlers')
 };
 
 // webpack config uses general config
 // we have a loop dep here
-module.exports.webpack = require('./webpack');
+config.webpack = require('./webpack')(config);
 require('./i18n');
 

@@ -1,6 +1,4 @@
 
-require(`styles/${LANG}`);
-
 require('client/polyfill');
 
 try {
