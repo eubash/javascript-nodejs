@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const troop = require('mongoose-troop');
+const mongooseTimestamp = require('lib/mongooseTimestamp');
 const ObjectId = mongoose.Schema.Types.ObjectId;
 const Schema = mongoose.Schema;
 const config = require('config');
@@ -220,7 +220,7 @@ schema.pre('save', function(next) {
 });
 
 
-schema.plugin(troop.timestamp);
+schema.plugin(mongooseTimestamp);
 
 var Article = module.exports = mongoose.model('Article', schema);
 

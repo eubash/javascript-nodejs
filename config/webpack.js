@@ -192,7 +192,6 @@ module.exports = function(config) {
         `;
 
         config.handlers.forEach(handler => {
-          console.log();
           if (fs.existsSync(`${config.projectRoot}/node_modules/${handler}/client/styles/global/common.styl`)) {
             content += `\n@require '~${handler}/client/styles/global/common.styl'`;
           }
