@@ -2,7 +2,7 @@ var transliterate = require('textUtil/transliterate');
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var hash = require('../lib/hash');
-var troop = require('mongoose-troop');
+var mongooseTimestamp = require('lib/mongooseTimestamp');
 var _ = require('lodash');
 var co = require('co');
 
@@ -330,7 +330,7 @@ UserSchema.pre('save', function(next) {
 });
 
 
-UserSchema.plugin(troop.timestamp, {useVirtual: false});
+UserSchema.plugin(mongooseTimestamp, {useVirtual: false});
 
 // all references using mongoose.model for safe recreation
 // when I recreate model (for tests) => I can reload it from mongoose.model (single source of truth)

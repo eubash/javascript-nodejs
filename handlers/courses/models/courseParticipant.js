@@ -1,7 +1,7 @@
 var mongoose = require('lib/mongoose');
 var Schema = mongoose.Schema;
 var config = require('config');
-var troop = require('mongoose-troop');
+var mongooseTimestamp = require('lib/mongooseTimestamp');
 var fs = require('mz/fs');
 var path = require('path');
 var log = require('log')();
@@ -114,6 +114,6 @@ schema.virtual('fullName').get(function () {
   return this.firstName + ' ' + this.surname;
 });
 
-schema.plugin(troop.timestamp, {useVirtual: false});
+schema.plugin(mongooseTimestamp, {useVirtual: false});
 
 module.exports = mongoose.model('CourseParticipant', schema);
