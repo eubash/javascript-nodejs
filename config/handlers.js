@@ -2,7 +2,7 @@ var path = require('path');
 var fs = require('fs');
 
 var handlers = [
-  'cls-handler', 'countryCode', 'mongooseHandler', 'requestId', 'requestLog', 'nocache',
+  'clsHandler', 'countryCode', 'mongooseHandler', 'requestId', 'requestLog', 'nocache',
 
   // this middleware adds this.render method
   // it is *before errorHandler*, because errors need this.render
