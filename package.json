@@ -33,7 +33,6 @@
     "co": "*",
     "co-busboy": "*",
     "co-request": "*",
-    "config": "*",
     "continuation-local-storage": "*",
     "css-loader": "*",
     "csv-parse": "*",
