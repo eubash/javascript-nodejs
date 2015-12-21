@@ -4,6 +4,7 @@ var co = require('co');
 var gutil = require('gulp-util');
 var Transaction = require('../models/transaction');
 var Order = require('../models/order');
+var currencyRate = require('currencyRate');
 
 /**
  * Mark TX as paid
@@ -20,6 +21,7 @@ module.exports = function() {
   return function() {
 
     return co(function*() {
+      yield* currencyRate.boot();
 
       var transaction = yield Transaction.findOne({number: args.number}).populate('order').exec();
 

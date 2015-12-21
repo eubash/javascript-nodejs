@@ -1,11 +1,13 @@
 var co = require('co');
 var Order = require('../models/order');
+var currencyRate = require('currencyRate');
 
 module.exports = function() {
 
   return function() {
 
     return co(function*() {
+      yield* currencyRate.boot();
 
       var lastNumber = 0;
       while(true) {
