@@ -16,7 +16,6 @@ var update = require('./lib/update');
 
 exports.boot = function*() {
   yield* update();
-
 };
 
 
