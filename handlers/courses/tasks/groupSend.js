@@ -51,7 +51,7 @@ module.exports = function() {
       var teacher = yield User.findById(group.teacher);
       recipients.push({
         email: teacher.email,
-        name: teacher.displayName
+        name:  teacher.displayName
       });
 
       // filter out already received
@@ -93,6 +93,7 @@ module.exports = function() {
           from:         args.from || 'informer',
           templatePath: args.templatePath,
           to:           [recipient],
+          config:       config,
           user:         usersByEmail[recipient.email],
           group:        group,
           subject:      args.subject,
