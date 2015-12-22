@@ -1,10 +1,5 @@
 // plain login
-var User = require('users').User;
-var jade = require('lib/serverJade');
 var path = require('path');
-var config = require('config');
-var sendMail = require('mailer').send;
-
 
 exports.get = function* () {
 

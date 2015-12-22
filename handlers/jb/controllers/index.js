@@ -27,6 +27,7 @@ exports.get = function*() {
 
 exports.post = function*() {
   this.locals.products = products;
+  this.locals.countries = countries.all;
 
   var fewDaysAgo = new Date();
   fewDaysAgo.setDate( fewDaysAgo.getDate() - 3 );
