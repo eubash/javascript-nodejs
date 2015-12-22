@@ -51,7 +51,8 @@ exports.get = function* (next) {
   }
 
   if (!this.locals.tabs[tabName]) {
-    this.throw(404);
+    // give user a hint that he might need to log in
+    this.throw(403, "Не хватает прав или эта страница профиля отсутствует");
   }
 
   this.locals.title = user.displayName;
