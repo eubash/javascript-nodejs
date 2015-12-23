@@ -23,5 +23,5 @@
           include interkassa-settings
         else if paymentMethod.name == "invoice"
           include invoice-settings
-        else if paymentMethodShowDefaultCurrency
+        else if paymentMethodShowDefaultCurrency && paymentMethod.currency
           +b.payment-setting.__default-currency Оплата будет проводиться в #{paymentMethod.currency}

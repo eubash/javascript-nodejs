@@ -1,7 +1,10 @@
+'use strict';
+
 const payments = require('payments');
 var getOrderInfo = payments.getOrderInfo;
 var Course = require('../models/course');
 var CourseGroup = require('../models/courseGroup');
+var CourseParticipant = require('../models/courseParticipant');
 var CourseInvite = require('../models/courseInvite');
 var config = require('config');
 var moment = require('momentWithLocale');
@@ -78,6 +81,35 @@ exports.get = function*() {
   }
 
   this.locals.paymentMethods = require('../lib/paymentMethods');
+
+  // if he was participant of the same group in the past half-year once, can claim free
+  // =====================
+  let pastGroups = yield CourseGroup.find({
+    course: group.course._id,
+    dateEnd: {
+      // last 6 months
+      $gt: new Date(+new Date() - 6*31*86400*1e3)
+    }
+  }, {_id: 1});
+  let pastGroupsIds = pastGroups.map(group => group._id);
+
+  let pastParticipant = yield CourseParticipant.find({
+    group:{
+      $in: pastGroupsIds
+    },
+    user: this.user._id,
+    isActive: true
+  });
+
+  // user is able to make an order for many people
+  // control manually is he correct or not
+  // approve manually.
+  if (pastParticipant.length == 1) {
+    this.locals.paymentMethods.free = require('payments').methods.free.info;
+  }
+
+  // .. same group participant
+  // ================
 
   this.locals.breadcrumbs = [
     {title: 'Учебник', url: '/'},

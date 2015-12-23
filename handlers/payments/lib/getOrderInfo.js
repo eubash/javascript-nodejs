@@ -184,8 +184,10 @@ function* getOrderInfo(order) {
           statusText:  "Ожидается оплата",
           transaction: transaction,
           title:       thanks,
-          accent:      `Как только мы получим подтверждение от платёжной системы, мы пришлём вам письмо на адрес <b>${order.email}</b>.`,
-          description: `
+          accent:      transaction.paymentMethod == 'free' ?
+            `Сообщите номер заказа ${order.number} преподавателю для зачисления.` :
+             `Как только мы получим подтверждение от платёжной системы, мы пришлём вам письмо на адрес <b>${order.email}</b>.`,
+          description: transaction.paymentMethod == 'free' ? '' : `
           <p>Если у вас возникли проблемы при работе с платежной системой, и оплатить не удалось,
           вы можете <a href="?changePayment=1" data-order-payment-change>выбрать другой метод оплаты</a> и оплатить заново.</p>
           <p>Если у вас возникли какие-либо вопросы, присылайте их на ${mailUrl}.</p>`
