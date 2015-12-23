@@ -5,7 +5,6 @@ var fs = require('mz/fs');
 var path = require('path');
 var log = require('log')();
 var validate = require('validate');
-var CourseParticipant = require('./courseParticipant');
 var CourseMaterial = require('./courseMaterial');
 
 var schema = new Schema({

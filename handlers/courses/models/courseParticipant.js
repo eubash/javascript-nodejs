@@ -7,6 +7,7 @@ var path = require('path');
 var log = require('log')();
 var validate = require('validate');
 var countries = require('countries');
+var CourseGroup = require('./courseGroup');
 
 // make sure ref:User is resolved when a gulp task wants this model
 require('users').User;
@@ -23,8 +24,9 @@ var schema = new Schema({
   courseCache: {
     type: Schema.Types.ObjectId,
     ref:  'Course',
-    index: true,
-    required: true
+    index: true
+    // required: true
+    // assigned by the hook
   },
 
   // participation cancelled?
@@ -121,6 +123,24 @@ schema.index({group: 1, user: 1}, {unique: true});
 schema.virtual('fullName').get(function () {
   return this.firstName + ' ' + this.surname;
 });
+
+
+schema.pre('save', function(next) {
+  var self = this;
+  try {
+    this.courseCache = this.group.course;
+    this.courseCache = this.group.course._id;
+  } catch(e) {}
+
+  if (!this.courseCache) {
+    CourseGroup.findOne({_id: this.group}, function(err, group) {
+      if (err) return next(err);
+      self.courseCache = group.course;
+      next();
+    });
+  }
+});
+
 
 schema.plugin(mongooseTimestamp, {useVirtual: false});
 
