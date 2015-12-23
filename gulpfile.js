@@ -62,7 +62,7 @@ gulp.task("nodemon", lazyRequireTask('./tasks/nodemon', {
   // so I have to restart server to pickup the template change
   ext:    "js,jade",
 
-  nodeArgs: ['--debug'],
+  nodeArgs: process.env.NODE_DEBUG  ? ['--debug'] : [],
   script: "./bin/server",
   ignore: '**/client/', // ignore handlers' client code
   watch:  ["handlers", "modules"]
