@@ -42,6 +42,10 @@ module.exports = {
 
     success: {
       // dev only
+    },
+
+    free: {
+      // request a freebie, accepted manually
     }
   }
 };

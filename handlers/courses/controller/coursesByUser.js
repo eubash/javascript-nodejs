@@ -113,9 +113,9 @@ exports.get = function*(next) {
   var groupsWhereTeacher = yield CourseGroup.find({
     teacher: user._id,
     dateEnd: {
-      // show 2 weeks after the end, not more
+      // show 2 months after the end, not more
       $not: {
-        $lt:  new Date(+new Date() - 14*86400*1e3)
+        $lt:  new Date(+new Date() - 31*2*86400*1e3)
       }
     }
   }).sort({dateStart: -1});

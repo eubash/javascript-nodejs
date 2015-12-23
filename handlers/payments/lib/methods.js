@@ -10,6 +10,7 @@ for (var key in config.payments.modules) {
   assert(paymentMethods[key].renderForm, key + ": no renderForm");
 }
 
+// not rendered, assigned by code, so no renderForm
 paymentMethods.direct = {
 
   info: {

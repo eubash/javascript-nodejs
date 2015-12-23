@@ -16,6 +16,14 @@ var schema = new Schema({
   group: {
     type: Schema.Types.ObjectId,
     ref:  'CourseGroup',
+    index: true,
+    required: true
+  },
+
+  courseCache: {
+    type: Schema.Types.ObjectId,
+    ref:  'Course',
+    index: true,
     required: true
   },
 
