@@ -174,6 +174,7 @@ function* askParticipantDetails(invite) {
       yield participant.persist();
 
     } catch (e) {
+      this.log.debug("Participant persist error", e);
       if (e.errors.group) {
         log.error(`group error (not unique?) for (${participant.group}, ${participant.user})`);
         throw e;
