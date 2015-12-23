@@ -8,7 +8,7 @@ exports.createTransaction = function*(order) {
 
   var transaction = new Transaction({
     order:  order,
-    amount: 0,
+    amount: order.convertAmount('RUB'),
     currency: 'RUB',
     status: Transaction.STATUS_PENDING,
     paymentMethod: path.basename(__dirname)
