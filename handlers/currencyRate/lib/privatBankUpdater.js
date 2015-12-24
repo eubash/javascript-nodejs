@@ -10,9 +10,10 @@ var url = 'https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5';
 module.exports = class {
   *update() {
 
+    // in dev mode always get from db
     var rate = yield PrivatBankCurrencyRate.findOne({
       created: {
-        $gt: new Date(new Date() - 86400*1000/2)
+        $gt: process.env.NODE_ENV == 'development' ? 0 : new Date(new Date() - 86400*1000/2)
       }
     }).sort({created: -1});
 

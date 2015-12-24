@@ -2,13 +2,22 @@ var mongoose = require('mongoose');
 var autoIncrement = require('mongoose-auto-increment');
 var Schema = mongoose.Schema;
 var countries = require('countries');
+var CourseGroup = require('./courseGroup');
 
 var schema = new Schema({
 
   group: {
     type: Schema.Types.ObjectId,
     ref:  'CourseGroup',
-    required: true
+    required: true,
+    index: true
+  },
+
+  courseCache: {
+    type: Schema.Types.ObjectId,
+    ref:  'Course',
+//    required: true, autoassigned by hook
+    index: true
   },
 
   stars: {
@@ -30,19 +39,22 @@ var schema = new Schema({
   participant: {
     type: Schema.Types.ObjectId,
     ref:  'CourseParticipant',
-    required: true
+    required: true,
+    index: true
   },
 
   teacherCache: {
     type: Schema.Types.ObjectId,
     ref:  'User',
-    required: true
+    required: true,
+    index: true
   },
 
   userCache: {
     type: Schema.Types.ObjectId,
     ref:  'User',
-    required: true
+    required: true,
+    index: true
   },
 
   // todo (not used now)
@@ -88,6 +100,27 @@ var schema = new Schema({
   created: {
     type:    Date,
     default: Date.now
+  }
+});
+
+
+
+schema.pre('save', function(next) {
+  var self = this;
+
+  if (this.group.course) {
+    if (this.group.course._id) {
+      this.courseCache = this.group.course._id;
+    } else {
+      this.courseCache = this.group.course;
+    }
+    next();
+  } else {
+    CourseGroup.findOne({_id: this.group}, function(err, group) {
+      if (err) return next(err);
+      self.courseCache = group.course;
+      next();
+    });
   }
 });
 

@@ -46,9 +46,12 @@ block content
           td= transaction.currency
           td= transaction.status
           td= transaction.statusMessage
-        if transaction.paymentMethod == 'invoice' && transaction.paymentDetails.agreementRequired
+        if transaction.paymentMethod == 'invoice'
           tr
-            td(colspan=7) Скачать <a href="/payments/invoice/#{transaction.number}/invoice.docx">счёт</a> и <a href="/payments/invoice/#{transaction.number}/agreement.docx">договор с актом</a>.
+            td(colspan=7)
+              | Скачать <a href="/payments/invoice/#{transaction.number}/invoice.docx">счёт</a>
+              if transaction.paymentDetails.agreementRequired
+                | &nbsp;и <a href="/payments/invoice/#{transaction.number}/agreement.docx">договор с актом</a>.
 
     p Действия
     ul
