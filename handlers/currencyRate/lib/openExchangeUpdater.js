@@ -11,10 +11,10 @@ module.exports = class {
   *update() {
     var result;
 
-
+    // in dev mode always get from db
     var rate = yield OpenExchangeCurrencyRate.findOne({
       created: {
-        $gt: new Date(new Date() - 86400*1000/2)
+        $gt: process.env.NODE_ENV=='development' ? 0 : new Date(new Date() - 86400*1000/2)
       }
     }).sort({created: -1});
 

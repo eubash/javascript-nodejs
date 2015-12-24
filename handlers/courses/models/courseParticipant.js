@@ -127,12 +127,15 @@ schema.virtual('fullName').get(function () {
 
 schema.pre('save', function(next) {
   var self = this;
-  try {
-    this.courseCache = this.group.course;
-    this.courseCache = this.group.course._id;
-  } catch(e) {}
 
-  if (!this.courseCache) {
+  if (this.group.course) {
+    if (this.group.course._id) {
+      this.courseCache = this.group.course._id;
+    } else {
+      this.courseCache = this.group.course;
+    }
+    next();
+  } else {
     CourseGroup.findOne({_id: this.group}, function(err, group) {
       if (err) return next(err);
       self.courseCache = group.course;

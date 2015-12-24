@@ -163,7 +163,8 @@ module.exports = function(config) {
 
     plugins: [
       new webpack.DefinePlugin({
-        LANG: JSON.stringify(config.lang)
+        LANG: JSON.stringify(config.lang),
+        IS_CLIENT: true
       }),
 
       // lodash is loaded when free variable _ occurs in the code

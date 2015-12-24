@@ -29,16 +29,16 @@ exports.get = function*() {
   }
 
   if (this.query.course) {
-    let course = yield Course.findOne({slug: this.query.course}, {_id: 1});
-    if (!course) this.throw(404);
-
-    let groups = yield CourseGroup.find({course: course._id}, {_id: 1});
-    let groupIds = groups.map(function(group) { return group._id });
-    filter.group = {$in: groupIds};
+    if (!mongoose.Types.ObjectId.isValid(this.query.course)) {
+      this.throw(400, "course is malformed");
+    }
+    filter.courseCache = new mongoose.Types.ObjectId(this.query.course);
   }
 
   if (this.query.teacherId) {
-    if (!mongoose.Types.ObjectId.isValid(this.query.teacherId)) this.throw(400, "teacherId is malformed");
+    if (!mongoose.Types.ObjectId.isValid(this.query.teacherId)) {
+      this.throw(400, "teacherId is malformed");
+    }
     filter.teacherCache = new mongoose.Types.ObjectId(this.query.teacherId);
   }
 
