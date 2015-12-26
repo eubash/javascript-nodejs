@@ -80,6 +80,7 @@ exports.get = function*() {
     this.locals.title = "Регистрация\n" + group.title;
   }
 
+  this.locals.allPaymentMethods = payments.methods;
   this.locals.paymentMethods = require('../lib/paymentMethods');
 
   // if he was participant of the same group in the past half-year once, can claim free
@@ -105,7 +106,7 @@ exports.get = function*() {
   // control manually is he correct or not
   // approve manually.
   if (pastParticipant.length == 1) {
-    this.locals.paymentMethods.free = require('payments').methods.free.info;
+    this.locals.paymentMethods.free = payments.methods.free.info;
   }
 
   // .. same group participant
