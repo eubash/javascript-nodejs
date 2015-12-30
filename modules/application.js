@@ -97,9 +97,6 @@ Application.prototype.requireHandler = function(path) {
     handler.init(this);
   }
 
-  log.trace(`requireHandler done: ${path}`);
-
-
   this.handlers[path] = handler;
 
 };
