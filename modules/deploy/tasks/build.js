@@ -42,11 +42,12 @@ module.exports = function() {
         // `git commit` would exit with status 1, stopping the deploy
         // so I commit only if there are changes
         try {
-          yield* client.runInBuild('git diff-index --quiet HEAD');
+          yield* client.runInBuild('git commit -a -m deploy');
         } catch(e) {
           if (e.code == 1) {
-            // exit code 1 means that there's something to commit
-            yield* client.runInBuild('git commit -a -m deploy');
+            console.log("Commit failed, nothing to commit?");
+          } else {
+            throw e;
           }
         }
 
