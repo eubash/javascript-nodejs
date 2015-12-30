@@ -14,7 +14,6 @@ const CourseParticipant = require('../models/courseParticipant');
 const ImgurImage = require('imgur').ImgurImage;
 const log = require('log')();
 
-
 exports.all = function*() {
 
   if (this.method != 'POST' && this.method != 'GET') {

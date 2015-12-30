@@ -3,78 +3,127 @@
 const db = require('lib/dataUtil');
 const mongoose = require('lib/mongoose');
 const path = require('path');
-const request = require('supertest');
+const request = require('request-promise');
 const fixtures = require(path.join(__dirname, '../fixtures/db'));
 const app = require('app');
 const assert = require('better-assert');
 
+
 describe('Authorization', function() {
 
   var server;
+  var prefix = 'http://127.0.0.1:1234';
+
+  function getCsrf(jar) {
+    var cookie = jar.getCookies(prefix).filter(cookie => cookie.key == 'XSRF-TOKEN')[0];
+    return cookie && cookie.value;
+  }
+
   before(function*() {
 
     yield* db.loadModels(fixtures, {reset: true});
-
-    // APP.LISTEN() USES A RANDOM PORT,
-    // which superagent gets as server.address().port
-    server = app.listen();
+    server = app.listen(1234, '127.0.0.1');
+    console.log(server.address());
   });
 
-  after(function() {
-    server.close();
+  after(function*() {
+    yield function(callback) {
+      server.close(callback);
+    };
   });
 
   describe('login', function() {
+    it('should require verified email', function*() {
+      var hadError = false;
+      try {
+        yield request({
+          method: 'post',
+          url:    `${prefix}/auth/login/local`,
+          form:   {
+            email:    fixtures.User[2].email,
+            password: fixtures.User[2].password
+          }
+        });
 
-    it('should require verified email', function(done) {
-      request(server)
-        .post('/auth/login/local')
-        .send({
-          email:    fixtures.User[2].email,
-          password: fixtures.User[2].password
-        })
-        .expect(401, done);
+      } catch (e) {
+        hadError = true;
+        e.statusCode.should.be.eql(401);
+      }
+
+      hadError.should.be.true;
     });
   });
 
   describe('login flow', function() {
-    var agent;
+    var jar;
 
     before(function() {
-      agent = request.agent(server);
+      jar = request.jar();
     });
 
-    it('should log in when email is verified', function(done) {
-      agent
-        .post('/auth/login/local')
-        .send({
+    it('should log in when email is verified', function*() {
+      var result = yield request({
+        method: 'POST',
+        url: `${prefix}/auth/login/local`,
+        jar: jar,
+        form: {
           email:    fixtures.User[0].email,
           password: fixtures.User[0].password
-        })
-        .expect(200, done);
+        }
+      });
+
+      var cookieNames = jar.getCookies(prefix).map(cookie => cookie.key);
+      cookieNames.should.containDeep(['sid', 'remember']);
     });
 
-    it('should log out', function(done) {
-      agent
-        .post('/auth/logout')
-        .send()
-        .expect(302, done);
+    it('should log out', function*() {
+      var csrf = getCsrf(jar);
+      var hadRedirect = false;
+      try {
+        yield request({
+          method:         'POST',
+          jar:            jar,
+          followRedirect: false,
+          url:            `${prefix}/auth/logout?_csrf=${csrf}`
+        });
+      } catch (e) {
+        e.statusCode.should.eql(302);
+        hadRedirect = true;
+      }
+
+      hadRedirect.should.be.true;
+
+      var cookieNames = jar.getCookies(prefix).map(cookie => cookie.key);
+
+      cookieNames.should.not.containEql('remember');
+      cookieNames.should.not.containEql('sid');
     });
-/*
-    it('should return error when repeat logout (the session is incorrect)', function(done) {
-      agent
-        .post('/auth/logout')
-        .send()
-        .expect(401, done);
-        */
+
+    it('should return error when repeat logout (the session is incorrect)', function*() {
+      var csrf = getCsrf(jar);
+      var hadError = false;
+      try {
+        yield request({
+          method:         'POST',
+          jar:            jar,
+          followRedirect: false,
+          url:            `${prefix}/auth/logout?_csrf=${csrf}`
+        });
+      } catch (e) {
+        e.statusCode.should.eql(401);
+        hadError = true;
+      }
+
+      hadError.should.be.true;
+
     });
   });
 
-  describe("register", function() {
-    var agent;
+  describe('register', function() {
+    var jar;
 
     before(function() {
-      agent = request.agent(server);
+      jar = request.jar();
     });
 
     var userData = {
@@ -83,45 +132,39 @@ describe('Authorization', function() {
       password:    "somepass"
     };
 
-    it('should create a new user', function(done) {
-      agent
-        .post('/auth/register')
-        .send(userData)
-        .expect(201, done);
+    it('should create a new user', function*() {
+      var result = yield request.post({
+        url: `${prefix}/auth/register`,
+        jar: jar,
+        form: userData,
+        resolveWithFullResponse: true
+      });
+
+
+      result.statusCode.should.be.eql(201);
+
+      var cookieNames = jar.getCookies(prefix).map(cookie => cookie.key);
+
+      cookieNames.should.not.containEql('remember');
+      cookieNames.should.not.containEql('sid');
     });
 
-    it('should not be logged in', function(done) {
-      agent
-        .post('/auth/logout')
-        .send('')
-        .expect(401, done);
-    });
-    /*
-
-     .end(function(err, res) {
-     res.body.email.should.be.eql(userData.email);
-     res.body.displayName.should.be.eql(userData.displayName);
-     done(err);
-     });
-     it('should be log in the new user', function(done) {
-     request(server)
-     .post('/auth/login/local')
-     .send({email: userData.email, password: userData.password})
-     .expect(200, done);
-     });
-     */
-
-    it('should fail to create a new user with same email', function(done) {
-      request(server)
-        .post('/auth/register')
-        .send(userData)
-        .set('Accept', 'application/json')
-        .expect(400)
-        .end(function(err, res) {
-          if (err) return done(err);
-          res.body.errors.email.should.exist;
-          done();
+    it('should fail to create a new user with same email', function*() {
+      var error;
+      try {
+        yield request.post({
+          url:                     `${prefix}/auth/register`,
+          jar:                     jar,
+          form:                    userData,
+          json: true,
+          resolveWithFullResponse: true
         });
+      } catch (e) {
+        error = e;
+      }
+
+      error.statusCode.should.be.eql(400);
+      error.response.body.errors.email.should.exist;
     });
 
   });
