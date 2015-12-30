@@ -19,6 +19,18 @@ exports.init = function(app) {
   app.csrfChecker.ignore.add('/auth/forgot-recover');
 
   app.use(function*(next) {
+
+    this.logout = function() {
+      this.cookies.set('remember'); // remove "remember me" cookie
+      this.cookies.set('remember.sig');
+
+      this.cookies.set('sid'); // logout removes sid, but not sid.sig (3rd party bug?)
+      this.cookies.set('sid.sig');
+
+      this.session = null;
+      this.req.logout();
+    };
+
     this.authAndRedirect = function(url) {
       this.addFlashMessage('info', 'Для доступа к этой странице нужна авторизация.');
       this.newFlash.successRedirect = url;
