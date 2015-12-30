@@ -9,8 +9,6 @@ exports.init = function(app) {
 
   require('./strategies');
 
-  app.use(mountHandlerMiddleware('/auth', __dirname));
-
   // no csrf check for guest endpoints (no generation of csrf for anon)
   app.csrfChecker.ignore.add('/auth/login/:any*');
   app.csrfChecker.ignore.add('/auth/register');
@@ -18,6 +16,7 @@ exports.init = function(app) {
   app.csrfChecker.ignore.add('/auth/forgot');
   app.csrfChecker.ignore.add('/auth/forgot-recover');
 
+  // add methods BEFORE adding other auth routes (that may want these methods)
   app.use(function*(next) {
 
     this.logout = function() {
@@ -36,8 +35,13 @@ exports.init = function(app) {
       this.newFlash.successRedirect = url;
       this.redirect('/auth/login');
     };
+
     yield* next;
   });
+
+  app.use(mountHandlerMiddleware('/auth', __dirname));
+
+
 };
 
 

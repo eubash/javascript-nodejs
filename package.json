@@ -103,6 +103,7 @@
     "path-to-regexp": "*",
     "prismjs": "*",
     "request": "*",
+    "request-promise": "^1.0.2",
     "sanitize-html": "*",
     "send": "*",
     "sha256": "*",
