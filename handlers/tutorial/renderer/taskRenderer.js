@@ -1,7 +1,3 @@
-const HeaderTag = require('simpledownParser').HeaderTag;
-const BodyParser = require('simpledownParser').BodyParser;
-const ServerHtmlTransformer = require('serverHtmlTransformer');
-const CompositeTag = require('simpledownParser').CompositeTag;
 const config = require('config');
 const Plunk = require('plunk').Plunk;
 const Task = require('../models/task');

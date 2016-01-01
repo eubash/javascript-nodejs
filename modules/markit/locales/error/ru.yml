@@ -1,3 +1,5 @@
+article_not_found: "Не найдена статья \"#{path}\""
+task_not_found: "Не найдена задача \"#{path}\""
 attr_required: "Отсутствует параметр \"#{attr}\""
 src_out_of_root: "Исходный путь \"#{src}\" находится вне корня"
 read_file: "Не могу прочитать файл \"#{src}\""

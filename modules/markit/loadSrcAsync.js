@@ -4,21 +4,24 @@ const assert = require('assert');
 
 assert(typeof IS_CLIENT === 'undefined');
 
-const Article = require('tutorial/models/article');
+const Reference = require('tutorial').Reference;
+const Article = require('tutorial').Article;
 const Plunk = require('plunk').Plunk;
-const Task = require('tutorial/models/task');
+const Task = require('tutorial').Task;
 const path = require('path');
 const fs = require('mz/fs');
 const t = require('i18n');
 
-var LANG = LANG || require('config').lang;
+var LANG = require('config').lang;
 
 t.requirePhrase('markit.error', require('./locales/error/' + LANG + '.yml'));
 
-module.exports = function* (md) {
+module.exports = function* (tokens, options) {
 
   let methods = {
-    blocktag_codetabs,
+    blocktag_codetabs: src2plunk,
+    blocktag_edit: src2plunk,
+    blocktag_iframe,
     blocktag_source
   };
 
@@ -36,8 +39,8 @@ module.exports = function* (md) {
   }
 
 
-  function* blocktag_codetabs(token) {
-    let src = path.join(md.options.resourceWebRoot, token.blockTagAttrs.src);
+  function* src2plunk(token) {
+    let src = path.join(options.resourceWebRoot, token.blockTagAttrs.src);
 
     let plunk = yield Plunk.findOne({webPath: src});
 
@@ -48,13 +51,19 @@ module.exports = function* (md) {
     token.plunk = plunk;
   }
 
+  function* blocktag_iframe(token) {
+    if (token.blockTagAttrs.edit) {
+      yield* src2plunk(token);
+    }
+  }
+
   function* blocktag_source(token) {
 
     if (!token.blockTagAttrs.src) return;
 
     let sourcePath = srcUnderRoot(
-      md.options.publicRoot,
-      path.join(md.options.resourceWebRoot, token.blockTagAttrs.src)
+      options.publicRoot,
+      path.join(options.resourceWebRoot, token.blockTagAttrs.src)
     );
 
     let content;
@@ -72,8 +81,8 @@ module.exports = function* (md) {
   }
 
 
-  for (var idx = 0; idx < md.state.tokens.length; idx++) {
-    let token = md.state.tokens[idx];
+  for (let idx = 0; idx < tokens.length; idx++) {
+    let token = tokens[idx];
 
     let process = methods[token.type];
     if (process) {
@@ -91,3 +100,5 @@ module.exports = function* (md) {
   }
 
 };
+
+

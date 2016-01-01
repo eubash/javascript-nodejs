@@ -1,7 +1,5 @@
 const _ = require('lodash');
 const config = require('config');
-const BodyParser = require('simpledownParser').BodyParser;
-const ServerHtmlTransformer = require('serverHtmlTransformer');
 const log = require('log')();
 const Article = require('../models/article');
 
@@ -108,6 +106,7 @@ ArticleRenderer.prototype._libsToJsCss = function(libs) {
  */
 ArticleRenderer.prototype.render = function* (article, options) {
 
+  // TODO!
   options = Object.create(options || {});
   options.metadata = this.metadata;
   options.trusted = true;

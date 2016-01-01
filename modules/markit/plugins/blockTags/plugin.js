@@ -17,21 +17,12 @@ function rewriteInlineToBlockTags(state) {
       if (!state.md.options.blockTags || state.md.options.blockTags.indexOf(blockTagName) == -1) continue;
 
       let blockTagAttrs = parseAttrs(blockTagMatch[2]);
-      let blockTagToken = {
-        type:          `blocktag_${blockTagName}`,
-        tag:           blockTagName,
-        attrs:         state.token[idx].attrs,
-        blockTagAttrs: blockTagAttrs,
-        map:           state.tokens[idx].map.slice(),
-        nesting:       0,
-        level:         0,
-        children:      null,
-        content:       '',
-        info:          '',
-        meta:          null,
-        block:         true,
-        hidden:        false
-      };
+      let blockTagToken = new state.Token('blocktag_source', blockTagName, state.tokens[idx].nesting);
+
+      blockTagToken.blockTagAttrs = blockTagAttrs;
+      blockTagToken.map = state.tokens[idx].map.slice();
+      blockTagToken.block = true;
+      blockTagToken.level = state.tokens[idx].level;
 
       state.tokens.splice(idx - 1, 3, blockTagToken);
       // no need to move idx back, because

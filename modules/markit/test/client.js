@@ -11,7 +11,7 @@ should.Assertion.add('html', function(str) {
 }, false);
 
 
-function makeMd() {
+function makeMd(options) {
 
   const md = MarkdownIt({
     blockTags: ['iframe']
@@ -19,7 +19,7 @@ function makeMd() {
 
   require('../plugins/outlinedBlocks')(md);
   require('../plugins/sourceBlocks')(md);
-  require('../plugins/blockTags')(md);
+  require('../plugins/blockTags/plugin')(md);
   require('../plugins/blockTags/iframe')(md);
 
   return md;
@@ -38,6 +38,8 @@ function parse(text) {
 
   return md.parse(text);
 }
+
+function
 
 describe('MarkIt', function() {
 

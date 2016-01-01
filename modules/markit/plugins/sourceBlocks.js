@@ -38,7 +38,7 @@ module.exports = function(md) {
   md.renderer.rules.blocktag_source = function(tokens, idx, options, env, slf) {
     let token = tokens[idx];
 
-    let attrs = tokens[idx].blockTagAttrs;
+    let attrs = token.blockTagAttrs;
 
     var lang = attrs.blockName;
     let prismLanguage = getPrismLanguage(lang);
