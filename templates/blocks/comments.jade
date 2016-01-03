@@ -1,15 +1,15 @@
 +b.comments(id="comments")
   +e.header
     +e("h2").header-title
-      a(href="#comments" name="comments")= t('Comments')
+      a(href="#comments" name="comments")= t('site.comments')
     +e.read-before
-      +e("span").read-before-link= t('read before commenting…')
+      +e("span").read-before-link= t('site.read_before_commenting')
       +e.read-before-popup
         +e.read-before-popup-i
           ul
-            li= t("You're welcome to post additions, questions to the articles and answers to them.")
-            li!= t("To insert a few words of code, use the <code>&lt;code&gt;</code> tag, for several lines – use <code>&lt;pre&gt;</code>, for more than 10 lines – use a sandbox (<a href='http://plnkr.co/edit/?p=preview'>plnkr</a>, <a href='http://jsbin.com'>JSBin</a>, <a href='http://codepen.io'>codepen</a>…)")
-            li= t("If you can't understand something in the article – please elaborate.")
+            li= t("site.comment.help[0]")
+            li!= t("site.comment.help[1]")
+            li= t("site.comment.help[2]")
 
 
 #disqus_thread

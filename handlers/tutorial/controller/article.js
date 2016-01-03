@@ -6,7 +6,7 @@ const TaskRenderer = require('../renderer/taskRenderer');
 const _ = require('lodash');
 const CacheEntry = require('cache').CacheEntry;
 const makeAnchor = require('textUtil/makeAnchor');
-const t = require('i18next').t;
+const t = require('i18n');
 
 exports.get = function *get(next) {
 
@@ -36,14 +36,14 @@ exports.get = function *get(next) {
   if (renderedArticle.isFolder) {
 
     sections.push({
-      title: t('Sibling chapters'),
+      title: t('tutorial.article.sibling_chapters'),
       links: renderedArticle.siblings
     });
 
   } else {
 
     sections.push({
-      title: t('Chapter'),
+      title: t('tutorial.article.chapter'),
       links: [renderedArticle.breadcrumbs[renderedArticle.breadcrumbs.length-1]]
     });
 
@@ -60,7 +60,7 @@ exports.get = function *get(next) {
 
     if (headerLinks.length) {
       sections.push({
-        title: t('Lesson navigation'),
+        title: t('tutorial.article.lesson_navigation'),
         links: headerLinks
       });
     }
@@ -76,13 +76,13 @@ exports.get = function *get(next) {
 
     if (renderedArticle.tasks.length) {
       section2.links.push({
-        title: t('Tasks') +' (' + renderedArticle.tasks.length + ')',
+        title: t('tutorial.article.tasks') + ' (' + renderedArticle.tasks.length + ')',
         url: '#tasks'
       });
     }
 
     section2.links.push({
-      title: t('Comments'),
+      title: t('site.comments'),
       url:   '#comments'
     });
 

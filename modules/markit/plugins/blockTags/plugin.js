@@ -1,6 +1,7 @@
 'use strict';
 
 const parseAttrs = require('../../utils/parseAttrs');
+const getPrismLanguage = require('../../getPrismLanguage');
 
 function rewriteInlineToBlockTags(state) {
   for (var idx = 1; idx < state.tokens.length - 1; idx++) {
@@ -8,7 +9,7 @@ function rewriteInlineToBlockTags(state) {
       state.tokens[idx + 1].type == 'paragraph_close' &&
       state.tokens[idx].type == 'inline') {
 
-      let blockTagMatch = state.tokens[idx].content.trim().match(/\[(\w+)\s*([^\]]*)\]/);
+      let blockTagMatch = state.tokens[idx].content.trim().match(/^\[(\w+)\s*([^\]]*)\]$/);
       if (!blockTagMatch) continue;
 
       let blockTagName = blockTagMatch[1];
@@ -17,7 +18,10 @@ function rewriteInlineToBlockTags(state) {
       if (!state.md.options.blockTags || state.md.options.blockTags.indexOf(blockTagName) == -1) continue;
 
       let blockTagAttrs = parseAttrs(blockTagMatch[2]);
-      let blockTagToken = new state.Token('blocktag_source', blockTagName, state.tokens[idx].nesting);
+
+      let tokenType = getPrismLanguage.allSupported.indexOf(blockTagName) == -1 ? 'blocktag_' + blockTagName : 'blocktag_source';
+
+      let blockTagToken = new state.Token(tokenType, blockTagName, state.tokens[idx].nesting);
 
       blockTagToken.blockTagAttrs = blockTagAttrs;
       blockTagToken.map = state.tokens[idx].map.slice();

@@ -4,7 +4,6 @@ const assert = require('assert');
 
 assert(typeof IS_CLIENT === 'undefined');
 
-const Reference = require('tutorial').Reference;
 const Article = require('tutorial').Article;
 const Plunk = require('plunk').Plunk;
 const Task = require('tutorial').Task;
@@ -40,6 +39,7 @@ module.exports = function* (tokens, options) {
 
 
   function* src2plunk(token) {
+
     let src = path.join(options.resourceWebRoot, token.blockTagAttrs.src);
 
     let plunk = yield Plunk.findOne({webPath: src});

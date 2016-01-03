@@ -9,7 +9,7 @@ const log = require('log')();
 const jade = require('lib/serverJade');
 const _ = require('lodash');
 const assert = require('assert');
-const i18n = require('i18next');
+const t = require('i18n');
 const money = require('money');
 const url = require('url');
 const validate = require('validate');
@@ -150,7 +150,7 @@ function addStandardHelpers(locals, ctx) {
     debugger;
   };
 
-  locals.t = i18n.t;
+  locals.t = t;
   locals.bem = require('bem-jade')();
 
   locals.thumb = function(url, width, height) {

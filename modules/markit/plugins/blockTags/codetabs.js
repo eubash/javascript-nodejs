@@ -9,7 +9,7 @@ const getPrismLanguage = require('../../getPrismLanguage');
 const jade = require('lib/serverJade');
 const bem = require('bem-jade');
 
-const codeTabsTemplate = require('../templates/codeTabs.jade');
+const codeTabsTemplate = require('../../templates/codeTabs.jade');
 
 module.exports = function(md) {
 
@@ -61,7 +61,7 @@ module.exports = function(md) {
 
     if (hasServerJs) {
       locals.zip = {
-        href: '/tutorial/zipview/' + path.basename(src) + '.zip?plunkId=' + token.plunk.plunkId
+        href: '/tutorial/zipview/' + path.basename(locals.src) + '.zip?plunkId=' + token.plunk.plunkId
       };
     } else {
       locals.edit = {

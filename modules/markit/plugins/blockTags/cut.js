@@ -2,7 +2,7 @@
 
 module.exports = function(md) {
 
-  md.renderer.rules.code_cut = function(tokens, idx, options, env, slf) {
+  md.renderer.rules.blocktag_cut = function(tokens, idx, options, env, slf) {
     return '';
   };
 

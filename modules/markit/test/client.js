@@ -39,32 +39,7 @@ function parse(text) {
   return md.parse(text);
 }
 
-function
-
 describe('MarkIt', function() {
-
-  it(`[iframe src="/path"]`, function() {
-    let result = render(this.test.title);
-    result.should.be.html(`<div class="code-result">
-      <div class="code-result__toolbar toolbar"></div>
-      <iframe class="code-result__iframe" data-trusted="0" style="height:300px" src="/path"></iframe>
-    </div>`
-    );
-
-  });
-
-  it('```js\na = 5\n```\n', function() {
-    let result = render(this.test.title);
-    result.should.be.html(`<div data-trusted="0" class="code-example">
-      <div class="codebox code-example__codebox">
-        <div class="codebox__code" data-code="1">
-          <pre class="line-numbers language-javascript"><code class="language-javascript">a = 5</code></pre>
-        </div>
-      </div>
-     </div>`
-    );
-
-  });
 
 
 });

@@ -10,6 +10,7 @@ assert(typeof IS_CLIENT === 'undefined');
 
 const Article = require('tutorial').Article;
 const Task = require('tutorial').Task;
+
 const Token = require('markdown-it/lib/token');
 const t = require('i18n');
 const url = require('url');
@@ -18,7 +19,7 @@ const tokenUtils = require('./utils/token');
 
 t.requirePhrase('markit.error', require('./locales/error/' + LANG + '.yml'));
 
-module.exports = function* (tokens, options) {
+module.exports = function* (tokens) {
 
   let isEmptyLink, isHrefLink;
   for (let idx = 0; idx < tokens.length; idx++) {

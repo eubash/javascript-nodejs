@@ -1,16 +1,18 @@
 'use strict';
 
 /**
- * Reads attrs from ![alt|height=100 width=200](...)
+ * Reads attrs from ![alt|height=100 width=200](...) into image token
+ *
  * P.S. Plugins that work like ![...](/url =100x150) require special parser, not markdown-compatible markup
  */
 
 const parseAttrs = require('../utils/parseAttrs');
+const tokenUtils = require('../utils/token');
 
 function readImgAttrs(state) {
 
   for (let idx = 0; idx < state.tokens.length; idx++) {
-    let token = state.tokens[i];
+    let token = state.tokens[idx];
 
     if (token.type !== 'inline') continue;
 
@@ -23,12 +25,30 @@ function readImgAttrs(state) {
     }
   }
 
+
+  // doesn't work for ![desc *me*|height="*hi*"](fig.png)
+  // works for ![desc *me*|height="hi"](fig.png)
+  function processImg(imgToken) {
+    if (!imgToken.children.length) return; // ![](..) empty image
+
+    // last always textToken
+    let lastTextToken = imgToken.children[imgToken.children.length - 1];
+
+    let parts = lastTextToken.content.split('|');
+    if (parts.length != 2) return; // no | or many || (invalid)
+
+    lastTextToken.content = parts[0];
+
+    let attrs = parseAttrs(parts[1]);
+
+    for (let name in attrs) {
+      if (!state.md.options.html && ['height', 'width'].indexOf(name) == -1) continue;
+      tokenUtils.attrReplace(imgToken, name, attrs[name]);
+    }
+  }
+
+
 }
-
-function procesImg(imgToken) {
-
-}
-
 
 module.exports = function(md) {
 

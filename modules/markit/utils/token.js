@@ -34,6 +34,18 @@ function attrReplace(token, name, value) {
   }
 }
 
+function addClass(token, value) {
+  let classAttr = attrGet(token, 'class');
+  if (classAttr.match(new RegExp(`\b${value}\b`))) return;
+
+  if (classAttr) {
+    classAttr += ' ' + value;
+  } else {
+    classAttr = value;
+  }
+  attrReplace(token, 'class', classAttr);
+}
+
 function attrGet(token, name) {
   let idx = token.attrIndex(name);
   if (idx == -1) return null;
@@ -43,3 +55,5 @@ function attrGet(token, name) {
 exports.attrReplace = attrReplace;
 
 exports.attrGet = attrGet;
+exports.addClass = addClass;
+

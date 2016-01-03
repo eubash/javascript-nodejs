@@ -3,7 +3,7 @@ block append variables
   - siteToolbarSections.push({ slug: 'quiz', title: 'Тесты знаний' });
 
 <!--[if lt IE 10]>
-div(style="color:red;text-align:center")= t("Sorry, the IE<10 is not supported, please use a newer browser.")
+div(style="color:red;text-align:center")= t("site.sorry_old_browser")
 <![endif]-->
 
 if lang=='ru'
@@ -12,7 +12,7 @@ if lang=='ru'
       +e.logo-wrap
         +e('a').link._logo(href="/")
 
-          +e('img').logo._normal(src="/img/" + t("sitetoolbar__logo_svg"), width=t("sitetoolbar__logo_width"))
+          +e('img').logo._normal(src="/img/" + t("site.toolbar.logo.svg"), width=t("site.toolbar.logo.width"))
           +e('img').logo._small(src="/img/sitetoolbar__logo_small.svg")
           script
             :uglify
@@ -86,7 +86,7 @@ if lang=='ru'
       +e.line
         +e.content
           +b.share-icons
-            +e('span').title= t('Share')
+            +e('span').title= t('site.share')
             include ../blocks/social-icons
 
     if bookChildNumber && bookLeafCount

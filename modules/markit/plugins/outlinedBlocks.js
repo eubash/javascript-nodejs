@@ -22,8 +22,14 @@ module.exports = function(md) {
         if (tokens[idx].nesting === 1) {
           let attrs = parseAttrs(tokens[idx].info, true);
           let header = attrs.header;
+          if (header) {
+            header = header.replace(/`(.*?)`/g, '<code>$1</code>');
+            if (!md.options.html) header = md.utils.escapeHtml(header);
+          } else {
+            header = t(`markit.outlined.${name}`);
+          }
           return `<div class="important important_${name}">
-            <div class="important__header"><span class="important__type">${md.utils.escapeHtml(header || t(`markit.outlined.${name}`))}</span></div>
+            <div class="important__header"><span class="important__type">${header}</span></div>
             <div class="important__content">`;
 
         } else {

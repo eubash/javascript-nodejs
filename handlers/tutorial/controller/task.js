@@ -26,31 +26,33 @@ exports.get = function *get(next) {
   var breadcrumbs = [];
 
   var parentId = task.parent._id;
-  while(true) {
+  while (true) {
     let parent = yield Article.findById(parentId, {slug: 1, title: 1, parent: 1}).exec();
     if (!parent) break;
     breadcrumbs.push({
-      url: parent.getUrl(),
+      url:   parent.getUrl(),
       title: parent.title
     });
     parentId = parent.parent;
   }
   breadcrumbs.push({
     title: 'Учебник',
-    url: '/'
+    url:   '/'
   });
   /*
-  breadcrumbs.push({
-    title: 'JavaScript.ru',
-    url: 'http://javascript.ru'
-  });
-  */
+   breadcrumbs.push({
+   title: 'JavaScript.ru',
+   url: 'http://javascript.ru'
+   });
+   */
 
   this.locals.breadcrumbs = breadcrumbs.reverse();
 
   this.locals.siteToolbarCurrentSection = "tutorial";
 
+  // No support for task.libs & head just yet (not needed?)
   this.locals.title = task.title;
+
   this.locals.task = {
     title:      task.title,
     importance: task.importance,

@@ -175,3 +175,5 @@ require.extensions['.yml'] = function(module, filename) {
 // we have a loop dep here
 config.webpack = require('./webpack')(config);
 
+const t = require('i18n');
+t.requirePhrase('site', require(path.join(config.localesRoot, 'site', config.lang + '.yml')));

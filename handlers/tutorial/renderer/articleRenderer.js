@@ -1,7 +1,10 @@
+'use strict';
+
 const _ = require('lodash');
 const config = require('config');
 const log = require('log')();
 const Article = require('../models/article');
+const Parser = require('markit/serverParser');
 
 // Порядок библиотек на странице
 // - встроенный CSS
@@ -16,26 +19,21 @@ const Article = require('../models/article');
  * @constructor
  */
 function ArticleRenderer() {
-  this.metadata = {};
 }
 
 // gets <head> content from metadata.libs & metadata.head
-ArticleRenderer.prototype.getHead = function() {
+ArticleRenderer.prototype.getHead = function(article) {
   return [].concat(
     this._libsToJsCss(
-      this._unmapLibsNames(this.metadata.libs.toArray())
+      this._unmapLibsNames(article.libs)
     ).css,
     this._libsToJsCss(
-      this._unmapLibsNames(this.metadata.libs.toArray())
+      this._unmapLibsNames(article.libs)
     ).js,
-    this.metadata.head)
-    .filter(Boolean).join("\n");
-};
-
-// js at bottom
-ArticleRenderer.prototype.getFoot = function() {
-  return this._libsToJsCss(this._unmapLibsNames(this.metadata.libs.toArray())).js
-    .filter(Boolean).join("\n");
+    article.headCss && `<style>${article.headCss}</style>`,
+    article.headJs && `<script>${article.headJs}</script>`,
+    article.headHtml)
+    .filter(Boolean).join('\n');
 };
 
 // Все библиотеки должны быть уникальны
@@ -78,7 +76,7 @@ ArticleRenderer.prototype._libsToJsCss = function(libs) {
 
   _.uniq(libs).forEach(function(lib) {
     if (!~lib.indexOf('://')) {
-      lib = 'https://js.cx/libs/' + lib;
+      lib = '//' + config.domain.static + '/libs/' + lib;
     }
 
     if (lib.slice(-3) == '.js') {
@@ -100,56 +98,48 @@ ArticleRenderer.prototype._libsToJsCss = function(libs) {
  * Render, gather metadata to the renderer object
  * @param article
  * @param options
- * options.noStripTitle disables stripping of the first header
  * options.headerLevelShift shifts all headers (to render in ebook as a subchapter0
- * @returns {{content: *, headers: *, head: *, foot: *}}
+ * @returns {{content: *, headers: *, head: *}}
  */
 ArticleRenderer.prototype.render = function* (article, options) {
 
-  // TODO!
   options = Object.create(options || {});
-  options.metadata = this.metadata;
-  options.trusted = true;
   if (options.linkHeaderTag === undefined) options.linkHeaderTag = true;
 
-  // shift off the title header
-  const node = new BodyParser(article.content, options).parseAndWrap();
+  let parser = new Parser(Object.assign({
+    resourceWebRoot: article.getResourceWebRoot()
+  }, options));
 
-  if (!options.noStripTitle) {
-    node.removeChild(node.getChild(0));
-  }
+
+  const tokens = yield* parser.parse(article.content);
 
   this.headers = [];
 
-  node.getChildren().forEach(function(child) {
-    if (child.getType() != 'HeaderTag') return;
+  for (let idx = 0; idx < tokens.length; idx++) {
+    let token = tokens[idx];
+    if (token.type == 'heading_open') {
+      let i = idx + 1;
+      while (tokens[i].type != 'heading_close') i++;
 
-    if (options.headerLevelShift) {
-      child.level += options.headerLevelShift;
+      let headingTokens = tokens.slice(idx + 1, i);
+
+      this.headers.push({
+        level: +token.tag.slice(1),
+        anchor: token.anchor,
+        title: parser.render(headingTokens)
+      });
+
+      idx = i;
     }
 
-    this.headers.push({
-      level: child.level,
-      anchor: child.anchor,
-      title: child.text
-    });
+  }
 
-  }, this);
-
-  const transformer = new ServerHtmlTransformer({
-    staticHost:      config.server.staticHost,
-    resourceWebRoot: article.getResourceWebRoot(),
-    linkHeaderTag: options.linkHeaderTag,
-    ebookType: options.ebookType
-  });
-
-  this.content = yield* transformer.transform(node, true);
+  this.content = parser.render(tokens);
 
   return {
     content: this.content,
     headers: this.headers,
-    head:    this.getHead(),
-    foot:    this.getFoot()
+    head:    this.getHead(article)
   };
 };
 
