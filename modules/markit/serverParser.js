@@ -9,12 +9,21 @@ const dataUtil = require('lib/dataUtil');
 const path = require('path');
 const mdSmartArrows = require('markdown-it-smartarrows');
 
+const onlineOfflinePlugin = require('./plugins/onlineOffline');
 const extendedCodePlugin = require('./plugins/extendedCode');
 const outlinedBlocksPlugin = require('./plugins/outlinedBlocks');
+const quotePlugin = require('./plugins/quote');
 const summaryPlugin = require('./plugins/summary');
 const comparePlugin = require('./plugins/compare');
 const sourceBlocksPlugin = require('./plugins/sourceBlocks');
-const imgAttrsPlugin = require('./plugins/imgAttrs');
+
+
+const imgDescToAttrsPlugin = require('./plugins/imgDescToAttrs');
+
+// must be before imgFiguresPlugin that transforms img token to figure
+// must be before plugins that rely on correct src
+const imgResolveRelativeSrcPlugin = require('./plugins/imgResolveRelativeSrc');
+
 const imgFiguresPlugin = require('./plugins/imgFigures');
 const headerAnchorPlugin = require('./plugins/headerAnchor');
 const headerLevelShiftPlugin = require('./plugins/headerLevelShift');
@@ -35,10 +44,10 @@ module.exports = class Parser {
   constructor(options) {
     this.options = options;
 
-    this.env = {};
+    this.env = options.env || {};
     this.md = MarkdownIt(Object.assign({
       typographer:   true,
-      blockTags:     ['iframe', 'edit', 'cut', 'codetabs', 'demo', 'summary', 'compare'].concat(require('./getPrismLanguage').allSupported),
+      blockTags:     ['iframe', 'edit', 'cut', 'codetabs', 'demo'].concat(require('./getPrismLanguage').allSupported),
       linkHeaderTag: true,
       html:          true,
       publicRoot:    config.publicRoot,
@@ -46,10 +55,13 @@ module.exports = class Parser {
       quotes:        config.lang == 'ru' ? '«»„“' : '“”‘’'
     }, options));
 
+    onlineOfflinePlugin(this.md);
+    quotePlugin(this.md);
     extendedCodePlugin(this.md);
     outlinedBlocksPlugin(this.md);
     sourceBlocksPlugin(this.md);
-    imgAttrsPlugin(this.md);
+    imgDescToAttrsPlugin(this.md);
+    imgResolveRelativeSrcPlugin(this.md);
     imgFiguresPlugin(this.md);
     headerAnchorPlugin(this.md);
     headerLevelShiftPlugin(this.md);

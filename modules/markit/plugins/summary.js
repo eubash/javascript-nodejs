@@ -17,10 +17,10 @@ module.exports = function(md) {
     render(tokens, idx) {
 
       if (tokens[idx].nesting === 1) {
-        return `<div class="summary">`;
+        return `<div class="summary"><div class="summary__content">`;
       } else {
         // closing tag
-        return '</div>\n';
+        return '</div></div>\n';
       }
     }
   });

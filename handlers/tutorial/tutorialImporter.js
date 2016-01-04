@@ -79,24 +79,6 @@ TutorialImporter.prototype.generateCaches = function*() {
   yield TaskRenderer.regenerateCaches();
 };
 
-// maybe move to separate task?
-TutorialImporter.prototype.checkIfErrorsInTokens = function(tokens) {
-
-  let errors = [];
-
-  log.debug("checking errors in parsed");
-
-  for (var i = 0; i < tokens.length; i++) {
-    let token = tokens[i];
-    if (token.type.startsWith('markdown_error')) {
-      errors.push(token.content);
-    }
-  }
-
-  if (errors.length) {
-    throw new Error('Errors: ' + errors.join());
-  }
-};
 
 
 TutorialImporter.prototype.destroyAll = function* () {
@@ -147,8 +129,6 @@ TutorialImporter.prototype.syncFolder = function*(sourceFolderPath, parent) {
   const parser = new Parser(options);
 
   const tokens = yield* parser.parse(content);
-
-  this.checkIfErrorsInTokens(tokens);
 
   data.githubLink = config.tutorialGithubBaseUrl + sourceFolderPath.slice(this.root.length);
 
@@ -219,8 +199,6 @@ TutorialImporter.prototype.syncArticle = function* (articlePath, parent) {
   const parser = new Parser(options);
 
   const tokens = yield* parser.parse(content);
-
-  this.checkIfErrorsInTokens(tokens);
 
   data.githubLink = config.tutorialGithubBaseUrl + articlePath.slice(this.root.length) + '/article.md';
 
@@ -361,9 +339,6 @@ TutorialImporter.prototype.syncTask = function*(taskPath, parent) {
 
   let tokens = yield* parser.parse(content);
 
-  this.checkIfErrorsInTokens(tokens);
-
-
   // Solution, no title, no meta
   const solutionPath = path.join(taskPath, 'solution.md');
   const solution = fs.readFileSync(solutionPath, 'utf-8').trim();
@@ -372,8 +347,6 @@ TutorialImporter.prototype.syncTask = function*(taskPath, parent) {
   log.debug("parsing solution");
 
   tokens = yield* parser.parse(solution);
-
-  this.checkIfErrorsInTokens(tokens);
 
   const task = new Task(data);
   yield task.persist();

@@ -4,12 +4,14 @@ const assert = require('assert');
 
 assert(typeof IS_CLIENT === 'undefined');
 
+
 const imageSize = require('image-size');
 
 const path = require('path');
 const tokenUtils = require('./utils/token');
 const t = require('i18n');
 const fs = require('mz/fs');
+const gm = require('gm');
 
 var LANG = require('config').lang;
 
@@ -23,33 +25,42 @@ module.exports = function* (tokens, options) {
   for (let idx = 0; idx < tokens.length; idx++) {
     let token = tokens[idx];
 
+    if (token.type == 'figure') {
+      yield* processImageOrFigure(token);
+      continue;
+    }
+
     if (token.type != 'inline') continue;
 
     for (let i = 0; i < token.children.length; i++) {
       let inlineToken = token.children[i];
       if (inlineToken.type != 'image') continue;
 
-      if (inlineToken.attrIndex('height') != -1 || inlineToken.attrIndex('width') != -1) continue;
-
-      try {
-        yield* processImage(inlineToken);
-      } catch (error) {
-        if (error instanceof SrcError) {
-          // replace image with error text
-          inlineToken.type = 'markdown_error_inline';
-          inlineToken.tag = '';
-          inlineToken.children = null;
-          inlineToken.attrs = null;
-          inlineToken.content = error.message;
-        } else {
-          throw error;
-        }
-
-      }
+      yield* processImageOrFigure(inlineToken);
     }
 
   }
 
+  function* processImageOrFigure(token) {
+
+    if (token.attrIndex('height') != -1 || token.attrIndex('width') != -1) return;
+
+    try {
+      yield* doProcessImageOrFigure(token);
+    } catch (error) {
+      if (error instanceof SrcError) {
+        // replace image with error text
+        token.type = (token.type == 'image') ? 'markdown_error_inline' : 'markdown_error_block';
+        token.tag = '';
+        token.children = null;
+        token.attrs = null;
+        token.content = error.message;
+      } else {
+        throw error;
+      }
+
+    }
+  }
 
   function srcUnderRoot(root, src) {
     let absolutePath = path.join(root, src);
@@ -65,27 +76,43 @@ module.exports = function* (tokens, options) {
 
     let sourcePath = srcUnderRoot(
       options.publicRoot,
-      path.join(options.resourceWebRoot, src)
+      src
     );
 
     // check readability
-    try {
-      let fd = yield fs.open(sourcePath, 'r');
-      yield fs.close(fd);
-    } catch (e) {
-      if (e.code == 'ENOENT' || e.code == 'EISDIR') {
-        throw new SrcError(t('markit.error.image_not_found', {src}));
-      }
+    let stat;
 
-      throw new SrcError(`${src}: ${e.message}`);
+    try {
+      stat = yield fs.stat(sourcePath);
+    } catch (e) {
+      throw new SrcError(t('markit.error.image_not_found', {src}));
     }
 
+    if (!stat.isFile()) {
+      throw new SrcError(t('markit.error.image_not_found', {src}));
+    }
+
+    if (/\.svg$/i.test(sourcePath)) {
+      try {
+        let size = yield function(callback) {
+          // GraphicsMagick fails with `gm identify my.svg`
+          gm(sourcePath).options({imageMagick: true}).identify('{"width":%w,"height":%h}', callback);
+        };
+
+        size = JSON.parse(size); // warning: no error processing
+
+        return size;
+      } catch (e) {
+        throw new SrcError(`${src}: ${e.message}`);
+      }
+    }
+
+
     try {
-      let imageInfo = yield function(callback) {
+      return yield function(callback) {
         imageSize(sourcePath, callback);
       };
 
-      return imageInfo;
     } catch (e) {
       if (e instanceof TypeError) {
         throw new SrcError(t('markit.error.image_invalid', {src}));
@@ -95,15 +122,14 @@ module.exports = function* (tokens, options) {
     }
   }
 
-  function* processImage(imgToken) {
-
-    let src = tokenUtils.attrGet(imgToken, 'src');
+  function* doProcessImageOrFigure(token) {
+    let src = tokenUtils.attrGet(token, 'src');
     if (!src) return;
 
     let imageInfo = yield* getImageInfo(src);
 
-    tokenUtils.attrReplace(imgToken, 'width', imageInfo.width);
-    tokenUtils.attrReplace(imgToken, 'height', imageInfo.height);
+    tokenUtils.attrReplace(token, 'width', imageInfo.width);
+    tokenUtils.attrReplace(token, 'height', imageInfo.height);
   }
 
 

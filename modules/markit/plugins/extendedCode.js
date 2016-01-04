@@ -13,7 +13,7 @@ module.exports = function(md) {
     let content = token.content.trim();
 
     if (content.indexOf('key:') == 0) {
-      return renderKey(content);
+      return renderKey(content.slice(4));
     }
 
     return '<code>' + md.utils.escapeHtml(content) + '</code>';

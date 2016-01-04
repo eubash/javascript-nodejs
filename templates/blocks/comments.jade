@@ -7,9 +7,8 @@
       +e.read-before-popup
         +e.read-before-popup-i
           ul
-            li= t("site.comment.help[0]")
-            li!= t("site.comment.help[1]")
-            li= t("site.comment.help[2]")
+            each comment in t('site.comment.help')
+              li!= comment
 
 
 #disqus_thread

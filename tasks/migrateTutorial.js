@@ -18,7 +18,7 @@ module.exports = function() {
 
       let entities = glob.sync('/js/javascript-tutorial/**/{task,article,solution}.md');
 
-      //entities = ['/js/javascript-tutorial/1-js/2-first-steps/21-javascript-specials/article.md'];
+      //entities = ['/js/javascript-tutorial/1-js/2-first-steps/17-function-basics/article.md'];
 
       for (var i = 0; i < entities.length; i++) {
         var entityPath = entities[i];
@@ -29,6 +29,7 @@ module.exports = function() {
         let text = migration.text;
         let head = migration.head;
 
+        console.log(entityPath, head, text, "\n\n\n\n\n");
 
         fs.writeFileSync(entityPath, text);
 
@@ -36,7 +37,6 @@ module.exports = function() {
           fs.writeFileSync(path.dirname(entityPath) + '/head.html', head);
         }
 
-        console.log(entityPath, head, text, "\n\n\n\n\n");
       }
 
     });

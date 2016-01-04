@@ -99,6 +99,7 @@ module.exports = function(md) {
       tokens[idx].type = `compare_${subType}_close`;
 
     }
+
   });
 
 
@@ -145,17 +146,17 @@ module.exports = function(md) {
       <div class="balance__title">${t('markit.compare.merits')}</div><ul class="balance__list">`;
   };
 
-  md.renderer.rules.compare_single_list_plus_close = function(tokens, idx, options, env, slf) {
+  md.renderer.rules.compare_double_list_plus_close = function(tokens, idx, options, env, slf) {
     return '</ul></div></div>';
   };
 
-  md.renderer.rules.compare_single_list_minus_open = function(tokens, idx, options, env, slf) {
+  md.renderer.rules.compare_double_list_minus_open = function(tokens, idx, options, env, slf) {
     return `<div class="balance__minuses">
       <div class="balance__content">
       <div class="balance__title">${t('markit.compare.demerits')}</div><ul class="balance__list">`;
   };
 
-  md.renderer.rules.compare_single_list_minus_close = function(tokens, idx, options, env, slf) {
+  md.renderer.rules.compare_double_list_minus_close = function(tokens, idx, options, env, slf) {
     return '</ul></div></div>';
   };
 };

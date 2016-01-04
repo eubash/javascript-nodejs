@@ -6,8 +6,14 @@ const stripIndents = require('textUtil/stripIndents');
 
 module.exports = function(text) {
 
+  text = text.replace(/[ \t]+$/gim, ''); // remove spaces
+
   text = text.replace(/\[(edit.*?)\](.*?)\[\/edit\]/g, '[$1 title="$2"]');
   text = text.replace(/\[(edit.*?)\/\]/g, '[$1]');
+
+  // remove [pre no-typography]...[/pre]
+  text = text.replace(/^\[pre.*?\]/gim, '');
+  text = text.replace(/^\[\/pre\]/gim, '');
 
   text = text.replace(/\[\]\(\/(.*?)\)/g, '<info:$1>');
   text = text.replace(/\[\]\((http.*?)\)/g, '<$1>');
@@ -45,7 +51,6 @@ module.exports = function(text) {
     else return '```' + lang + comment + '\n' + code + '\n' + '```';
   });
 
-
   // EXTRACT META...
   let meta = {};
   // importance -> meta
@@ -75,7 +80,7 @@ module.exports = function(text) {
   let codeInlineLabels = {};
 
   text = text.replace(/\n```[\s\S]*?^```/gim, function(code) {
-    let label = '~CODELABEL:' + (Math.random() * 1e7 ^ 0) + '\n';
+    let label = '~CODELABEL:' + (Math.random() * 1e8 ^ 0) + '\n';
     codeBlockLabels[label] = code;
 
     return label;
@@ -83,16 +88,17 @@ module.exports = function(text) {
 
   let r = new RegExp('`[^`\n]+`', 'gim');
   text = text.replace(r, function(code) {
-    let label = '~INLINECODE:' + (Math.random() * 1e7 ^ 0);
+    let label = '~INLINECODE:' + (Math.random() * 1e8 ^ 0);
     codeInlineLabels[label] = code;
     return label;
   });
 
   text = text.replace(/^(\[.*?\])$/gim, '\n$1\n'); // ensure that all block tags are in paragraphs
 
+
   function fixListItem(listItem) {
 
-    listItem = listItem.replace(/\n\n([*а-яё!a-z0-9])/gim, '\n\n    $1');
+    listItem = listItem.replace(/\n\n([<*!а-яёa-z0-9])/gim, '\n\n    $1');
 
     let codeLabels = listItem.match(/~CODELABEL:\d+(\n|$)/g) || [];
     for (var i = 0; i < codeLabels.length; i++) {
@@ -134,20 +140,22 @@ module.exports = function(text) {
 
   text = text.replace(/<dl>([\s\S]+?)<\/dl>/gim, function(match, list) {
 
+
     list = list.replace(/<\/dt><dd>/g, '</dt>\n<dd>');
-    list = list.replace(/<dt>\s*([\s\S]*?)\s*<\/dt>/gim, ': $1');
+    list = list.replace(/<dt>\s*([\s\S]*?)\s*<\/dt>/gim, '$1');
 
     list = list.replace(/<dd>\s*([\s\S]*?)\s*<\/dd>/gim, function(m, listItem) {
 
       //console.log("\n--------------\nLISTITEM FROM\n", listItem);
-      listItem = fixListItem('\n\n' + listItem);
+      listItem = fixListItem(listItem);
 
       //console.log("LISTITEM TO\n", listItem);
-      return listItem;
+      return ': ' + listItem.replace(/^\s+/, '') + '\n';
     });
 
     return list;
   });
+
 
   text = text.replace(/<img(.*?)>/g, function(match, attrs) {
     attrs = parseAttrs(attrs);
@@ -167,12 +175,17 @@ module.exports = function(text) {
   });
 
 
-  for (let label in codeBlockLabels) {
-    text = text.replace(label, codeBlockLabels[label] + '\n');
+  for (let label in codeInlineLabels) {
+    text = text.replace(label, escapeRegReplace(codeInlineLabels[label]));
   }
 
-  for (let label in codeInlineLabels) {
-    text = text.replace(label, codeInlineLabels[label]);
+  // code inside non-md table is not supported any more
+  text = text.replace(/<(th|td)>(.*?)<\/\1>/gim, function(match, td, content) {
+    return `<${td}>` + content.replace(/`(.*?)`/gim, '<code>$1</code>') + `</${td}>`;
+  });
+
+  for (let label in codeBlockLabels) {
+    text = text.replace(label, escapeRegReplace(codeBlockLabels[label]) + '\n');
   }
 
   // ...WITH LABELS
@@ -180,7 +193,13 @@ module.exports = function(text) {
   text = text.replace(/[ \t]+$/gim, ''); // trailing spaces
   text = text.replace(/\n{3,}/gim, '\n\n'); // many line breaks into 2
 
-  text = text.replace(/\n\[(smart|warn|ponder|summary)(.*?)\]([\s\S]*?)\[\/\1\]/g, function(match, name, attrs, content) {
+  text = text.replace(/\n\[compare\]([\s\S]*?)\[\/compare\]/g, function(match, content) {
+    // -List -> - List
+    return '\n```compare\n' + content.trim().replace(/^([-+])/gim, '$1 ') + '\n```';
+  });
+
+
+  text = text.replace(/\n\[(smart|warn|ponder|summary|online|offline|quote)(.*?)\]([\s\S]*?)\[\/\1\]/g, function(match, name, attrs, content) {
     content = content.trim();
 
     let delim = '```';
@@ -190,10 +209,6 @@ module.exports = function(text) {
     return '\n' + delim + name + (attrs ? ' ' + attrs.trim() : '') + '\n' + content + '\n' + delim;
   });
 
-  text = text.replace(/\n\[compare\]([\s\S]*?)\[\/compare\]/g, function(match, content) {
-    // -List -> - List
-    return '\n```compare\n' + content.trim().replace(/^([-+])/gim, '$1 ') + '\n```';
-  });
 
   if (Object.keys(meta).length) {
     text = yaml.safeDump(meta) + '\n---\n\n' + text.replace(/^\s*/, '');
@@ -204,4 +219,10 @@ module.exports = function(text) {
 
 function indent(code) {
   return '    ' + code.replace(/\n/gim, '\n    ');
+}
+
+// escape a string to use as a safe replace
+// otherwise $1 becomes backreference
+function escapeRegReplace(string) {
+  return string.replace(/\$/g, '$$$$'); // $ -> $$
 }

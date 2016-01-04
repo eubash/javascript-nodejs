@@ -7,13 +7,9 @@ require('lib/mongoose');
 require('tutorial').Article;
 require('tutorial').Task;
 
-const MarkdownIt = require('markdown-it');
-const loadSrcAsync = require('../loadSrcAsync');
-const loadImgSizeAsync = require('../loadImgSizeAsync');
-const resolveTutorialLinks = require('../resolveTutorialLinks');
+const Parser = require('../serverParser');
 const dataUtil = require('lib/dataUtil');
 const path = require('path');
-const mdSmartArrows = require('markdown-it-smartarrows');
 const stripYamlMetadata = require('../stripYamlMetadata');
 
 // compares removing spaces between tags
@@ -24,41 +20,7 @@ should.Assertion.add('html', function(str) {
 }, false);
 
 
-function makeMd() {
-
-  const md = MarkdownIt({
-    typographer:     true,
-    blockTags:       ['iframe', 'edit', 'cut', 'codetabs', 'demo'].concat(require('../getPrismLanguage').allSupported),
-    staticHost:      'https://js.cx',
-    resourceWebRoot: '/resources',
-    publicRoot:      __dirname,
-    linkHeaderTag: true,
-    html:            true
-  });
-
-  require('../plugins/extendedCode')(md);
-  require('../plugins/outlinedBlocks')(md);
-  require('../plugins/compare')(md);
-  require('../plugins/sourceBlocks')(md);
-  require('../plugins/imgAttrs')(md);
-  require('../plugins/imgFigures')(md);
-  require('../plugins/headerAnchor')(md);
-  require('../plugins/markdownError')(md);
-  require('../plugins/blockTags/plugin')(md);
-  require('../plugins/blockTags/iframe')(md);
-  require('../plugins/blockTags/edit')(md);
-  require('../plugins/blockTags/cut')(md);
-  require('../plugins/blockTags/codetabs')(md);
-  require('../plugins/blockTags/demo')(md);
-
-  mdSmartArrows(md);
-
-  return md;
-}
-
 function* render(text) {
-
-  const md = makeMd();
 
   let tmp;
   try {
@@ -71,12 +33,15 @@ function* render(text) {
   text = tmp.text;
   let env = {meta: tmp.meta};
 
-  const parsed = md.parse(text, env);
-  yield* loadSrcAsync(parsed, md.options);
-  yield* loadImgSizeAsync(parsed, md.options);
-  yield* resolveTutorialLinks(parsed, md.options);
+  const parser = new Parser({
+    resourceWebRoot: '/resources',
+    publicRoot: __dirname,
+    env
+  });
 
-  let result = md.renderer.render(parsed, md.options, env);
+  const tokens = yield* parser.parse(text);
+
+  let result = parser.render(tokens);
   //console.log(env);
   return result;
 
@@ -145,7 +110,7 @@ describe('MarkIt', function() {
 
   it(`notfigure ![desc](blank.png)`, function*() {
     let result = yield* render(this.test.title);
-    result.trim().should.be.eql('<p>notfigure <img src="blank.png" alt="desc" width="3" height="2"></p>');
+    result.trim().should.be.eql('<p>notfigure <img src="/resources/blank.png" alt="desc" width="3" height="2"></p>');
   });
 
   it(`notfigure ![desc](not-exists.png)`, function*() {
@@ -201,20 +166,31 @@ describe('MarkIt', function() {
     </div>`);
   });
 
-/*
-  it(`Механизм работы функций и переменных в JavaScript очень отличается от большинства языков.
-
-Чтобы его понять, мы в этой главе рассмотрим переменные и функции в глобальной области. А в следующей -- пойдём дальше.
-
-[cut]
-
-## Глобальный объект
-`, function*() {
+  it(`\`\`\`compare
++ one
+- two
+\`\`\``, function*() {
     let result = yield* render(this.test.title);
-
-    console.log(result);
+    result.trim().should.be.html(`<div class="balance">
+      <div class="balance__pluses">
+        <div class="balance__content">
+          <div class="balance__title">Достоинства</div>
+          <ul class="balance__list">
+            <li>one</li>
+          </ul>
+        </div>
+      </div>
+      <div class="balance__minuses">
+        <div class="balance__content">
+          <div class="balance__title">Недостатки</div>
+          <ul class="balance__list">
+            <li>two</li>
+          </ul>
+        </div>
+      </div>
+    </div>`);
   });
-*/
+
 
 });
 

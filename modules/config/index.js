@@ -177,3 +177,5 @@ config.webpack = require('./webpack')(config);
 
 const t = require('i18n');
 t.requirePhrase('site', require(path.join(config.localesRoot, 'site', config.lang + '.yml')));
+
+//console.log(t.i18n._storage);
