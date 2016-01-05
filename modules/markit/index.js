@@ -1,19 +1,11 @@
 'use strict';
 
-const md = require('markdown-it')({
-  blockTags: ['iframe']
-});
+exports.BasicParser = require('./basicParser');
+exports.ServerParser = require('./serverParser');
 
-require('./plugins/outlinedBlocks')(md);
-require('./plugins/sourceBlocks')(md);
-require('./plugins/blockTags')(md);
-require('./plugins/blockTags/iframe')(md);
+exports.Token = require('markdown-it/lib/token');
+exports.tokenUtils = require('./utils/token');
 
-let result = md.parse('\n[iframe src="/abc"]\n', {});
-
-let rendered = md.renderer.render(result, md.options, {});
-
-console.log(result);
-
-console.log(rendered);
+exports.stripTitle = require('./stripTitle');
+exports.stripYamlMetadata = require('./stripYamlMetadata');
 

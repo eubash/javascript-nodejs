@@ -1,5 +1,3 @@
-article_not_found: "Article \"#{path}\" not found"
-task_not_found: "Task \"#{path}\" not found"
 image_not_found: "Image \"#{src}\" not found"
 image_invalid: "Image \"#{src}\" is corrupted"
 attr_required: "Attribute \"#{attr}\" is required"

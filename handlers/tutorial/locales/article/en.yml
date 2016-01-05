@@ -8,3 +8,4 @@ tasks: Tasks
 chapter: Chapter
 lesson_of: "Lesson #{bookChildNumber} of #{bookLeadCount}"
 
+article_not_found: "Article \"#{path}\" not found"

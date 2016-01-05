@@ -12,20 +12,15 @@
 
 ## Выпуски скринкаста
 
-[warn header="Babel 5"]
+```warn header="Babel 5"
 В первых частях скринкаста используется модуль `babel-loader` версии 5, который ставится через `"npm i babel-loader@5"`.
 
 Для шестой версии Babel нужно ставить `"npm i babel-loader babel-core babel-preset-es2015"` и использовать лоадер `"babel?presets[]=es2015"`.
 
 Впрочем, в Babel 6 есть много "шероховатостей", не факт что обновление на него сейчас на него будет оправданным.
-[/warn]
-
-
-
+```
 
 ## Часть 1: Введение
-
-<no-typography>
 
 <div class="lessons-list lessons-list_screencast">
 <ol class="lessons-list__lessons">
@@ -33,11 +28,7 @@
 </ol>
 </div>
 
-</no-typography>
-
 ## Часть 2: Простая сборка
-
-<no-typography>
 
 <div class="lessons-list lessons-list_screencast">
 <ol class="lessons-list__lessons">
@@ -51,11 +42,8 @@
 <li class="lessons-list__lesson" data-mnemo="02-simple-8"><a href="#" data-video-id="ZLrzAhhbt6s">Минификация</a></li>
 </ol>
 </div>
-</no-typography>
 
 ## Часть 3: Несколько скриптов
-
-<no-typography>
 
 <div class="lessons-list lessons-list_screencast">
 <ol class="lessons-list__lessons">
@@ -68,12 +56,8 @@
 <li class="lessons-list__lesson" data-mnemo="03-multi-7"><a href="#" data-video-id="enlfe-6VQNM">Мульти-компиляция</a></li>
 </ol>
 </div>
-</no-typography>
-
 
 ## Часть 4: Продвинутые require
-
-<no-typography>
 
 <div class="lessons-list lessons-list_screencast">
 <ol class="lessons-list__lessons">
@@ -86,11 +70,9 @@
 <li class="lessons-list__lesson" data-mnemo="04-require-7"><a href="#" data-video-id="vHRvO4jn6Oc">IgnorePlugin</a></li>
 </ol>
 </div>
-</no-typography>
 
 ## Часть 5: Подключение библиотек
 
-<no-typography>
 <div class="lessons-list lessons-list_screencast">
 <ol class="lessons-list__lessons">
 <li class="lessons-list__lesson" data-mnemo="05-library-1"><a href="#" data-video-id="RdZkFNzST3c">CDN и сборка: externals</a></li>
@@ -100,11 +82,9 @@
 <li class="lessons-list__lesson" data-mnemo="05-library-5"><a href="#" data-video-id="XV1M4Pwx-Ik">expose и script-loader</a></li>
 </ol>
 </div>
-</no-typography>
 
 ## Часть 6: Стили и файлы
 
-<no-typography>
 <div class="lessons-list lessons-list_screencast">
 <ol class="lessons-list__lessons">
 <li class="lessons-list__lesson" data-mnemo="06-styles-assets-1"><a href="#" data-video-id="hkPwyt3lhbg">Компонент "меню", style-loader</a></li>
@@ -115,22 +95,18 @@
 <li class="lessons-list__lesson" data-mnemo="06-styles-assets-6"><a href="#" data-video-id="62qYFgokzdU">ExtractTextPlugin</a></li>
 </ol>
 </div>
-</no-typography>
 
 ## Часть 7: Длинное кеширование
 
-<no-typography>
 <div class="lessons-list lessons-list_screencast">
 <ol class="lessons-list__lessons">
 <li class="lessons-list__lesson" data-mnemo="07-caching-1"><a href="#" data-video-id="ZpSKNCBv_2s">Повторение: пример конфига</a></li>
 <li class="lessons-list__lesson" data-mnemo="07-caching-2"><a href="#" data-video-id="kxxFQZx3KOk">Настройки для кеширования</a></li>
 </ol>
 </div>
-</no-typography>
 
 ## Часть 8: Live reload и Hot Module Replacement
 
-<no-typography>
 <div class="lessons-list lessons-list_screencast">
 <ol class="lessons-list__lessons">
 <li class="lessons-list__lesson" data-mnemo="08-live-reload-1"><a href="#" data-video-id="e9oA1AVV-jg">Webpack Dev Server</a></li>
@@ -139,8 +115,9 @@
 <li class="lessons-list__lesson" data-mnemo="08-live-reload-4"><a href="#" data-video-id="EQhXtTOxpVk">Hot Module Replacement</a></li>
 </ol>
 </div>
-</no-typography>
 
 ## Код
 
-Код к большинству выпусков находится в здесь: [](https://github.com/iliakan/webpack-screencast), его также можно скачать и в виде [zip-файла](https://github.com/iliakan/webpack-screencast/archive/master.zip).
+Код к большинству выпусков находится в здесь: <https://github.com/iliakan/webpack-screencast>, его также можно скачать и в виде [zip-файла](https://github.com/iliakan/webpack-screencast/archive/master.zip).
+
+Обратите внимание, что зачастую одному выпуску соответствуют несколько этапов эволюции кода. Если вам нужен итоговый вариант, то смотрите последний.

@@ -4,7 +4,8 @@ const _ = require('lodash');
 const config = require('config');
 const log = require('log')();
 const Article = require('../models/article');
-const Parser = require('markit/serverParser');
+
+const TutorialParser = require('../lib/tutorialParser');
 
 // Порядок библиотек на странице
 // - встроенный CSS
@@ -106,7 +107,7 @@ ArticleRenderer.prototype.render = function* (article, options) {
   options = Object.create(options || {});
   if (options.linkHeaderTag === undefined) options.linkHeaderTag = true;
 
-  let parser = new Parser(Object.assign({
+  let parser = new TutorialParser(Object.assign({
     resourceWebRoot: article.getResourceWebRoot()
   }, options));
 

@@ -1,5 +1,3 @@
-article_not_found: "Не найдена статья \"#{path}\""
-task_not_found: "Не найдена задача \"#{path}\""
 image_not_found: "Изображение \"#{src}\" не найдено"
 image_invalid: "Изображение \"#{src}\" повреждено"
 attr_required: "Отсутствует параметр \"#{attr}\""

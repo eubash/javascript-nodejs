@@ -14,6 +14,7 @@ const money = require('money');
 const url = require('url');
 const validate = require('validate');
 const pluralize = require('textUtil/pluralize');
+const BasicParser = require('markit').BasicParser;
 
 // public.versions.json is regenerated and THEN node is restarted on redeploy
 // so it loads a new version.
@@ -125,16 +126,13 @@ function addStandardHelpers(locals, ctx) {
     }
   });
 
-  var renderSimpledown;
-  Object.defineProperty(locals, "renderSimpledown", {
-    get: function() {
-      if (!renderSimpledown) {
-        renderSimpledown = require('renderSimpledown');
-      }
-      return renderSimpledown; // attach at 1st use
-    }
-  });
+  locals.markit = function(text, options) {
+    return new BasicParser(options).render(text);
+  };
 
+  locals.markitInline = function(text, options) {
+    return new BasicParser(options).renderInline(text);
+  };
 
   locals.renderParagraphsAndLinks = require('renderParagraphsAndLinks');
 

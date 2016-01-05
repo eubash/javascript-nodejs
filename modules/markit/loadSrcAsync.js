@@ -4,9 +4,7 @@ const assert = require('assert');
 
 assert(typeof IS_CLIENT === 'undefined');
 
-const Article = require('tutorial').Article;
 const Plunk = require('plunk').Plunk;
-const Task = require('tutorial').Task;
 const path = require('path');
 const fs = require('mz/fs');
 const t = require('i18n');

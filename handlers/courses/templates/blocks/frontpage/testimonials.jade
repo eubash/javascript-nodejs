@@ -20,11 +20,11 @@
                 for raiting in [1,2,3,4,5]
                   +e('i').star ★
 
-              +e('p').testimonial-text= renderSimpledown(testimonial.content.slice(0, testimonial.cutAtLength || Infinity), {trusted: false})
+              +e('p').testimonial-text= markit(testimonial.content.slice(0, testimonial.cutAtLength || Infinity))
                 if testimonial.cutAtLength
                   =' '
                   +e('span').cut &hellip;
-                  +e('span').cuted= renderSimpledown(testimonial.content.slice(testimonial.cutAtLength), {trusted: false})
+                  +e('span').cuted= markit(testimonial.content.slice(testimonial.cutAtLength))
             +e.user
               +e.userpic
                 +e('img').userpic-img(src=testimonial.photoLink)

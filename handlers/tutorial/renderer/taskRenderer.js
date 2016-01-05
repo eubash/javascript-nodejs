@@ -4,7 +4,8 @@ const config = require('config');
 const Plunk = require('plunk').Plunk;
 const Task = require('../models/task');
 const log = require('log')();
-const Parser = require('markit/serverParser');
+
+const TutorialParser = require('../lib/tutorialParser');
 
 const t = require('i18n');
 
@@ -22,7 +23,7 @@ function TaskRenderer() {
 
 TaskRenderer.prototype.renderContent = function* (task, options) {
 
-  let parser = new Parser(Object.assign({
+  let parser = new TutorialParser(Object.assign({
     resourceWebRoot: task.getResourceWebRoot()
   }, options));
 
@@ -85,7 +86,7 @@ TaskRenderer.prototype.renderWithCache = function*(task, options) {
 
 TaskRenderer.prototype.renderSolution = function* (task, options) {
 
-  let parser = new Parser(Object.assign({
+  let parser = new TutorialParser(Object.assign({
     resourceWebRoot: task.getResourceWebRoot()
   }, options));
 

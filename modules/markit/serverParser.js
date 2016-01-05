@@ -4,7 +4,6 @@ const config = require('config');
 const MarkdownIt = require('markdown-it');
 const loadSrcAsync = require('./loadSrcAsync');
 const loadImgSizeAsync = require('./loadImgSizeAsync');
-const resolveTutorialLinks = require('./resolveTutorialLinks');
 const dataUtil = require('lib/dataUtil');
 const path = require('path');
 const mdSmartArrows = require('markdown-it-smartarrows');
@@ -39,7 +38,7 @@ const stripTitle = require('./stripTitle');
 const stripYamlMetadata = require('./stripYamlMetadata');
 const deflistPlugin = require('markdown-it-deflist');
 
-module.exports = class Parser {
+module.exports = class ServerParser {
 
   constructor(options) {
     this.options = options;
@@ -83,7 +82,6 @@ module.exports = class Parser {
     const tokens = this.md.parse(text, this.env);
     yield* loadSrcAsync(tokens, this.md.options);
     yield* loadImgSizeAsync(tokens, this.md.options);
-    yield* resolveTutorialLinks(tokens, this.md.options);
 
     return tokens;
   }

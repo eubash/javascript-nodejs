@@ -13,3 +13,5 @@ Importance: Важность
 importance: важность
 importance_help: Насколько эта задача важна для освоения материала, от 1 до 5
 solution: решение
+
+task_not_found: "Не найдена задача \"#{path}\""

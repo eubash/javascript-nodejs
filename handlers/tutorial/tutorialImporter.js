@@ -15,15 +15,14 @@ const ArticleRenderer = require('./renderer/articleRenderer');
 const TaskRenderer = require('./renderer/taskRenderer');
 const log = require('log')();
 
-const Parser = require('markit/serverParser');
-const stripTitle = require('markit/stripTitle');
-const stripYamlMetadata = require('markit/stripYamlMetadata');
+const TutorialParser = require('./lib/tutorialParser');
+const stripTitle = require('markit').stripTitle;
+const stripYamlMetadata = require('markit').stripYamlMetadata;
 
 
 function TutorialImporter(options) {
   this.root = fs.realpathSync(options.root);
-  this.onchange = options.onchange || function() {
-    };
+  this.onchange = options.onchange || function() {    };
 }
 
 TutorialImporter.prototype.sync = function* (directory) {
@@ -80,7 +79,6 @@ TutorialImporter.prototype.generateCaches = function*() {
 };
 
 
-
 TutorialImporter.prototype.destroyAll = function* () {
   yield Article.destroy({});
   yield Task.destroy({});
@@ -126,7 +124,7 @@ TutorialImporter.prototype.syncFolder = function*(sourceFolderPath, parent) {
 
   data.content = content;
 
-  const parser = new Parser(options);
+  const parser = new TutorialParser(options);
 
   const tokens = yield* parser.parse(content);
 
@@ -196,7 +194,7 @@ TutorialImporter.prototype.syncArticle = function* (articlePath, parent) {
 
   data.content = content;
 
-  const parser = new Parser(options);
+  const parser = new TutorialParser(options);
 
   const tokens = yield* parser.parse(content);
 
@@ -335,7 +333,7 @@ TutorialImporter.prototype.syncTask = function*(taskPath, parent) {
 
   data.content = content;
 
-  const parser = new Parser(options);
+  const parser = new TutorialParser(options);
 
   let tokens = yield* parser.parse(content);
 
