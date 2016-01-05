@@ -45,15 +45,15 @@ module.exports = function(md) {
     let toolbarHtml = '';
     if (token.blockTagAttrs.link) {
       toolbarHtml += `<div class="toolbar__tool">
-        <a href="${src}" target="_blank" title="${t('open.window')}" class="toolbar__button_external"></a>
+        <a href="${src}" target="_blank" title="${t('markit.iframe.open.window')}" class="toolbar__button toolbar__button_external"></a>
       </div>
       `;
     }
 
     if (token.plunk && token.blockTagAttrs.edit) {
       toolbarHtml += `<div class="toolbar__tool">
-        <a href="http://plnkr.co/edit/${token.plunk.plunkId}?p=preview" target="_blank" title="${t('open.sandbox')}"
-        data-plunk-id="${token.plunk.plunkId}" class="toolbar__button_edit"></a>
+        <a href="http://plnkr.co/edit/${token.plunk.plunkId}?p=preview" target="_blank" title="${t('markit.iframe.open.sandbox')}"
+        data-plunk-id="${token.plunk.plunkId}" class="toolbar__button toolbar__button_edit"></a>
       </div>
       `;
     }
@@ -62,7 +62,7 @@ module.exports = function(md) {
       let zipname = src.split('/').filter(Boolean).reverse()[0];
       let href = `/tutorial/zipview/${zipname}.zip?plunkId=${token.plunk.plunkId}`;
       toolbarHtml += `<div class="toolbar__tool">
-        <a href="${href}" target="_blank" title="${t('open.zip')}" class="toolbar__button_zip"></a>
+        <a href="${href}" target="_blank" title="${t('open.zip')}" class="toolbar__button toolbar__button_zip"></a>
       </div>
       `;
     }

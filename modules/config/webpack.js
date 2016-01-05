@@ -62,6 +62,7 @@ module.exports = function(config) {
     entry: {
       styles:                    config.tmpRoot + '/styles.styl',
       about:                     'about/client',
+      //markit:                    'markit/basicParser',
       auth:                      'auth/client',
       angular:                   'client/angular',
       head:                      'client/head',
@@ -162,7 +163,7 @@ module.exports = function(config) {
 
     plugins: [
       new webpack.DefinePlugin({
-        LANG: JSON.stringify(config.lang),
+        LANG:      JSON.stringify(config.lang),
         IS_CLIENT: true
       }),
 
@@ -200,6 +201,15 @@ module.exports = function(config) {
         });
 
         fs.writeFileSync(`${config.tmpRoot}/styles.styl`, content);
+      },
+
+      {
+        apply: function(compiler) {
+          compiler.plugin("done", function(stats) {
+            stats = stats.toJson();
+            fs.writeFileSync(`${config.tmpRoot}/stats.json`, JSON.stringify(stats));
+          });
+        }
       }
     ],
 
