@@ -12,6 +12,9 @@ function rtrimLines(text) {
 }
 
 function stripSpaceIndent(text) {
+
+  if (!text) return text;
+
   var stripPattern = /^ *(?=\S+)/gm;
 
   var indentLen = text.match(stripPattern)
@@ -24,6 +27,8 @@ function stripSpaceIndent(text) {
 }
 
 function stripTabIndent(text) {
+  if (!text) return text;
+
   var stripPattern = /^\t*(?=\S+)/gm;
 
   var indentLen = text.match(stripPattern)

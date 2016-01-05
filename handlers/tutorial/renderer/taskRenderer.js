@@ -1,37 +1,35 @@
-const HeaderTag = require('simpledownParser').HeaderTag;
-const BodyParser = require('simpledownParser').BodyParser;
-const ServerHtmlTransformer = require('serverHtmlTransformer');
-const CompositeTag = require('simpledownParser').CompositeTag;
+'use strict';
+
 const config = require('config');
 const Plunk = require('plunk').Plunk;
 const Task = require('../models/task');
 const log = require('log')();
+
+const TutorialParser = require('../lib/tutorialParser');
+
+const t = require('i18n');
+
+const LANG = require('config').lang;
+
+t.requirePhrase('tutorial.task', require('../locales/task/' + LANG + '.yml'));
+
 
 /**
  * Can render many articles, keeping metadata
  * @constructor
  */
 function TaskRenderer() {
-  this.metadata = {};
 }
 
 TaskRenderer.prototype.renderContent = function* (task, options) {
 
-  options = Object.create(options);
-  options.metadata = this.metadata;
-  options.trusted = true;
+  let parser = new TutorialParser(Object.assign({
+    resourceWebRoot: task.getResourceWebRoot()
+  }, options));
 
-  const node = new BodyParser(task.content, options).parseAndWrap();
+  const tokens = yield* parser.parse(task.content);
 
-  node.removeChild(node.getChild(0));
-
-  const transformer = new ServerHtmlTransformer({
-    resourceWebRoot: task.getResourceWebRoot(),
-    staticHost:      config.server.staticHost,
-    ebookType:         options.ebookType
-  });
-
-  var content = yield* transformer.transform(node, true);
+  let content = parser.render(tokens);
 
   content = yield* this.addContentPlunkLink(task, content);
   return content;
@@ -50,12 +48,9 @@ TaskRenderer.prototype.addContentPlunkLink = function*(task, content) {
       if (files[i].filename == 'test.js') hasTest = true;
     }
 
-    var title = hasTest ?
-      'Открыть песочницу с тестами для задачи.' :
-      'Открыть песочницу для задачи.';
+    var title = hasTest ? t('tutorial.task.open_task.sandbox.tests') : t('tutorial.task.open_task.sandbox.no_tests');
 
-
-    content += '<a href="' + sourcePlunk.getUrl() + '" target="_blank" data-plunk-id="' + sourcePlunk.plunkId + '">' + title + '</a>';
+    content += `<a href="${sourcePlunk.getUrl()}" target="_blank" data-plunk-id="${sourcePlunk.plunkId}">${title}</a>`;
   }
 
   return content;
@@ -91,56 +86,57 @@ TaskRenderer.prototype.renderWithCache = function*(task, options) {
 
 TaskRenderer.prototype.renderSolution = function* (task, options) {
 
-  options = Object.create(options);
-  options.metadata = this.metadata;
-  options.trusted = true;
+  let parser = new TutorialParser(Object.assign({
+    resourceWebRoot: task.getResourceWebRoot()
+  }, options));
 
-  const node = new BodyParser(task.solution, options).parseAndWrap();
-
-  var children = node.getChildren();
-
-  const transformer = new ServerHtmlTransformer({
-    resourceWebRoot: task.getResourceWebRoot(),
-    staticHost:      config.server.staticHost,
-    ebookType:         options.ebookType
-  });
+  const tokens = yield* parser.parse(task.solution);
 
   const solutionParts = [];
 
-// if no #header at start
-// no parts, single solution
-  if (!(children[0] instanceof HeaderTag)) {
-    var solution = yield* transformer.transform(node, true);
+
+  // if no #header at start
+  // no parts, single solution
+  if (tokens.length == 0 || tokens[0].type != 'heading_open') {
+    let solution = parser.render(tokens);
     solution = yield* this.addSolutionPlunkLink(task, solution);
     return solution;
   }
 
-// otherwise, split into parts
-  var currentPart;
-  for (var i = 0; i < children.length; i++) {
-    var child = children[i];
-    if (child instanceof HeaderTag) {
-      currentPart = {title: stripTags(yield transformer.transform(child, true)), content: []};
+
+  // otherwise, split into parts
+  let currentPart;
+  for (let idx = 0; idx < tokens.length; idx++) {
+    let token = tokens[idx];
+    if (token.type == 'heading_open') {
+
+      let i = idx + 1;
+      while (tokens[i].type != 'heading_close') i++;
+
+      let headingTokens = tokens.slice(idx + 1, i);
+
+      currentPart = {
+        title: stripTags(parser.render(headingTokens)),
+        content: []
+      };
       solutionParts.push(currentPart);
+      idx = i;
       continue;
     }
 
-    currentPart.content.push(child);
+    currentPart.content.push(token);
   }
 
-  for (var i = 0; i < solutionParts.length; i++) {
+  for (let i = 0; i < solutionParts.length; i++) {
     var part = solutionParts[i];
-    var child = new CompositeTag(null, part.content);
-    child.trusted = node.trusted;
-    part.content = yield* transformer.transform(child, true);
+    part.content = parser.render(part.content);
   }
 
   var solutionPartLast = solutionParts[solutionParts.length - 1];
   solutionParts[solutionParts.length - 1].content = yield* this.addSolutionPlunkLink(task, solutionPartLast.content);
 
   return solutionParts;
-}
-;
+};
 
 TaskRenderer.prototype.addSolutionPlunkLink = function*(task, solution) {
 
@@ -153,11 +149,9 @@ TaskRenderer.prototype.addSolutionPlunkLink = function*(task, solution) {
       if (files[i].filename == 'test.js') hasTest = true;
     }
 
-    var title = hasTest ?
-      'Открыть решение с тестами в песочнице.' :
-      'Открыть решение в песочнице';
+    let title = hasTest ? t('tutorial.task.open_solution.sandbox.tests') : t('tutorial.task.open_solution.sandbox.no_tests');
 
-    solution += '<a href="' + solutionPlunk.getUrl() + '" target="_blank" data-plunk-id="' + solutionPlunk.plunkId + '">' + title + '</a>';
+    solution += `<a href="${solutionPlunk.getUrl()}" target="_blank" data-plunk-id="${solutionPlunk.plunkId}">${title}</a>`;
 
   }
 

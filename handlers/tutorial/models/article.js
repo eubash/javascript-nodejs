@@ -1,10 +1,11 @@
+'use strict';
+
 const mongoose = require('mongoose');
 const mongooseTimestamp = require('lib/mongooseTimestamp');
 const ObjectId = mongoose.Schema.Types.ObjectId;
 const Schema = mongoose.Schema;
 const config = require('config');
 const path = require('path');
-const Reference = require('./reference');
 const Task = require('./task');
 const html2search = require('elastic').html2search;
 
@@ -21,9 +22,24 @@ const schema = new Schema({
     index:    true
   },
 
+
+  libs: [String],
+
+  headJs:   String,
+  headCss:  String,
+  headHtml: String,
+
   content: {
     type:     String,
-    required: true
+    validate: [
+      {
+        // allow empty content on folders
+        validator: function(value) {
+          return this.isFolder ? true : Boolean(value);
+        },
+        msg:       'Content is required'
+      }
+    ]
   },
 
   parent: {
@@ -44,7 +60,7 @@ const schema = new Schema({
   search: String,
 
   githubLink: {
-    type: String,
+    type:     String,
     required: true
   },
 
@@ -86,7 +102,7 @@ schema.methods.getUrl = function() {
 schema.methods.findParents = function*() {
   var parents = [];
   var article = this;
-  while(true) {
+  while (true) {
     article = yield Article.findById(article.parent).select('slug parent title').exec();
     if (!article) break;
     parents.push(article);

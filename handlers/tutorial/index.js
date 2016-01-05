@@ -1,5 +1,14 @@
+'use strict';
 
-var mountHandlerMiddleware = require('lib/mountHandlerMiddleware');
+const mountHandlerMiddleware = require('lib/mountHandlerMiddleware');
+
+const t = require('i18n');
+
+const LANG = require('config').lang;
+
+t.requirePhrase('tutorial.article', require('./locales/article/' + LANG + '.yml'));
+t.requirePhrase('tutorial.task', require('./locales/task/' + LANG + '.yml'));
+
 
 exports.init = function(app) {
   app.use(mountHandlerMiddleware('/', __dirname));
@@ -20,7 +29,7 @@ function addNodeIgnores(app) {
 
 
 exports.Article = require('./models/article');
-exports.ArticleRenderer = require('./renderer/articleRenderer');
-exports.Reference = require('./models/reference');
 exports.Task = require('./models/task');
+
 exports.TaskRenderer = require('./renderer/taskRenderer');
+exports.ArticleRenderer = require('./renderer/articleRenderer');

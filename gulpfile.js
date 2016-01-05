@@ -48,6 +48,8 @@ gulp.task('lint-or-die', lazyRequireTask('./tasks/lint', { src: jsSources, dieOn
 gulp.task('db:load', lazyRequireTask('./tasks/dbLoad'));
 gulp.task('db:clear', lazyRequireTask('./tasks/dbClear'));
 gulp.task('migrate:play', lazyRequireTask('./tasks/migratePlay'));
+gulp.task('migrate:md', lazyRequireTask('./tasks/migrateMd'));
+gulp.task('migrate:tutorial', lazyRequireTask('./tasks/migrateTutorial'));
 
 gulp.task('migrate:up', lazyRequireTask('migrate/tasks/up'));
 gulp.task('migrate:down', lazyRequireTask('migrate/tasks/down'));

@@ -30,7 +30,7 @@ require.extensions['.jade'] = function(module, filename) {
 
 };
 
-require('./filterSimpledown');
+require('./filterMarkit');
 
 require('./filterUglify');
 

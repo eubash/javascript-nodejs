@@ -8,7 +8,6 @@ var webpack = require('webpack');
 var CommonsChunkPlugin = require("webpack/lib/optimize/CommonsChunkPlugin");
 var WriteVersionsPlugin = require('lib/webpack/writeVersionsPlugin');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
-var I18nPlugin = require("i18n-webpack-plugin");
 var del = require('del');
 
 // 3rd party / slow to build modules
@@ -16,7 +15,6 @@ var del = require('del');
 // no es6 (for 6to5 processing) inside
 // NB: includes angular-*
 var noProcessModulesRegExp = /node_modules\/(angular|prismjs)/;
-
 
 module.exports = function(config) {
 // tutorial.js?hash
@@ -27,7 +25,6 @@ module.exports = function(config) {
       config.assetVersioning == 'file' ? `${name}.${hash}.${ext}` :
         `${name}.${ext}`;
   }
-
 
   var webpackConfig = {
     output: {
@@ -44,7 +41,8 @@ module.exports = function(config) {
       filename:   extHash("[name]", 'js'),
 
       chunkFilename: extHash("[name]-[id]", 'js'),
-      library:       '[name]'
+      library:       '[name]',
+      pathInfo:      process.env.NODE_ENV == 'development'
     },
 
     cache: process.env.NODE_ENV == 'development',
@@ -63,6 +61,7 @@ module.exports = function(config) {
     entry: {
       styles:                    config.tmpRoot + '/styles.styl',
       about:                     'about/client',
+      //markit: 'markit/basicParser',
       auth:                      'auth/client',
       angular:                   'client/angular',
       head:                      'client/head',
@@ -95,6 +94,14 @@ module.exports = function(config) {
     module: {
       loaders: [
         {
+          test:   /\.json$/,
+          loader: 'json'
+        },
+        {
+          test:   /\.yml$/,
+          loader: 'json!yaml'
+        },
+        {
           test:   /\.jade$/,
           loader: "jade?root=" + config.projectRoot + '/templates'
         },
@@ -124,6 +131,11 @@ module.exports = function(config) {
         // '/js/javascript-nodejs/node_modules/6to5-loader/index.js?modules=commonInterop!/js/javascript-nodejs/node_modules/client/head/index.js'
         {
           test: function(path) {
+            /*
+             if (path.indexOf('!') != -1) {
+             path = path.slice(path.lastIndexOf('!') + 1);
+             }
+             */
             //console.log(path);
             return noProcessModulesRegExp.test(path);
           }
@@ -143,6 +155,7 @@ module.exports = function(config) {
       // allow require('styles') which looks for styles/index.styl
       extensions: ['.js', '', '.styl'],
       alias:      {
+        config:          'client/config',
         lodash:          'lodash/dist/lodash',
         angular:         'angular/angular',
         angularRouter:   'angular-ui-router/release/angular-ui-router',
@@ -163,7 +176,7 @@ module.exports = function(config) {
 
     plugins: [
       new webpack.DefinePlugin({
-        LANG: JSON.stringify(config.lang),
+        LANG:      JSON.stringify(config.lang),
         IS_CLIENT: true
       }),
 
@@ -181,8 +194,6 @@ module.exports = function(config) {
       new WriteVersionsPlugin(path.join(config.manifestRoot, "pack.versions.json")),
 
       new ExtractTextPlugin(extHash('[name]', 'css', '[contenthash]'), {allChunks: true}),
-
-      new I18nPlugin(require(path.join(config.localesRoot, config.lang, 'translation'))),
 
       function generateStylesList() {
         // create config.tmpRoot/styles.styl with common styles & styles from handlers
@@ -203,6 +214,15 @@ module.exports = function(config) {
         });
 
         fs.writeFileSync(`${config.tmpRoot}/styles.styl`, content);
+      },
+
+      {
+        apply: function(compiler) {
+          compiler.plugin("done", function(stats) {
+            stats = stats.toJson();
+            fs.writeFileSync(`${config.tmpRoot}/stats.json`, JSON.stringify(stats));
+          });
+        }
       }
     ],
 

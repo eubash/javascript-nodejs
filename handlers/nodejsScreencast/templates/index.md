@@ -68,15 +68,14 @@
 
 Веб-приложение -- сайт с чатом, посетителями, базой данных и авторизацией.
 
-[smart header="Express 3 -> Express 4"]
+```smart header="Express 3 -> Express 4"
 Вторая часть записана с версией фреймворка express 3, сейчас уже express 4.
 Устаревшие фичи express3 в скринкасте не используются, так что это единственное существенное отличие -- в express 4 многие библиотеки вынесены отдельно из фреймворка, см. [Migrating from 3.x to 4.x](https://github.com/visionmedia/express/wiki/Migrating-from-3.x-to-4.x).
 Если вы хотите следовать скринкасту, то рекомендуется `npm i express@3`, переход на 4 будет для вас очевиден.
 
 Вторую часть можно использовать и в качестве основы для перехода к более современным фреймворкам, таким как [KoaJS](http://koajs.com).
-[/smart]
+```
 
-<no-typography>
 <div class="lessons-list lessons-list_screencast">
 <ol class="lessons-list__lessons">
 <li class="lessons-list__lesson" data-mnemo="chat-1"><a href="#" data-video-id="2Xp9yj3UIAg">Создаём костяк сайта / Express: основы и Middleware</a></li>
@@ -94,18 +93,15 @@
 <li class="lessons-list__lesson" data-mnemo="chat-13"><a href="#" data-video-id="A3TUXGI_iuM">Socket.IO + Express + авторизация</a></li>
 </ol>
 </div>
-</no-typography>
 
 Дополнительно:
 
-<no-typography>
 <div class="lessons-list lessons-list_screencast">
 <ol class="lessons-list__lessons">
 <li class="lessons-list__lesson" data-mnemo="mongo-install"><a href="#" data-video-id="fugXo7A5sNE">Установка MongoDB для Windows, пример работы</a></li>
 </ol>
 </div>
-</no-typography>
 
 ## Код
 
-Код к большинству выпусков находится в здесь: [](https://github.com/iliakan/nodejs-screencast), его также можно скачать и в виде [zip-файла](https://github.com/iliakan/nodejs-screencast/archive/master.zip).
+Код к большинству выпусков находится в здесь: <https://github.com/iliakan/nodejs-screencast>, его также можно скачать и в виде [zip-файла](https://github.com/iliakan/nodejs-screencast/archive/master.zip).

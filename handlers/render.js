@@ -9,11 +9,12 @@ const log = require('log')();
 const jade = require('lib/serverJade');
 const _ = require('lodash');
 const assert = require('assert');
-const i18n = require('i18next');
+const t = require('i18n');
 const money = require('money');
 const url = require('url');
 const validate = require('validate');
 const pluralize = require('textUtil/pluralize');
+const BasicParser = require('markit').BasicParser;
 
 // public.versions.json is regenerated and THEN node is restarted on redeploy
 // so it loads a new version.
@@ -125,18 +126,13 @@ function addStandardHelpers(locals, ctx) {
     }
   });
 
-  var renderSimpledown;
-  Object.defineProperty(locals, "renderSimpledown", {
-    get: function() {
-      if (!renderSimpledown) {
-        renderSimpledown = require('renderSimpledown');
-      }
-      return renderSimpledown; // attach at 1st use
-    }
-  });
+  locals.markit = function(text, options) {
+    return new BasicParser(options).render(text);
+  };
 
-
-  locals.renderParagraphsAndLinks = require('renderParagraphsAndLinks');
+  locals.markitInline = function(text, options) {
+    return new BasicParser(options).renderInline(text);
+  };
 
   locals.csrf = function() {
     // function, not a property to prevent autogeneration
@@ -150,7 +146,7 @@ function addStandardHelpers(locals, ctx) {
     debugger;
   };
 
-  locals.t = i18n.t;
+  locals.t = t;
   locals.bem = require('bem-jade')();
 
   locals.thumb = function(url, width, height) {

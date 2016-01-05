@@ -1,7 +1,7 @@
 +b(class=["quiz-question", quizResult && (question.correct ? "_correct_true" : "_correct_false")])
   input(type="hidden" name="type" value=question.type)
   +e.body
-    != renderSimpledown(question.content)
+    != markit(question.content)
 
     if question.type == 'single'
       +e("ul").variants
@@ -16,9 +16,9 @@
           ])
             +e("label").label
               +e("input").input(type="radio" value=num name=(!quizResult && "answer") disabled=!!quizResult checked=(variantSelected ? "checked" : undefined))
-              +e("span").input-text!= renderSimpledown(answer.title, {applyContextTypography: false})
+              +e("span").input-text!= markitInline(answer.title)
             if answer.description
-              +e.description!= renderSimpledown(answer.description, {applyContextTypography: false})
+              +e.description!= markit(answer.description)
 
 
     if question.type == 'multi'
@@ -34,9 +34,9 @@
           ])
             +e("label").label
               +e("input").input(type="checkbox" value=num name=(!quizResult && "answer") disabled=!!quizResult checked=(variantSelected ? "checked" : undefined))
-              +e("span").input-text!= renderSimpledown(answer.title, {applyContextTypography: false})
+              +e("span").input-text!= markitInline(answer.title)
             if answer.description
-              +e.description!= renderSimpledown(answer.description, {applyContextTypography: false})
+              +e.description!= markit(answer.description)
 
 
   if !quizResult

@@ -1,9 +1,10 @@
+'use strict';
+
 const config = require('config');
 const Quiz = require('../models/quiz');
 const QuizResult = require('../models/quizResult');
 const QuizStat = require('../models/quizStat');
-const formatTitle = require('simpledownParser').formatTitle;
-const renderSimpledown = require('renderSimpledown');
+const BasicParser = require('markit').BasicParser;
 
 exports.get = function*() {
 
@@ -17,29 +18,29 @@ exports.get = function*() {
   if (!sessionQuiz) {
     // let the user start a new quiz here
     // not archived!
-    var quiz = yield Quiz.findOne({
+    let quiz = yield Quiz.findOne({
       slug: this.params.slug,
       archived: false
     }).exec();
 
     if (!quiz) {
-      this.log.debug("No quiz: " + this.params.slug);
+      this.log.debug('No quiz: ' + this.params.slug);
       this.throw(404);
     }
 
     this.locals.quiz = quiz;
-    this.locals.title = formatTitle(quiz.title);
+    this.locals.title = new BasicParser().renderInline(quiz.title);
     this.body = this.render('quiz-start');
     return;
   }
 
   // we have a session quiz, but it may be archived! (user started it before the update)
   // so let's look by id
-  var quiz = yield Quiz.findById(sessionQuiz.id).exec();
+  let quiz = yield Quiz.findById(sessionQuiz.id).exec();
 
   if (!quiz) {
     // invalid id in sessionQuiz, probably db was cleared
-    this.log.debug("No quiz with id: " + sessionQuiz.id);
+    this.log.debug('No quiz with id: ' + sessionQuiz.id);
     // invalid quiz in session, delete and go /quiz
     delete this.session.quizzes[this.params.slug];
     this.redirect('/quiz');
@@ -47,9 +48,10 @@ exports.get = function*() {
   }
 
   this.locals.quiz = quiz;
-  this.locals.title = formatTitle(quiz.title);
+  this.locals.title = new BasicParser().renderInline(quiz.title);
 
-  this.log.debug("sessionQuiz", sessionQuiz);
+  console.log(quiz.title, this.locals.title);
+  this.log.debug('sessionQuiz', sessionQuiz);
 
   if (sessionQuiz.result) {
 

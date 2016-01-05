@@ -5,7 +5,7 @@ const CourseParticipant = require('../models/courseParticipant');
 const CourseGroup = require('../models/courseGroup');
 const User = require('users').User;
 const _ = require('lodash');
-const renderSimpledown = require('renderSimpledown');
+const BasicParser = require('markit').BasicParser;
 const CacheEntry = require('cache').CacheEntry;
 
 module.exports = function*(courseFeedback, user) {
@@ -62,11 +62,11 @@ function* renderFeedback(courseFeedback, user) {
       link: courseFeedback.group.teacher.getProfileUrl(),
       name: courseFeedback.group.teacher.displayName
     },
-    content:           renderSimpledown(courseFeedback.content, {trusted: false}),
+    content:           new BasicParser().render(courseFeedback.content),
     isTeacherOrAdmin:         isTeacherOrAdmin,
     isPublic:          courseFeedback.isPublic,
     number:            courseFeedback.number,
-    teacherComment:    courseFeedback.teacherComment ? renderSimpledown(courseFeedback.teacherComment, {trusted: false}) : '',
+    teacherComment:    courseFeedback.teacherComment ? new BasicParser().render(courseFeedback.teacherComment) : '',
     teacherCommentRaw: isTeacherOrAdmin ? (courseFeedback.teacherComment || '') : '',
     editLink:          authorOrAdmin ? `/courses/feedback/edit/${courseFeedback.number}` : null,
     link:              `/courses/feedback/${courseFeedback.number}`
