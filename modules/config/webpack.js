@@ -16,7 +16,6 @@ var del = require('del');
 // NB: includes angular-*
 var noProcessModulesRegExp = /node_modules\/(angular|prismjs)/;
 
-
 module.exports = function(config) {
 // tutorial.js?hash
 // tutorial.hash.js
@@ -26,7 +25,6 @@ module.exports = function(config) {
       config.assetVersioning == 'file' ? `${name}.${hash}.${ext}` :
         `${name}.${ext}`;
   }
-
 
   var webpackConfig = {
     output: {
@@ -43,7 +41,8 @@ module.exports = function(config) {
       filename:   extHash("[name]", 'js'),
 
       chunkFilename: extHash("[name]-[id]", 'js'),
-      library:       '[name]'
+      library:       '[name]',
+      pathInfo:      process.env.NODE_ENV == 'development'
     },
 
     cache: process.env.NODE_ENV == 'development',
@@ -62,7 +61,7 @@ module.exports = function(config) {
     entry: {
       styles:                    config.tmpRoot + '/styles.styl',
       about:                     'about/client',
-      //markit:                    'markit/basicParser',
+      //markit: 'markit/basicParser',
       auth:                      'auth/client',
       angular:                   'client/angular',
       head:                      'client/head',
@@ -95,6 +94,14 @@ module.exports = function(config) {
     module: {
       loaders: [
         {
+          test:   /\.json$/,
+          loader: 'json'
+        },
+        {
+          test:   /\.yml$/,
+          loader: 'json!yaml'
+        },
+        {
           test:   /\.jade$/,
           loader: "jade?root=" + config.projectRoot + '/templates'
         },
@@ -124,6 +131,11 @@ module.exports = function(config) {
         // '/js/javascript-nodejs/node_modules/6to5-loader/index.js?modules=commonInterop!/js/javascript-nodejs/node_modules/client/head/index.js'
         {
           test: function(path) {
+            /*
+             if (path.indexOf('!') != -1) {
+             path = path.slice(path.lastIndexOf('!') + 1);
+             }
+             */
             //console.log(path);
             return noProcessModulesRegExp.test(path);
           }
@@ -143,6 +155,7 @@ module.exports = function(config) {
       // allow require('styles') which looks for styles/index.styl
       extensions: ['.js', '', '.styl'],
       alias:      {
+        config:          'client/config',
         lodash:          'lodash/dist/lodash',
         angular:         'angular/angular',
         angularRouter:   'angular-ui-router/release/angular-ui-router',

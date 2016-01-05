@@ -4,7 +4,7 @@ let tokenUtils = require('../../utils/token');
 
 const t = require('i18n');
 
-var LANG = LANG || require('config').lang;
+const LANG = require('config').lang;
 
 t.requirePhrase('markit.demo', require('../../locales/demo/' + LANG + '.yml'));
 

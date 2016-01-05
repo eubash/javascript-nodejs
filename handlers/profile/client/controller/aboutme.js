@@ -1,12 +1,14 @@
 var angular = require('angular');
 var profile = angular.module('profile');
 
-var renderParagraphsAndLinks = require('renderParagraphsAndLinks');
+var BasicParser = require('markit/basicParser');
 
 profile.controller('ProfileAboutMeCtrl', ($scope, me) => {
 
   $scope.me = me;
 
-  $scope.renderParagraphsAndLinks = require('renderParagraphsAndLinks');
+  $scope.markit = function(text) {
+    return new BasicParser().render(text);
+  };
 
 });

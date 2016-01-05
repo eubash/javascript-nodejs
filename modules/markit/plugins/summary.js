@@ -8,7 +8,7 @@ const markdownItContainer = require('markdown-it-container');
 const parseAttrs = require('../utils/parseAttrs');
 const t = require('i18n');
 
-var LANG = LANG || require('config').lang;
+const LANG = require('config').lang;
 
 module.exports = function(md) {
 

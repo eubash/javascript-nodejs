@@ -55,6 +55,7 @@
     "jade": "*",
     "jade-loader": "*",
     "js-yaml": "*",
+    "json-loader": "^0.5.4",
     "koa": "^1",
     "koa-bodyparser": "^2",
     "koa-compose": "*",
@@ -128,6 +129,7 @@
     "vinyl-fs": "*",
     "vinyl-source-stream": "*",
     "webpack": "*",
+    "yaml-loader": "^0.1.0",
     "yargs": "*"
   },
   "devDependencies": {

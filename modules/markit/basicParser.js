@@ -1,5 +1,8 @@
 'use strict';
 
+
+const LANG = require('config').lang;
+
 const MarkdownIt = require('markdown-it');
 
 const mdSmartArrows = require('markdown-it-smartarrows');
@@ -13,8 +16,6 @@ const markdownErrorPlugin = require('./plugins/markdownError');
 const blockTagsPlugin = require('./plugins/blockTags/plugin');
 const hellipPlugin = require('./plugins/hellip');
 const deflistPlugin = require('markdown-it-deflist');
-
-var LANG = LANG || require('config').lang;
 
 module.exports = class BasicParser {
 

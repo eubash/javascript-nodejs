@@ -4,7 +4,7 @@ const BabelFish = require('babelfish');
 
 const i18n = new BabelFish('en');
 
-var LANG = LANG || require('config').lang;
+const LANG = require('config').lang;
 
 function t() {
   let args = [LANG];

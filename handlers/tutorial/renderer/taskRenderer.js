@@ -9,7 +9,7 @@ const TutorialParser = require('../lib/tutorialParser');
 
 const t = require('i18n');
 
-var LANG = require('config').lang;
+const LANG = require('config').lang;
 
 t.requirePhrase('tutorial.task', require('../locales/task/' + LANG + '.yml'));
 

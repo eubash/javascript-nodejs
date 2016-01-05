@@ -12,7 +12,7 @@ const extractHighlight = require('../utils/source/extractHighlight');
 const t = require('i18n');
 const getPrismLanguage = require('../getPrismLanguage');
 
-var LANG = LANG || require('config').lang;
+const LANG = require('config').lang;
 
 function rewriteFenceToSource(state) {
 

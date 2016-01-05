@@ -55,7 +55,7 @@ block profileContent
       +e.lcell
         +e.name О себе
       +e.rcell
-        +e.value!= renderParagraphsAndLinks(profileUser.aboutMe)
+        +e.value!= markit(profileUser.aboutMe)
 
   if profileUser.birthday
     +b.profile-field
