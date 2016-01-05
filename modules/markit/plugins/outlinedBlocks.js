@@ -17,14 +17,14 @@ module.exports = function(md) {
   ['warn', 'smart', 'ponder'].forEach(name => {
     md.use(markdownItContainer, name, {
       marker: '`',
-      render(tokens, idx) {
+      render(tokens, idx, options, env, slf) {
 
         if (tokens[idx].nesting === 1) {
           let attrs = parseAttrs(tokens[idx].info, true);
           let header = attrs.header;
           if (header) {
-            header = header.replace(/`(.*?)`/g, '<code>$1</code>');
-            if (!md.options.html) header = md.utils.escapeHtml(header);
+            //header = header.replace(/`(.*?)`/g, '<code>$1</code>');
+            header = md.renderInline(header);
           } else {
             header = t(`markit.outlined.${name}`);
           }

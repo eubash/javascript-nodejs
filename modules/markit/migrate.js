@@ -98,7 +98,7 @@ module.exports = function(text) {
 
   function fixListItem(listItem) {
 
-    listItem = listItem.replace(/\n\n([<*!а-яёa-z0-9])/gim, '\n\n    $1');
+    listItem = listItem.replace(/\n\n([.<*!а-яёa-z0-9])/gim, '\n\n    $1');
 
     let codeLabels = listItem.match(/~CODELABEL:\d+(\n|$)/g) || [];
     for (var i = 0; i < codeLabels.length; i++) {

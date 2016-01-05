@@ -21,7 +21,9 @@ function rewriteFenceToSource(state) {
     if (state.tokens[idx].type == 'fence') {
       let attrs = parseAttrs(state.tokens[idx].info, true);
 
-      if (getPrismLanguage.allSupported.indexOf(attrs.blockName) == -1) continue;
+      let langOrExt = attrs.blockName || '';
+
+      if (getPrismLanguage.allSupported.indexOf(langOrExt) == -1) continue;
 
       state.tokens[idx].type = 'blocktag_source';
       state.tokens[idx].blockTagAttrs = attrs;

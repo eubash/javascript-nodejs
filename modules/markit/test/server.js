@@ -54,10 +54,11 @@ describe('MarkIt', function() {
     yield* dataUtil.loadModels(path.join(__dirname, './fixture/tutorial'), {reset: true});
   });
 
+  describe('code', function() {
 
-  it(`[js src="1.js" height=300]`, function*() {
-    let result = yield* render(this.test.title);
-    result.should.be.html(`<div data-trusted="1" class="code-example" data-demo-height="300">
+    it(`[js src="1.js" height=300]`, function*() {
+      let result = yield* render(this.test.title);
+      result.should.be.html(`<div data-trusted="1" class="code-example" data-demo-height="300">
       <div class="codebox code-example__codebox">
         <div class="codebox__code" data-code="1">
         <pre class="line-numbers language-none"><code class="language-none">var a = 5</code></pre>
@@ -65,6 +66,33 @@ describe('MarkIt', function() {
       </div>
     </div>`);
 
+    });
+
+
+    it('```\ncode\n```', function*() {
+      let result = yield* render(this.test.title);
+      result.should.be.html(`<div data-trusted="1" class="code-example">
+        <div class="codebox code-example__codebox">
+          <div class="codebox__code" data-code="1">
+            <pre class="line-numbers language-none"><code class="language-none">code</code></pre>
+          </div>
+        </div>
+      </div>`);
+    });
+
+
+    it('```js\na = 5\n```\n', function*() {
+      let result = yield* render(this.test.title);
+      result.should.be.html(`<div data-trusted="1" class="code-example">
+      <div class="codebox code-example__codebox">
+        <div class="codebox__code" data-code="1">
+          <pre class="line-numbers language-javascript"><code class="language-javascript">a = 5</code></pre>
+        </div>
+      </div>
+     </div>`
+      );
+
+    });
   });
 
 
@@ -78,21 +106,8 @@ describe('MarkIt', function() {
 
   });
 
-  it('```js\na = 5\n```\n', function*() {
-    let result = yield* render(this.test.title);
-    result.should.be.html(`<div data-trusted="1" class="code-example">
-      <div class="codebox code-example__codebox">
-        <div class="codebox__code" data-code="1">
-          <pre class="line-numbers language-javascript"><code class="language-javascript">a = 5</code></pre>
-        </div>
-      </div>
-     </div>`
-    );
 
-  });
-
-
-
+/*
   it(`<info:task/task-1>`, function*() {
     let result = yield* render(this.test.title);
     result.trim().should.be.eql('<p><a href="/task/task-1">Task 1</a></p>');
@@ -102,6 +117,7 @@ describe('MarkIt', function() {
     let result = yield* render(this.test.title);
     result.trim().should.be.eql('<p><a href="/article-1.2">Article 1.2</a></p>');
   });
+  */
 
   it(`notfigure ![desc|height=100 width=200](/url)`, function*() {
     let result = yield* render(this.test.title);
@@ -152,17 +168,17 @@ describe('MarkIt', function() {
 - Поддерживается всеми распространёнными браузерами и включён по умолчанию.
 \`\`\``, function*() {
     let result = yield* render(this.test.title);
-    result.trim().should.be.html(`<div class="balance balance_single">
-    <div class="balance__minuses">
-    <div class="balance__content">
-      <div class="balance__title">Недостатки</div>
-        <ul class="balance__list">
-        <li>Полная интеграция с HTML/CSS.</li>
-        <li>Простые вещи делаются просто.</li>
-        <li>Поддерживается всеми распространёнными браузерами и включён по умолчанию.</li>
-        </ul>
-      </div>
-    </div>
+    result.trim().should.be.html(`
+    <div class="balance balance_single">
+      <div class="balance__minuses">
+        <div class="balance__content">
+          <ul class="balance__list">
+            <li>Полная интеграция с HTML/CSS.</li>
+            <li>Простые вещи делаются просто.</li>
+            <li>Поддерживается всеми распространёнными браузерами и включён по умолчанию.</li>
+          </ul>
+          </div>
+        </div>
     </div>`);
   });
 
