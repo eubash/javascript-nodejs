@@ -9,7 +9,7 @@ each section in sidebar.sections
             +e('a').link(href=link.url)= link.title
 
 +e.section
-  +e.section-title= t('Share')
+  +e.section-title= t('site.share')
   +b('a').share._tw.sidebar__share(href="https://twitter.com/share?url="+encodeURIComponent(url.href))
   //- [] encoded as %5B %5D to make validator happy
   +b('a').share._fb.sidebar__share(href="https://www.facebook.com/sharer/sharer.php?s=100&p%5Burl%5D="+encodeURIComponent(url.href))
@@ -19,5 +19,5 @@ each section in sidebar.sections
 
 if githubLink
   +e.section
-    +e('a').link(href=githubLink)= t('Edit on Github')
+    +e('a').link(href=githubLink)= t('site.edit_on_github')
 

@@ -1,3 +1,5 @@
+'use strict';
+
 var mongoose = require('mongoose');
 var mongooseTimestamp = require('lib/mongooseTimestamp');
 var ObjectId = mongoose.Schema.Types.ObjectId;
@@ -16,6 +18,12 @@ var schema = new Schema({
     type: Number
   },
 
+  libs: [String],
+
+  headJs: String,
+  headCss: String,
+  headHtml: String,
+
   slug: {
     type:     String,
     unique:   true,
@@ -31,7 +39,7 @@ var schema = new Schema({
   solution: {
     // can be empty (assuming there is a solution.view which will be autolinked)
     type:     String,
-    default: ""
+    default: ''
   },
 
   rendered: {

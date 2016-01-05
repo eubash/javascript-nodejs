@@ -1,6 +1,7 @@
 var path = require('path');
 var fs = require('fs');
 var env = process.env;
+var yaml = require('js-yaml');
 
 // NODE_ENV = development || test || production
 env.NODE_ENV = env.NODE_ENV || 'development';
@@ -165,8 +166,15 @@ var config = module.exports = {
   handlers: require('./handlers')
 };
 
+require.extensions['.yml'] = function(module, filename) {
+  module.exports = yaml.safeLoad(fs.readFileSync(filename, 'utf-8'));
+};
+
+
 // webpack config uses general config
 // we have a loop dep here
 config.webpack = require('./webpack')(config);
-require('./i18n');
+
+const t = require('i18n');
+t.requirePhrase('site', require(path.join(config.localesRoot, 'site', config.lang + '.yml')));
 

@@ -1,0 +1,8 @@
+//- __notification - потому что одновременно является элементом родителя, .sitetoolbar
++b.notification._top._info.__notification(style="display:none" id="notify-formatting-github")
+  +e.content На сайте были внутренние изменения, если увидите какие-то странности в форматировании текста – пишите на <a href="https://github.com/iliakan/javascript-nodejs/issues/new">Github</a>.
+  +e('button').close(title="Закрыть")
+
+script
+  :uglify
+    head.showTopNotification();
