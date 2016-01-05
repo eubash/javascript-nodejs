@@ -130,7 +130,8 @@
     "vinyl-fs": "*",
     "vinyl-source-stream": "*",
     "webpack": "*",
-    "yaml-loader": "^0.1.0",
+    "webpack-sources": "*",
+    "yaml-loader": "*",
     "yargs": "*"
   },
   "devDependencies": {
