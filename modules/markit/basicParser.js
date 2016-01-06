@@ -5,7 +5,7 @@ const LANG = require('config').lang;
 
 const MarkdownIt = require('markdown-it');
 
-const mdSmartArrows = require('markdown-it-smartarrows');
+const charTypographyPlugin = require('./plugins/charTypography');
 const extendedCodePlugin = require('./plugins/extendedCode');
 const outlinedBlocksPlugin = require('./plugins/outlinedBlocks');
 const sourceBlocksPlugin = require('./plugins/sourceBlocks');
@@ -14,7 +14,6 @@ const imgDescToAttrsPlugin = require('./plugins/imgDescToAttrs');
 
 const markdownErrorPlugin = require('./plugins/markdownError');
 const blockTagsPlugin = require('./plugins/blockTags/plugin');
-const hellipPlugin = require('./plugins/hellip');
 const deflistPlugin = require('markdown-it-deflist');
 
 module.exports = class BasicParser {
@@ -38,8 +37,7 @@ module.exports = class BasicParser {
     imgDescToAttrsPlugin(this.md);
     markdownErrorPlugin(this.md);
     blockTagsPlugin(this.md);
-    mdSmartArrows(this.md);
-    hellipPlugin(this.md);
+    charTypographyPlugin(this.md);
     deflistPlugin(this.md);
   }
 
