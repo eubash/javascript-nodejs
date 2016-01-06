@@ -16,43 +16,15 @@ describe("ArticleRenderer", function() {
       title:   "Title",
       slug:    "test",
       githubLink: 'http://not.exists.com',
-      content: "# Title\n\n## Title\n\nMy html *string*."
+      content: "## Title\n\n## Title\n\n"
     });
     const renderer = new ArticleRenderer();
 
     const result = yield renderer.render(article);
     result.content.replace(/\n/g, '').should.be.eql(
-      '<h2><a class="main__anchor" name="title-2" href="#title-2">Title</a></h2><p>My html <em>string</em>.</p>'
+      '<h2><a class="main__anchor" name="title" href="#title">Title</a></h2><h2><a class="main__anchor" name="title-2" href="#title-2">Title</a></h2>'
     );
 
   });
 
-  it("resolves references to article", function* () {
-
-    yield new Article({
-      title:   "Title",
-      slug:    "test",
-      weight:  0,
-      isFolder: false,
-      content: "# Title\n\n## Title\n\nMy html *string*.",
-      githubLink: 'http://not.exists.com'
-    }).persist();
-
-    const article = new Article({
-      title:   "Title",
-      slug:    "test",
-      weight:  0,
-      isFolder: false,
-      content: "# Title\n\n[](/test)",
-      githubLink: 'http://not.exists.com'
-    });
-
-    const renderer = new ArticleRenderer();
-
-    const result = yield renderer.render(article);
-    result.content.replace(/\n/g, '').should.be.eql(
-      '<p><a href="/test">Title</a></p>'
-    );
-
-  });
 });

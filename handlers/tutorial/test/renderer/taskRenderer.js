@@ -14,7 +14,7 @@ describe("TaskRenderer", function() {
   it("renderContent", function* () {
 
     const task = new Task({
-      "content":    "# Title\n\nContent",
+      "content":    "Content",
       "slug":       "unique-slug-no-plunk-link-add",
       "title":      "Title",
       "importance": 4,
@@ -42,8 +42,8 @@ describe("TaskRenderer", function() {
 
     const result = yield renderer.renderSolution(task, {});
 
-    result.should.be.eql([{title: 'Part 1', content: '<p>\nContent 1</p>'},
-      {title: 'Part 2', content: '<p>\nContent 2</p>'}])
+    result.should.be.eql([{title: 'Part 1', content: '<p>Content 1</p>\n'},
+      {title: 'Part 2', content: '<p>Content 2</p>\n'}])
 
   });
 });

@@ -11,13 +11,19 @@
 
 const parseAttrs = require('../utils/parseAttrs');
 const makeAnchor = require('textUtil/makeAnchor');
+const StringMap = require("stringmap");
+
+const t = require('i18n');
+const LANG = require('config').lang;
+
+t.requirePhrase('markit.error', require('../locales/error/' + LANG + '.yml'));
 
 // add headingToken.achor
 // not "id" attr, because rendering uses `.anchor` for the extra link OR id
 function readHeadingAnchor(state) {
 
-  //let env = state.env;
-  //if (!env.headings) env.headings = [];
+  let env = state.env;
+  if (!env.headings) env.headings = new StringMap();
 
   let tokens = state.tokens;
   for (let idx = 0; idx < state.tokens.length; idx++) {
@@ -39,11 +45,31 @@ function readHeadingAnchor(state) {
       inlineToken.content = inlineToken.content.replace(anchorReg, '');
       let lastTextToken = inlineToken.children[inlineToken.children.length - 1];
       lastTextToken.content = inlineToken.content.replace(anchorReg, '');
+
+      if (env.headings.has(anchor)) {
+        // fixed anchor, cannot change, add -1 -2
+        lastTextToken.type = 'markdown_error_inline';
+        lastTextToken.content = t('markit.error.anchor_exists', {anchor: 'anchor'});
+      } else {
+        env.headings.set(anchor, 1);
+      }
+
     } else {
       anchor = makeAnchor(inlineToken.content, state.md.options.translitAnchors);
+
+      if (env.headings.has(anchor)) {
+        // иначе просто добавляю -2, -3 ...
+        env.headings.set(anchor, env.headings.get(anchor) + 1);
+        anchor = anchor + '-' + env.headings.get(anchor);
+      } else {
+        env.headings.set(anchor, 1);
+      }
+
     }
 
+
     headingToken.anchor = anchor;
+
   }
 
 }
