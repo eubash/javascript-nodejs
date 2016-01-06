@@ -5,11 +5,11 @@ let migrate = require('../migrate');
 describe("Migrate", function() {
 
   it('edit', function() {
-    migrate('[edit src="solution"]Полный код решения[/edit]').text.should.eql(
+    migrate('[edit src="solution"]Полный код решения[/edit]').text.trim().should.eql(
       '[edit src="solution" title="Полный код решения"]'
     );
 
-    migrate('[edit src="solution"/]').text.should.eql(
+    migrate('[edit src="solution"/]').text.trim().should.eql(
       '[edit src="solution"]'
     );
   });
@@ -36,11 +36,12 @@ describe("Migrate", function() {
 \`\`\`html
 <img src="incode.png">
 \`\`\`
+
 ![|style="vertical-align:middle"](b.png)`);
   });
 
   it('demo', function() {
-    migrate(`[demo src="index.html"/] [demo /] [demo]`).text.should.be.eql('[demo src="index.html"] [demo] [demo]');
+    migrate(`[demo src="index.html"/] [demo /] [demo]`).text.trim().should.be.eql('[demo src="index.html"] [demo] [demo]');
   });
 
   it('[importance 5]', function() {
@@ -74,7 +75,7 @@ domtree
   });
 
   it('code src', function() {
-    migrate('```html\n<!--+ src="index.html" -->\n```').text.should.be.eql('[html src="index.html"]')
+    migrate('```html\n<!--+ src="index.html" -->\n```').text.trim().should.be.eql('[html src="index.html"]')
   });
 
   it('code', function() {

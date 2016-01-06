@@ -221,10 +221,6 @@ schema.statics.findTree = function* (options) {
 };
 
 schema.pre('remove', function(next) {
-  Reference.remove({article: this._id}, next);
-});
-
-schema.pre('remove', function(next) {
   Task.remove({parent: this._id}, next);
 });
 
