@@ -1,10 +1,6 @@
-// plain login
-var User = require('users').User;
-var jade = require('lib/serverJade');
-var path = require('path');
-var config = require('config');
-var sendMail = require('mailer').send;
+'use strict';
 
+const User = require('users').User;
 
 exports.get = function* () {
 
@@ -12,7 +8,11 @@ exports.get = function* () {
     this.logout();
   }
 
-  var user = yield User.findOne({
+  if (!this.isAdmin && process.env.NODE_ENV != 'development') {
+    this.throw(403);
+  }
+
+  let user = yield User.findOne({
     profileName: this.params.profileNameOrEmailOrId
   }).exec();
 

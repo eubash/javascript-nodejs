@@ -13,6 +13,22 @@ var LANG = require('config').lang;
 
 t.requirePhrase('markit.error', require('./locales/error/' + LANG + '.yml'));
 
+
+class SrcError extends Error {
+}
+
+function srcUnderRoot(root, src) {
+  let absolutePath = path.join(root, src);
+
+  if (absolutePath.slice(0, root.length + 1) != root + '/') {
+    throw new SrcError(t('markit.error.src_outside_of_root', {src}));
+  }
+
+  return absolutePath;
+}
+
+
+
 module.exports = function* (tokens, options) {
 
   let methods = {
@@ -21,20 +37,6 @@ module.exports = function* (tokens, options) {
     blocktag_iframe,
     blocktag_source
   };
-
-  class SrcError extends Error {
-  }
-
-  function srcUnderRoot(root, src) {
-    let absolutePath = path.join(root, src);
-
-    if (absolutePath.slice(0, root.length + 1) != root + '/') {
-      throw new SrcError(t('markit.error.src_outside_of_root', {src}));
-    }
-
-    return absolutePath;
-  }
-
 
   function* src2plunk(token) {
 
@@ -78,25 +80,35 @@ module.exports = function* (tokens, options) {
     token.content = content;
   }
 
+  function* walk(tokens) {
 
-  for (let idx = 0; idx < tokens.length; idx++) {
-    let token = tokens[idx];
-
-    let process = methods[token.type];
-    if (process) {
-      try {
-        yield* process(token);
-      } catch (err) {
-        if (err instanceof SrcError) {
-          token.type = 'markdown_error_block';
-          token.content = err.message;
-        } else {
-          throw err;
+    for (let idx = 0; idx < tokens.length; idx++) {
+      let token = tokens[idx];
+      let process = methods[token.type];
+      if (process) {
+        try {
+          yield* process(token);
+        } catch (err) {
+          if (err instanceof SrcError) {
+            token.type = 'markdown_error_block';
+            token.content = err.message;
+          } else {
+            throw err;
+          }
         }
       }
+
+      /* don't walk nested, no rules for them
+      if (token.children) {
+        yield* walk(token.children);
+      }
+      */
     }
+
   }
 
+
+  yield* walk(tokens);
 };
 
 

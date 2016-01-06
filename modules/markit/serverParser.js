@@ -21,7 +21,7 @@ const imgDescToAttrsPlugin = require('./plugins/imgDescToAttrs');
 
 // must be before imgFiguresPlugin that transforms img token to figure
 // must be before plugins that rely on correct src
-const imgResolveRelativeSrcPlugin = require('./plugins/imgResolveRelativeSrc');
+const resolveRelativeSrcPlugin = require('./plugins/resolveRelativeSrc');
 
 const imgFiguresPlugin = require('./plugins/imgFigures');
 const headerAnchorPlugin = require('./plugins/headerAnchor');
@@ -60,7 +60,7 @@ module.exports = class ServerParser {
     outlinedBlocksPlugin(this.md);
     sourceBlocksPlugin(this.md);
     imgDescToAttrsPlugin(this.md);
-    imgResolveRelativeSrcPlugin(this.md);
+    resolveRelativeSrcPlugin(this.md);
     imgFiguresPlugin(this.md);
     headerAnchorPlugin(this.md);
     headerLevelShiftPlugin(this.md);

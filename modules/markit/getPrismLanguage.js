@@ -9,6 +9,8 @@ let ext2language = {
 
 let languages = 'none markup javascript css coffeescript php http java ruby scss sql'.split(' ');
 
+let allSupported = Object.keys(ext2language).concat(languages);
+
 function getPrismLanguage(language) {
   language = ext2language[language] || language;
   if (languages.indexOf(language) == -1) language = 'none';
@@ -20,6 +22,6 @@ function getPrismLanguage(language) {
 getPrismLanguage.languages = languages;
 
 // all supported programming languages and extensions
-getPrismLanguage.allSupported = Object.keys(ext2language).concat(languages);
+getPrismLanguage.allSupported = allSupported;
 
 module.exports = getPrismLanguage;
