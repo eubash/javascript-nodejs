@@ -70,7 +70,7 @@ module.exports = function* (tokens, options) {
     let plunk = yield Plunk.findOne({webPath: src});
 
     if (!plunk) {
-      throw new SrcError(t('markit.error.no_such_plunk', {href}));
+      throw new SrcError(t('markit.error.no_such_plunk', {src: href}));
     }
 
     tokenUtils.attrReplace(token, 'href', plunk.getUrl());

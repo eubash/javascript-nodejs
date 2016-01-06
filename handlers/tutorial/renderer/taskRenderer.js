@@ -152,7 +152,6 @@ TaskRenderer.prototype.addSolutionPlunkLink = function*(task, solution) {
     let title = hasTest ? t('tutorial.task.open_solution.sandbox.tests') : t('tutorial.task.open_solution.sandbox.no_tests');
 
     solution += `<a href="${solutionPlunk.getUrl()}" target="_blank" data-plunk-id="${solutionPlunk.plunkId}">${title}</a>`;
-
   }
 
   return solution;

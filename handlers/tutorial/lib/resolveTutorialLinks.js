@@ -24,7 +24,7 @@ t.requirePhrase('tutorial.task', require('../locales/task/' + LANG + '.yml'));
 
 module.exports = function* (tokens) {
 
-  let isEmptyLink, isHrefLink;
+  let isEmptyLink, isAutoLink;
   for (let idx = 0; idx < tokens.length; idx++) {
     let token = tokens[idx];
 
@@ -35,22 +35,22 @@ module.exports = function* (tokens) {
       if (inlineToken.type == 'link_open') {
         let href = tokenUtils.attrGet(inlineToken, 'href');
         if (!href.startsWith('info:')) continue;
-        let pathname = href.slice(5);
+
+        let urlParsed = url.parse(href.slice(5));
+        let pathname = urlParsed.pathname;
 
         isEmptyLink = token.children[i + 1].type == 'link_close';
-        isHrefLink = token.children[i + 1].type == 'text' &&
+        isAutoLink = token.children[i + 1].type == 'text' &&
           token.children[i + 1].content == href &&
           token.children[i + 2].type == 'link_close';
 
-        if (!isEmptyLink && !isHrefLink) continue;
-
         if (pathname.startsWith('task/')) {
           let task = yield Task.findOne({slug: pathname.slice('task/'.length)}, 'slug title');
-          if (task) replaceLink(token.children, i, task.title, task.getUrl());
+          if (task) replaceLink(token.children, i, task.title, task.getUrl(), urlParsed);
           else replaceLinkWithError(token.children, i, t('tutorial.task.task_not_found', {path: pathname}));
         } else {
           let article = yield Article.findOne({slug: pathname}, 'slug title');
-          if (article) replaceLink(token.children, i, article.title, article.getUrl());
+          if (article) replaceLink(token.children, i, article.title, article.getUrl(), urlParsed);
           else replaceLinkWithError(token.children, i, t('tutorial.article.article_not_found', {path: pathname}));
         }
 
@@ -60,43 +60,31 @@ module.exports = function* (tokens) {
   }
 
   function replaceLinkWithError(children, linkOpenIdx, content) {
-    if (isEmptyLink) {
-      let token = new Token('markdown_error_inline', '', 0);
-      token.content = content;
-      token.level = children[linkOpenIdx].level;
-      children.splice(linkOpenIdx, 2, token);
-      return;
-    }
+    let token = new Token('markdown_error_inline', '', 0);
+    token.content = content;
+    token.level = children[linkOpenIdx].level;
 
-    if (isHrefLink) {
-      let token = new Token('markdown_error_inline', '', 0);
-      token.content = content;
-      token.level = children[linkOpenIdx].level;
-      children.splice(linkOpenIdx, 3, token);
-      return;
-    }
-
-    throw new Error('Should never reach here');
+    let linkCloseIdx = linkOpenIdx + 1;
+    while (children[linkCloseIdx].type != 'link_close') linkCloseIdx++;
+    children.splice(linkOpenIdx, linkCloseIdx - linkOpenIdx + 1, token);
   }
 
 
-  function replaceLink(children, linkOpenIdx, title, url) {
+  function replaceLink(children, linkOpenIdx, title, url, prevUrlParsed) {
+    if (prevUrlParsed.query) url += '?' + prevUrlParsed.query;
+    if (prevUrlParsed.hash) url += prevUrlParsed.hash;
+    
     tokenUtils.attrReplace(children[linkOpenIdx], 'href', url);
 
+    // for empty & autolinks also replace children
     if (isEmptyLink) {
       let token = new Token('text', '', 0);
       token.content = title;
       token.level = children[linkOpenIdx].level;
       children.splice(linkOpenIdx + 1, 0, token);
-      return;
-    }
-
-    if (isHrefLink) {
+    } else if (isAutoLink) {
       children[linkOpenIdx + 1].content = title;
-      return;
     }
-
-    throw new Error('Should never reach here');
   }
 
 };
