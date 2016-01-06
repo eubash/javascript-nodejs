@@ -36,12 +36,13 @@ module.exports = function(md) {
         src = state.md.options.resourceWebRoot + '/' + src;
         tokenUtils.attrReplace(imgToken, 'src', src);
       }
-
     }
+
     function link_open(token) {
       let href = tokenUtils.attrGet(token, 'href');
 
-      if (href.indexOf('://') == -1 && href[0] != '/') {
+      // don't touch info:tutorial link protocol
+      if (!href.match(/^\w+:/) && href[0] != '/') {
         href = state.md.options.resourceWebRoot + '/' + href;
         tokenUtils.attrReplace(token, 'href', href);
       }
