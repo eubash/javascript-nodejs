@@ -9,19 +9,19 @@ function rewriteInlineToBlockTags(state) {
       state.tokens[idx + 1].type == 'paragraph_close' &&
       state.tokens[idx].type == 'inline') {
 
-      let blockTagMatch = state.tokens[idx].content.trim().match(/^\[(\w+)\s*([^\]]*)\]$/);
+      let blockTagMatch = state.tokens[idx].content.trim().match(/^\[(\w+\s*[^\]]*)\]$/);
       if (!blockTagMatch) continue;
 
-      let blockTagName = blockTagMatch[1];
+      let blockTagAttrs = parseAttrs(blockTagMatch[1], true);
+
+      let blockName = blockTagAttrs.blockName;
 
       // if not supported
-      if (!state.md.options.blockTags || state.md.options.blockTags.indexOf(blockTagName) == -1) continue;
+      if (!state.md.options.blockTags || state.md.options.blockTags.indexOf(blockName) == -1) continue;
 
-      let blockTagAttrs = parseAttrs(blockTagMatch[2]);
+      let tokenType = getPrismLanguage.allSupported.indexOf(blockName) == -1 ? 'blocktag_' + blockName : 'blocktag_source';
 
-      let tokenType = getPrismLanguage.allSupported.indexOf(blockTagName) == -1 ? 'blocktag_' + blockTagName : 'blocktag_source';
-
-      let blockTagToken = new state.Token(tokenType, blockTagName, state.tokens[idx].nesting);
+      let blockTagToken = new state.Token(tokenType, blockName, state.tokens[idx].nesting);
 
       blockTagToken.blockTagAttrs = blockTagAttrs;
       blockTagToken.map = state.tokens[idx].map.slice();

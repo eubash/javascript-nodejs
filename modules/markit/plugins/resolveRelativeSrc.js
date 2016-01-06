@@ -10,6 +10,11 @@ module.exports = function(md) {
 
   md.core.ruler.push('img_resolve_relative_src', function(state) {
 
+    let methods = {
+      link_open,
+      image
+    };
+
     for (let idx = 0; idx < state.tokens.length; idx++) {
       let token = state.tokens[idx];
 
@@ -18,18 +23,27 @@ module.exports = function(md) {
       for (let i = 0; i < token.children.length; i++) {
         let inlineToken = token.children[i];
 
-        if (inlineToken.type == 'image') {
-          processImg(inlineToken);
+        if (methods[inlineToken.type]) {
+          methods[inlineToken.type](inlineToken);
         }
       }
     }
 
-    function processImg(imgToken) {
+    function image(imgToken) {
       let src = tokenUtils.attrGet(imgToken, 'src');
 
       if (src.indexOf('://') == -1 && src[0] != '/') {
         src = state.md.options.resourceWebRoot + '/' + src;
         tokenUtils.attrReplace(imgToken, 'src', src);
+      }
+
+    }
+    function link_open(token) {
+      let href = tokenUtils.attrGet(token, 'href');
+
+      if (href.indexOf('://') == -1 && href[0] != '/') {
+        href = state.md.options.resourceWebRoot + '/' + href;
+        tokenUtils.attrReplace(token, 'href', href);
       }
 
     }

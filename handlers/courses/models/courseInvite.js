@@ -12,7 +12,7 @@ var schema = new Schema({
   order: {
     type: Schema.Types.ObjectId,
     ref:  'Order'
-    // not required, invite may exist without an order ("free second time" for people who had problems?)
+    // not required, invite may exist without an order (theoretically?)
   },
 
   // when order is null,
