@@ -1,13 +1,23 @@
 'use strict';
 
+/**
+ * Loads info from external sources for
+ * sandbox: links
+ * codetabs
+ * edit
+ * iframe edit
+ * [js src...] (for editing)
+ *
+ * @type {ok|exports|module.exports}
+ */
+
 const assert = require('assert');
-
-assert(typeof IS_CLIENT === 'undefined');
-
 const Plunk = require('plunk').Plunk;
 const path = require('path');
 const fs = require('mz/fs');
 const t = require('i18n');
+
+const tokenUtils = require('./utils/token');
 
 var LANG = require('config').lang;
 
@@ -28,14 +38,14 @@ function srcUnderRoot(root, src) {
 }
 
 
-
 module.exports = function* (tokens, options) {
 
   let methods = {
     blocktag_codetabs: src2plunk,
     blocktag_edit: src2plunk,
     blocktag_iframe,
-    blocktag_source
+    blocktag_source,
+    link_open
   };
 
   function* src2plunk(token) {
@@ -49,6 +59,21 @@ module.exports = function* (tokens, options) {
     }
 
     token.plunk = plunk;
+  }
+
+  function* link_open(token) {
+    let href = tokenUtils.attrGet(token, 'href');
+    if (!href.startsWith('sandbox:')) return;
+
+    let src = path.join(options.resourceWebRoot, href.slice('sandbox:'.length));
+
+    let plunk = yield Plunk.findOne({webPath: src});
+
+    if (!plunk) {
+      throw new SrcError(t('markit.error.no_such_plunk', {href}));
+    }
+
+    tokenUtils.attrReplace(token, 'href', plunk.getUrl());
   }
 
   function* blocktag_iframe(token) {
@@ -80,7 +105,7 @@ module.exports = function* (tokens, options) {
     token.content = content;
   }
 
-  function* walk(tokens) {
+  function* walk(tokens, isInline) {
 
     for (let idx = 0; idx < tokens.length; idx++) {
       let token = tokens[idx];
@@ -90,7 +115,7 @@ module.exports = function* (tokens, options) {
           yield* process(token);
         } catch (err) {
           if (err instanceof SrcError) {
-            token.type = 'markdown_error_block';
+            token.type = isInline ? 'markdown_error_inline' : 'markdown_error_block';
             token.content = err.message;
           } else {
             throw err;
@@ -98,11 +123,10 @@ module.exports = function* (tokens, options) {
         }
       }
 
-      /* don't walk nested, no rules for them
       if (token.children) {
-        yield* walk(token.children);
+        yield* walk(token.children, true);
       }
-      */
+
     }
 
   }

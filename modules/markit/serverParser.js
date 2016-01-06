@@ -5,8 +5,6 @@ const MarkdownIt = require('markdown-it');
 const loadSrcAsync = require('./loadSrcAsync');
 const loadImgSizeAsync = require('./loadImgSizeAsync');
 const dataUtil = require('lib/dataUtil');
-const path = require('path');
-const mdSmartArrows = require('markdown-it-smartarrows');
 
 const onlineOfflinePlugin = require('./plugins/onlineOffline');
 const extendedCodePlugin = require('./plugins/extendedCode');
@@ -33,7 +31,7 @@ const editPlugin = require('./plugins/blockTags/edit');
 const cutPlugin = require('./plugins/blockTags/cut');
 const codeTabsPlugin = require('./plugins/blockTags/codetabs');
 const demoPlugin = require('./plugins/blockTags/demo');
-const hellipPlugin = require('./plugins/hellip');
+const charTypographyPlugin = require('./plugins/charTypography');
 const stripTitle = require('./stripTitle');
 const stripYamlMetadata = require('./stripYamlMetadata');
 const deflistPlugin = require('markdown-it-deflist');
@@ -73,8 +71,7 @@ module.exports = class ServerParser {
     demoPlugin(this.md);
     summaryPlugin(this.md);
     comparePlugin(this.md);
-    mdSmartArrows(this.md);
-    hellipPlugin(this.md);
+    charTypographyPlugin(this.md);
     deflistPlugin(this.md);
   }
 
