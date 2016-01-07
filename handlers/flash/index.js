@@ -26,7 +26,8 @@ exports.init = function(app) {
 
     // note that this.session can be null
     // (logout does that)
-    if (this.session && Object.keys(this.session.flash).length === 0) {
+    // note that this.session.flash may not exist (if session just created)
+    if (this.session && this.session.flash && Object.keys(this.session.flash).length === 0) {
       // don't write empty new flash
       delete this.session.flash;
     }

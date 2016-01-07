@@ -80,7 +80,9 @@ var schema = new Schema({
   aboutLink:  {
     type:      String,
     validate:  [
-      function(value) { return value ? validate.patterns.webpageUrl.test(value) : true; },
+      function(value) {
+        return value ? validate.patterns.webpageUrl.test(value) : true;
+      },
       "Некорректный URL страницы."
     ],
     maxlength: 4 * 1024
