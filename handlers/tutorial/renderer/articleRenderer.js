@@ -16,24 +16,41 @@ const TutorialParser = require('../lib/tutorialParser');
 // - библиотеки JS
 
 /**
- * Can render many articles, keeping metadata
+ * Can render many articles, joining metadata
  * @constructor
  */
 function ArticleRenderer() {
+  this.libs = [];
+  this.headCss = [];
+  this.headJs = [];
+  this.headHtml = [];
+
+  Object.defineProperties(this, {
+    headers:{
+      get() {
+        throw new Error("Deprecated get headers");
+      }
+    },
+    content:{
+      get() {
+        throw new Error("Deprecated get content");
+      }
+    }
+  });
 }
 
 // gets <head> content from metadata.libs & metadata.head
-ArticleRenderer.prototype.getHead = function(article) {
+ArticleRenderer.prototype.getHead = function() {
   return [].concat(
     this._libsToJsCss(
-      this._unmapLibsNames(article.libs)
+      this._unmapLibsNames(this.libs)
     ).css,
     this._libsToJsCss(
-      this._unmapLibsNames(article.libs)
+      this._unmapLibsNames(this.libs)
     ).js,
-    article.headCss && `<style>${article.headCss}</style>`,
-    article.headJs && `<script>${article.headJs}</script>`,
-    article.headHtml)
+    this.headCss.length && `<style>${this.headCss.join('\n')}</style>`,
+    this.headJs.length && `<script>${this.headJs.join('\n')}</script>`,
+    this.headHtml.join('\n'))
     .filter(Boolean).join('\n');
 };
 
@@ -114,7 +131,7 @@ ArticleRenderer.prototype.render = function* (article, options) {
 
   const tokens = yield* parser.parse(article.content);
 
-  this.headers = [];
+  let headers = [];
 
   for (let idx = 0; idx < tokens.length; idx++) {
     let token = tokens[idx];
@@ -124,7 +141,7 @@ ArticleRenderer.prototype.render = function* (article, options) {
 
       let headingTokens = tokens.slice(idx + 1, i);
 
-      this.headers.push({
+      headers.push({
         level: +token.tag.slice(1),
         anchor: token.anchor,
         title: parser.render(headingTokens)
@@ -135,12 +152,27 @@ ArticleRenderer.prototype.render = function* (article, options) {
 
   }
 
-  this.content = parser.render(tokens);
+  let content = parser.render(tokens);
+
+  for (var i = 0; i < article.libs.length; i++) {
+    this.libs.push(article.libs[i]);
+  }
+
+  if (article.headCss) {
+    this.headCss.push(article.headCss);
+  }
+  if (article.headJs) {
+    this.headJs.push(article.headJs);
+  }
+  if (article.headHtml) {
+    this.headHtml.push(article.headHtml);
+  }
+
 
   return {
-    content: this.content,
-    headers: this.headers,
-    head:    this.getHead(article)
+    content: content,
+    headers: headers,
+    head:    this.getHead()
   };
 };
 
