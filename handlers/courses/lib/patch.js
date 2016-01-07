@@ -31,9 +31,16 @@ module.exports = function*() {
 
     this.log.debug("Incoming emails", emails);
 
-    // ignore the email if it's a participant (old orders, invite had no order) OR invite was accepted
+    // email belongs to a participant
+    // if invite for it was accepted (user's email may change, but invite still was accepted)
+    // OR if it's participant (for old orders, invite had no order)
+    let participatingEmails = _.unique(
+      Object.keys(participantsByEmail).concat(Object.keys(invitesAcceptedByEmail))
+    );
+
+    // clean up submitted emails from participants
     emails = emails.filter(function throwAwayParticipantsInSubmitted(email) {
-      return !(email in participantsByEmail) && !(email in invitesAcceptedByEmail);
+      return participatingEmails.indexOf(email) != -1;
     });
 
     this.log.debug("Incoming emails except participants", emails);
@@ -41,7 +48,7 @@ module.exports = function*() {
     // create a new emails list
     // first, take participants from the order:
     let newEmails = this.order.data.emails.filter(function keepParticipantsInOrder(email) {
-      return email in participantsByEmail;
+      return participatingEmails.indexOf(email) != -1;
     });
 
     this.log.debug("Order participant emails", newEmails);
