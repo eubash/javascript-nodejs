@@ -121,13 +121,13 @@ ArticleRenderer.prototype._libsToJsCss = function(libs) {
  */
 ArticleRenderer.prototype.render = function* (article, options) {
 
-  options = Object.create(options || {});
+  options = Object.assign({
+    resourceWebRoot: article.getResourceWebRoot()
+  }, options || {});
+
   if (options.linkHeaderTag === undefined) options.linkHeaderTag = true;
 
-  let parser = new TutorialParser(Object.assign({
-    resourceWebRoot: article.getResourceWebRoot()
-  }, options));
-
+  let parser = new TutorialParser(options);
 
   const tokens = yield* parser.parse(article.content);
 
