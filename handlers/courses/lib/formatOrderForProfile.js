@@ -1,33 +1,40 @@
-var CourseGroup = require('courses').CourseGroup;
-var CourseParticipant = require('courses').CourseParticipant;
-var User = require('users').User;
-var _ = require('lodash');
-var getOrderInfo = require('payments').getOrderInfo;
-var paymentMethods = require('./paymentMethods');
+'use strict';
+
+let CourseGroup = require('courses').CourseGroup;
+let CourseParticipant = require('courses').CourseParticipant;
+let CourseInvite = require('courses').CourseInvite;
+let User = require('users').User;
+let _ = require('lodash');
+let getOrderInfo = require('payments').getOrderInfo;
+let paymentMethods = require('./paymentMethods');
 
 module.exports = function* formatCourseOrder(order) {
 
-  var group = yield CourseGroup.findById(order.data.group).populate('course');
+  let group = yield CourseGroup.findById(order.data.group).populate('course');
 
   if (!group) {
     this.log.error("Not found group for order", order.toObject());
     this.throw(404);
   }
 
-  var users = yield User.find({
-    email: {
-      $in: order.data.emails
-    }
+  let groupParticipants = yield CourseParticipant.find({
+    group: order.data.group
+  }).populate('user');
+
+  let groupParticipantsByEmail = {};
+  for (let key in groupParticipants) {
+    let participant = groupParticipants[key];
+    groupParticipantsByEmail[participant.user.email] = participant;
+  }
+
+  let invitesAccepted = yield CourseInvite.find({
+    order: order._id,
+    accepted: true
   });
 
-  var usersByEmail = _.indexBy(users, 'email');
+  let invitesAcceptedByEmail = _.indexBy(invitesAccepted, 'email');
 
-  var groupParticipants = yield CourseParticipant.find({group: order.data.group});
-
-  var groupParticipantsByUser = _.indexBy(groupParticipants, 'user');
-
-
-  var orderToShow = {
+  let orderToShow = {
     created:      order.created,
     title:        group.title,
     number:       order.number,
@@ -38,17 +45,15 @@ module.exports = function* formatCourseOrder(order) {
     contactPhone: order.data.contactPhone,
     courseUrl:    group.course.getUrl(),
     participants: order.data.emails.map(function(email) {
-      //console.log("usersByEmail[email]", email, usersByEmail[email]);
-
       return {
         email:    email,
-        inGroup: Boolean(usersByEmail[email] && groupParticipantsByUser[usersByEmail[email]._id])
+        inGroup: Boolean(groupParticipantsByEmail[email] || invitesAcceptedByEmail[email])
       };
     })
 
   };
 
-  var orderInfo = yield* getOrderInfo(order);
+  let orderInfo = yield* getOrderInfo(order);
 
   orderToShow.orderInfo = _.pick(orderInfo, ['status', 'statusText', 'descriptionProfile']);
 

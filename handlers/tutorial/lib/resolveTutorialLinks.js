@@ -73,7 +73,7 @@ module.exports = function* (tokens) {
   function replaceLink(children, linkOpenIdx, title, url, prevUrlParsed) {
     if (prevUrlParsed.query) url += '?' + prevUrlParsed.query;
     if (prevUrlParsed.hash) url += prevUrlParsed.hash;
-    
+
     tokenUtils.attrReplace(children[linkOpenIdx], 'href', url);
 
     // for empty & autolinks also replace children

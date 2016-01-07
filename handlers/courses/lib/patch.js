@@ -1,6 +1,7 @@
 "use strict";
 
 const CourseParticipant = require('../models/courseParticipant');
+const CourseInvite = require('courses').CourseInvite;
 const _ = require('lodash');
 const sendOrderInvites = require('./sendOrderInvites');
 const Order = require('payments').Order;
@@ -9,13 +10,20 @@ const Order = require('payments').Order;
 module.exports = function*() {
 
   //var group = yield CourseGroup.findById(this.order.data.group).exec();
-  var participants = yield CourseParticipant.find({
+  let participants = yield CourseParticipant.find({
     group: this.order.data.group
   }).populate('user');
 
-  var participantsByEmail = _.indexBy(participants, function(participant) {
+  let participantsByEmail = _.indexBy(participants, function(participant) {
     return participant.user.email;
   });
+
+  const invitesAccepted = yield CourseInvite.find({
+    order: this.order._id,
+    accepted: true
+  });
+
+  const invitesAcceptedByEmail = _.indexBy(invitesAccepted, 'email');
 
   if ("emails" in this.request.body) {
 
@@ -23,16 +31,16 @@ module.exports = function*() {
 
     this.log.debug("Incoming emails", emails);
 
-    // ignore the email if it's a participant
+    // ignore the email if it's a participant (old orders, invite had no order) OR invite was accepted
     emails = emails.filter(function throwAwayParticipantsInSubmitted(email) {
-      return !(email in participantsByEmail);
+      return !(email in participantsByEmail) && !(email in invitesAcceptedByEmail);
     });
 
     this.log.debug("Incoming emails except participants", emails);
 
     // create a new emails list
     // first, take participants from the order:
-    var newEmails = this.order.data.emails.filter(function keepParticipantsInOrder(email) {
+    let newEmails = this.order.data.emails.filter(function keepParticipantsInOrder(email) {
       return email in participantsByEmail;
     });
 
@@ -78,7 +86,7 @@ module.exports = function*() {
   yield this.order.persist();
 
 
-  var invites = [];
+  let invites = [];
   if (this.order.status == Order.STATUS_SUCCESS) {
     invites = yield* sendOrderInvites(this.order);
   }
