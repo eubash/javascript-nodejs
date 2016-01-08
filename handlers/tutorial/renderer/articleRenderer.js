@@ -4,7 +4,6 @@ const _ = require('lodash');
 const config = require('config');
 const log = require('log')();
 const Article = require('../models/article');
-
 const TutorialParser = require('../lib/tutorialParser');
 
 // Порядок библиотек на странице
@@ -24,6 +23,10 @@ function ArticleRenderer() {
   this.headCss = [];
   this.headJs = [];
   this.headHtml = [];
+
+  // shared across all renderings
+  // shared headingsMap to prevent same ids
+  this.env = {};
 
   Object.defineProperties(this, {
     headers:{
@@ -122,7 +125,8 @@ ArticleRenderer.prototype._libsToJsCss = function(libs) {
 ArticleRenderer.prototype.render = function* (article, options) {
 
   options = Object.assign({
-    resourceWebRoot: article.getResourceWebRoot()
+    resourceWebRoot: article.getResourceWebRoot(),
+    env: this.env
   }, options || {});
 
   if (options.linkHeaderTag === undefined) options.linkHeaderTag = true;
