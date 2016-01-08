@@ -23,7 +23,7 @@ t.requirePhrase('markit.error', require('../locales/error/' + LANG + '.yml'));
 function readHeadingAnchor(state) {
 
   let env = state.env;
-  if (!env.headings) env.headings = new StringMap();
+  if (!env.headingsMap) env.headingsMap = new StringMap();
 
   let tokens = state.tokens;
   for (let idx = 0; idx < state.tokens.length; idx++) {
@@ -46,23 +46,23 @@ function readHeadingAnchor(state) {
       let lastTextToken = inlineToken.children[inlineToken.children.length - 1];
       lastTextToken.content = inlineToken.content.replace(anchorReg, '');
 
-      if (env.headings.has(anchor)) {
+      if (env.headingsMap.has(anchor)) {
         // fixed anchor, cannot change, add -1 -2
         lastTextToken.type = 'markdown_error_inline';
         lastTextToken.content = t('markit.error.anchor_exists', {anchor: 'anchor'});
       } else {
-        env.headings.set(anchor, 1);
+        env.headingsMap.set(anchor, 1);
       }
 
     } else {
       anchor = makeAnchor(inlineToken.content, state.md.options.translitAnchors);
 
-      if (env.headings.has(anchor)) {
+      if (env.headingsMap.has(anchor)) {
         // иначе просто добавляю -2, -3 ...
-        env.headings.set(anchor, env.headings.get(anchor) + 1);
-        anchor = anchor + '-' + env.headings.get(anchor);
+        env.headingsMap.set(anchor, env.headingsMap.get(anchor) + 1);
+        anchor = anchor + '-' + env.headingsMap.get(anchor);
       } else {
-        env.headings.set(anchor, 1);
+        env.headingsMap.set(anchor, 1);
       }
 
     }
