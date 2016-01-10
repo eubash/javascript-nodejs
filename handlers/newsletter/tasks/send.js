@@ -1,3 +1,5 @@
+'use strict';
+
 var co = require('co');
 var fs = require('fs');
 var log = require('log')();
