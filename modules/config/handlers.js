@@ -47,8 +47,9 @@ var handlers = [
   process.env.NODE_ENV == 'development' && 'dev',
 
   'users', 'auth', 'ebook', 'donate', 'cache', 'search',
+  'staticPage', // must be before courses & other arbitrary url stuff
   'profile', 'jb', 'play', 'nodejsScreencast', 'webpackScreencast', 'about', 'imgur',
-  'profileGuest', 'quiz', 'currencyRate', 'payments', 'downloadByLink', 'staticPage',
+  'profileGuest', 'quiz', 'currencyRate', 'payments', 'downloadByLink',
   'newsletter', 'mailer', 'courses'
 ];
 
