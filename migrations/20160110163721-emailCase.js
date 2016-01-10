@@ -22,10 +22,6 @@ exports.up = function*() {
     }
   }
 
-  emailsMap = {
-    'iliakan@gmail.com': ['iliakan@gmail.com', 'mk@javascript.ru']
-  };
-
   for (let email in emailsMap) {
     let emailMapItem = emailsMap[email];
 
@@ -40,10 +36,6 @@ exports.up = function*() {
     });
   }
 
-  console.log(emailsMap);
-
-
-  process.exit(1);
 };
 
 exports.down = function*() {
