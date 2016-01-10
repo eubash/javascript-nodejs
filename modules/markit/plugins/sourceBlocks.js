@@ -93,10 +93,10 @@ module.exports = function(md) {
       toolbarHtml = `
         <div class="toolbar codebox__toolbar">
           <div class="toolbar__tool">
-            <a href="#" title="${t(lang == 'js' ? 'run' : 'show')}" data-action="run" class="toolbar__button toolbar__button_run"></a>
+            <a href="#" title="${t(lang == 'js' ? 'markit.code.run' : 'markit.code.show')}" data-action="run" class="toolbar__button toolbar__button_run"></a>
           </div>
           <div class="toolbar__tool">
-            <a href="#" title="${t('open.sandbox')}" target="_blank" data-action="edit" class="toolbar__button toolbar__button_edit"></a>
+            <a href="#" title="${t('markit.code.open.sandbox')}" target="_blank" data-action="edit" class="toolbar__button toolbar__button_edit"></a>
           </div>
         </div>`;
     }
