@@ -30,6 +30,11 @@ module.exports = {
       fromName:  'Илья Кантор (JavaScript.ru)',
       signature: "<em>Успешной разработки!<br>Илья Кантор</em>"
     },
+    riakobchuk: {
+      fromEmail: 'r.iakobchuk@javascript.ru',
+      fromName:  'Роман Якобчук (JavaScript.ru)',
+      signature: "<em>Успешной разработки!<br>Роман Якобчук</em>"
+    },
     ssuvorov: {
       fromEmail: 's.suvorov@javascript.ru',
       fromName:  'Степан Суворов (JavaScript.ru)',
