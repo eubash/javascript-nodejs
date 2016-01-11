@@ -4,10 +4,6 @@ const User = require('users').User;
 
 exports.get = function* () {
 
-  if (this.user) {
-    this.logout();
-  }
-
   if (!this.user.isAdmin && process.env.NODE_ENV != 'development') {
     this.throw(403);
   }
@@ -27,8 +23,6 @@ exports.get = function* () {
       user = yield User.findById(this.params.profileNameOrEmailOrId).exec();
     } catch(e) {}
   }
-
-  console.log(user);
 
   if (!user) this.throw(404);
 
