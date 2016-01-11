@@ -42,25 +42,27 @@ module.exports = function*(order) {
 
   gutil.log("Canceling " + order.number);
 
-  var orderUser = yield User.findById(order.user).exec();
+  var orderUser = yield User.findById(order.user);
   var orderGroup = yield CourseGroup.findById(order.data.group).exec();
 
   assert(orderGroup);
   assert(orderUser);
 
-  yield* mailer.send({
-    from:                         'orders',
-    templatePath:                 path.join(__dirname, '../templates/email/orderCancel'),
-    to:                           [{email: orderUser.email}],
-    orderSuccessSameGroupAndUser: orderSuccessSameGroupAndUser,
-    orderUser:                    orderUser,
-    orderGroup:                   orderGroup,
-    profileOrdersLink:            config.server.siteHost + orderUser.getProfileUrl() + '/orders',
-    order:                        order,
-    subject:                      "[Курсы, система регистрации] Отмена заказа " + order.number + " на сайте javascript.ru"
-  });
+  if (!orderUser.deleted) {
+    yield* mailer.send({
+      from:                         'orders',
+      templatePath:                 path.join(__dirname, '../templates/email/orderCancel'),
+      to:                           [{email: orderUser.email}],
+      orderSuccessSameGroupAndUser: orderSuccessSameGroupAndUser,
+      orderUser:                    orderUser,
+      orderGroup:                   orderGroup,
+      profileOrdersLink:            config.server.siteHost + orderUser.getProfileUrl() + '/orders',
+      order:                        order,
+      subject:                      "[Курсы, система регистрации] Отмена заказа " + order.number + " на сайте javascript.ru"
+    });
 
-  gutil.log("Sent letter to " + orderUser.email);
+    gutil.log("Sent letter to " + orderUser.email);
+  }
 
 
   yield order.persist({

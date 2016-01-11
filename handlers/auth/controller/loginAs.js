@@ -8,7 +8,7 @@ exports.get = function* () {
     this.logout();
   }
 
-  if (!this.isAdmin && process.env.NODE_ENV != 'development') {
+  if (!this.user.isAdmin && process.env.NODE_ENV != 'development') {
     this.throw(403);
   }
 
