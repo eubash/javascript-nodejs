@@ -1,7 +1,7 @@
 'use strict';
 
 // 'my=5 test=3 bla="my "test"'  -> my=5 test=3 bla="my "  (test is not matched)
-const attrsReg = /(\w+)(?:=(?:'((?:\\'|[^'])*)'|"((?:\\"|[^"])*)"|(\S+))|(?:\s|$))/g;
+const attrsReg = /([\w-]+)(?:=(?:'((?:\\'|[^'])*)'|"((?:\\"|[^"])*)"|(\S+))|(?:\s|$))/g;
 
 module.exports = function(attrs, withBlockName) {
   const attrsObject = {};
