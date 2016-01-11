@@ -52,7 +52,6 @@ module.exports = function(md) {
 
     token.attrPush([ 'class', 'code-example' ]);
 
-    console.log(attrs);
     if (attrs['no-strict']) {
       token.attrPush(['data-no-strict', 1]);
     }
