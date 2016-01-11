@@ -14,6 +14,9 @@ const getPrismLanguage = require('../getPrismLanguage');
 
 const LANG = require('config').lang;
 
+t.requirePhrase('markit.code', require('../locales/code/' + LANG + '.yml'));
+
+
 function rewriteFenceToSource(state) {
 
   for (var idx = 0; idx < state.tokens.length; idx++) {
@@ -49,6 +52,7 @@ module.exports = function(md) {
 
     token.attrPush([ 'class', 'code-example' ]);
 
+    console.log(attrs);
     if (attrs['no-strict']) {
       token.attrPush(['data-no-strict', 1]);
     }
