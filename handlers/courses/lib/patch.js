@@ -14,6 +14,10 @@ module.exports = function*() {
     group: this.order.data.group
   }).populate('user');
 
+  this.log.debug("participants", participants.map(p => {
+    return {email: p.user.email, user: p.user.profileName};
+  }));
+
   let participantsByEmail = _.indexBy(participants, function(participant) {
     return participant.user.email;
   });
@@ -22,6 +26,8 @@ module.exports = function*() {
     order: this.order._id,
     accepted: true
   });
+
+  this.log.debug("invitesAccepted", invitesAccepted);
 
   const invitesAcceptedByEmail = _.indexBy(invitesAccepted, 'email');
 
@@ -38,9 +44,11 @@ module.exports = function*() {
       Object.keys(participantsByEmail).concat(Object.keys(invitesAcceptedByEmail))
     );
 
+    this.log.debug("Participanting emails", participatingEmails.sort());
+
     // clean up submitted emails from participants
     emails = emails.filter(function throwAwayParticipantsInSubmitted(email) {
-      return participatingEmails.indexOf(email) != -1;
+      return participatingEmails.indexOf(email) == -1;
     });
 
     this.log.debug("Incoming emails except participants", emails);
@@ -48,7 +56,7 @@ module.exports = function*() {
     // create a new emails list
     // first, take participants from the order:
     let newEmails = this.order.data.emails.filter(function keepParticipantsInOrder(email) {
-      return participatingEmails.indexOf(email) != -1;
+      return participatingEmails.indexOf(email) == -1;
     });
 
     this.log.debug("Order participant emails", newEmails);
