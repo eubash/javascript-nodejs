@@ -9,7 +9,7 @@ module.exports = function*(next) {
     this.throw(401);
   }
 
-  if (String(this.user._id) == String(this.groupBySlug.teacher)) {
+  if (this.user._id.equals(this.groupBySlug.teacher._id)) {
     this.teacher = this.user;
     yield* next;
     return;
