@@ -8,7 +8,7 @@ module.exports = function*(next) {
     this.throw(401);
   }
 
-  if (this.user._id.equals(group.teacher)) {
+  if (this.user._id.equals(group.teacher._id)) {
     this.teacher = this.user;
     yield* next;
   } else {
