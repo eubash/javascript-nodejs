@@ -29,8 +29,7 @@ module.exports = function() {
       .argv;
 
     return co(function* () {
-      var group = yield CourseGroup
-        .findOne({slug: args.group});
+      var group = yield CourseGroup.findOne({slug: args.group}).populate('teacher');
 
       if (!group) {
         throw new Error("No group:" + args.group);
@@ -48,7 +47,7 @@ module.exports = function() {
 
       log.debug(recipients);
 
-      var teacher = yield User.findById(group.teacher);
+      var teacher = group.teacher;
       recipients.push({
         email: teacher.email,
         name:  teacher.displayName
