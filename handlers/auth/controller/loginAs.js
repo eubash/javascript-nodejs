@@ -4,7 +4,7 @@ const User = require('users').User;
 
 exports.get = function* () {
 
-  if (!this.user.isAdmin && process.env.NODE_ENV != 'development') {
+  if (!(this.user && this.user.isAdmin) && process.env.NODE_ENV != 'development') {
     this.throw(403);
   }
 
