@@ -7,7 +7,7 @@ module.exports = function*(slug, next) {
 
   var group = yield CourseGroup.findOne({
     slug: slug
-  }).populate('course teacherCache');
+  }).populate('course teacher');
 
   if (!group) {
     this.throw(404, "Нет такой группы.");

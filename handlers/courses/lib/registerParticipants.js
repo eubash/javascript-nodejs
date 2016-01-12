@@ -14,12 +14,13 @@ module.exports = grantKeysAndChatToGroup;
 function* grantKeysAndChatToGroup(group) {
   yield CourseGroup.populate(group, 'course');
 
-  var participants = yield CourseParticipant.find({
+  let participants = yield CourseParticipant.find({
     group:    group._id,
     isActive: true
   }).populate('user');
 
-  var teacher = yield User.findById(group.teacher);
+  let teacher = group.teacher;
+  if (!teacher._id) teacher = yield User.findById(teacher);
 
   yield* grantXmppChatMemberships(group, participants, teacher);
 

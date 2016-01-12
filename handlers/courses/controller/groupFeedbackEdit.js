@@ -40,7 +40,8 @@ exports.all = function*() {
       return;
     }
 
-    teacher = yield User.findById(group.teacher);
+    teacher = group.teacher;
+
     courseFeedback = new CourseFeedback({
       group: group._id,
       participant:  participant._id,
