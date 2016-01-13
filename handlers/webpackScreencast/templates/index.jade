@@ -80,7 +80,7 @@ block content
         each donation in donations
           +e('li').item
             if donation.url
-              +e('a').link(href=url)= donation.name
+              +e('a').link(href=donation.url)= donation.name
             else
               +e.link= donation.name
             +e.amount #{donation.amount} #{donation.currency}
