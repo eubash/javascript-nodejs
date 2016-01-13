@@ -7,11 +7,13 @@ var Schema = mongoose.Schema;
 const config = require('config');
 const path = require('path');
 const html2search = require('elastic').html2search;
+const validate = require('validate');
 
 var schema = new Schema({
   title: {
     type:     String,
-    required: true
+    required: true,
+    trim: true
   },
 
   importance: {
@@ -28,17 +30,20 @@ var schema = new Schema({
     type:     String,
     unique:   true,
     required: true,
-    index:    true
+    lowercase: true,
+    trim: true
   },
 
   content: {
     type:     String,
-    required: true
+    required: true,
+    trim: true
   },
 
   solution: {
     // can be empty (assuming there is a solution.view which will be autolinked)
     type:     String,
+    trim: true,
     default: ''
   },
 
@@ -57,7 +62,9 @@ var schema = new Schema({
 
   githubLink: {
     type: String,
-    required: true
+    required: true,
+    trim: true,
+    validate: validate.patterns.webpageUrl
   },
 
   parent: {

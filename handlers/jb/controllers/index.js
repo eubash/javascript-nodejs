@@ -37,7 +37,7 @@ exports.post = function*() {
 
 
   var form = this.locals.form = {
-    email: this.request.body.email,
+    email: this.request.body.email.toLowerCase(),
     name: this.request.body.name,
     product: this.request.body.product,
     country: country,
@@ -45,7 +45,7 @@ exports.post = function*() {
   };
 
   var existingRequest = yield JbRequest.findOne({
-    email: this.request.body.email,
+    email: this.request.body.email.toLowerCase(),
     product: this.request.body.product,
     country: this.request.body.country,
     name: this.request.body.name,
@@ -63,7 +63,7 @@ exports.post = function*() {
   }
 
   var jbRequest = new JbRequest({
-    email: this.request.body.email,
+    email: this.request.body.email.toLowerCase(),
     product: this.request.body.product,
     country: this.request.body.country,
     name: this.request.body.name

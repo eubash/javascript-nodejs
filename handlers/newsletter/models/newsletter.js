@@ -4,11 +4,13 @@ const Schema = mongoose.Schema;
 const schema = new Schema({
   title: {
     type: String,
-    required: true
+    required: true,
+    trim: true
   },
   slug: {
     type: String,
     required: true,
+    trim: true,
     unique: true
   },
   // weight for non-internal subscriptions sorting

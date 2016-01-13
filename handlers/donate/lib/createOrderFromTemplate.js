@@ -26,7 +26,7 @@ module.exports = function* (orderTemplate, user, requestBody) {
     order.user = user._id;
     order.email = user.email;
   } else {
-    order.email = requestBody.email;
+    order.email = requestBody.email.toLowerCase();
   }
 
   yield order.persist();

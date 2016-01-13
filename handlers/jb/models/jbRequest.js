@@ -20,10 +20,13 @@ const schema = new Schema({
 
   email: {
     type: String,
-    required: 'Укажите email'
+    required: 'Укажите email',
+    lowercase: true,
+    trim: true
   },
   name: {
     type: String,
+    trim: true,
     validate: [
       {
         validator: function(value) {

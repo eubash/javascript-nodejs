@@ -7,24 +7,29 @@ var schema = new Schema({
   slug: {
     type: String,
     unique: true,
+    trim: true,
+    lowercase: true,
     required: true
   },
 
   // "Курс JavaScript/DOM/интерфейсы"
   title: {
     type: String,
+    trim: true,
     required: true
   },
 
   // "JavaScript/DOM/интерфейсы"
   titleShort: {
     type: String,
+    trim: true,
     required: true
   },
 
   // short description to show in the list
   shortDescription: {
-    type: String
+    type: String,
+    trim: true
   },
 
   videoKeyTag: {

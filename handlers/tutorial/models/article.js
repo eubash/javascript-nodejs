@@ -19,7 +19,9 @@ const schema = new Schema({
     type:     String,
     unique:   true,
     required: true,
-    index:    true
+    index:    true,
+    lowercase: true,
+    trim: true
   },
 
 
@@ -31,6 +33,7 @@ const schema = new Schema({
 
   content: {
     type:     String,
+    trim: true,
     validate: [
       {
         // allow empty content on folders

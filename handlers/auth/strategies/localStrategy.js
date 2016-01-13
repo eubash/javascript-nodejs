@@ -26,6 +26,7 @@ module.exports = new LocalStrategy({
       setTimeout(callback, 100);
     };
 
+    email = email.toLowerCase();
     var user = yield User.findOne({email: email}).exec();
 
     if (!user) {

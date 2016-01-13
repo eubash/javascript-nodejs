@@ -1,3 +1,5 @@
+'use strict';
+
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const crypto = require('crypto');
@@ -22,6 +24,8 @@ const schema = new Schema({
   },
   email:       {
     type:     String,
+    lowercase: true,
+    trim: true,
     required: true,
     unique:   true,
     validate: [

@@ -33,7 +33,7 @@ module.exports = function*() {
 
   if ("emails" in this.request.body) {
 
-    let emails = _.unique(this.request.body.emails.split(',').filter(Boolean));
+    let emails = _.unique(this.request.body.emails.split(',').filter(Boolean)).map(String).map(s => s.toLowerCase());
 
     this.log.debug("Incoming emails", emails);
 
