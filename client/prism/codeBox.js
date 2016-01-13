@@ -187,7 +187,7 @@ function CodeBox(elem) {
         /* jshint -W061 */
         window["eval"].call(window, code);
       } catch (e) {
-        alert(__("Error") + ': ' + e.message);
+        alert("Error: " + e.message);
       }
 
     } else {
