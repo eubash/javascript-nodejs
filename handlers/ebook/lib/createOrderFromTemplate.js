@@ -22,7 +22,7 @@ module.exports = function* (orderTemplate, user, requestBody) {
   });
 
   if (user) {
-    order.user = user._id;
+    order.user = user;
     order.email = user.email;
   } else {
     order.email = requestBody.email.toLowerCase();
