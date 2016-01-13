@@ -4,6 +4,8 @@ var OrderTemplate = payments.OrderTemplate;
 var Transaction = payments.Transaction;
 var assert = require('assert');
 const getOrderInfo = payments.getOrderInfo;
+const getPaymentMethods = require('../lib/getPaymentMethods');
+
 
 // Existing order page
 exports.get = function*() {
@@ -21,7 +23,7 @@ exports.get = function*() {
 
   this.locals.user = this.req.user;
 
-  this.locals.paymentMethods = require('../lib/paymentMethods');
+  this.locals.paymentMethods = yield* getPaymentMethods.call(this);
 
   this.locals.paymentMethodShowDefaultCurrency = true;
 

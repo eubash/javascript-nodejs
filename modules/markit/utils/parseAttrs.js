@@ -18,7 +18,7 @@ module.exports = function(attrs, withBlockName) {
   }
 
   let match, name, value;
-  while((match = attrsReg.exec(attrs)) !== null) {
+  while ((match = attrsReg.exec(attrs)) !== null) {
     name = match[1];
     value = match[2] !== undefined ? match[2].replace(/\\'/g, "'") :
       match[3] !== undefined ? match[3].replace(/\\"/g, '"') : match[4];
