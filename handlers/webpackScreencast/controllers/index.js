@@ -25,7 +25,10 @@ exports.get = function*() {
   let donateOrders = yield Order.find({
     module: 'donate',
     status: Order.STATUS_SUCCESS,
-    'data.name': {$exists: true}
+    'data.name': {
+      $exists: true,
+      $ne: ''
+    }
   }).sort({usdAmount: -1});
 
   this.locals.donations = donateOrders.map(order => {
