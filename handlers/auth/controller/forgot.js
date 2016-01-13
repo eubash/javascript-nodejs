@@ -6,8 +6,9 @@ var sendMail = require('mailer').send;
 
 exports.post = function* (next) {
 
+  var email = this.request.body.email.toLowerCase();
   var user = yield User.findOne({
-    email: this.request.body.email
+    email
   }).exec();
 
   if (!user) {

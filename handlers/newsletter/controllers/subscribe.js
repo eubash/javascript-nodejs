@@ -41,11 +41,11 @@ exports.post = function*() {
       this.throw(404, "Email не указан.");
     }
     subscription = yield Subscription.findOne({
-      email: this.request.body.email
+      email: this.request.body.email.toLowerCase()
     });
   }
 
-  var email = subscription ? subscription.email : this.request.body.email;
+  var email = subscription ? subscription.email : this.request.body.email.toLowerCase();
 
 
   // may be empty (e.g. for remove request)
@@ -58,7 +58,7 @@ exports.post = function*() {
 
 
   // full access if user for himself OR accessKey is given
-  var isFullAccess = this.user && this.user.email == this.request.body.email ||
+  var isFullAccess = this.user && this.user.email == this.request.body.email.toLowerCase() ||
     subscription && subscription.accessKey == this.request.body.accessKey;
 
   function respond(message) {

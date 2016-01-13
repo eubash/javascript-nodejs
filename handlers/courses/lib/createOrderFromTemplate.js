@@ -38,7 +38,7 @@ module.exports = function*(orderTemplate, user, requestBody) {
   if (!Array.isArray(emails)) {
     throw new OrderCreateError("Отсутствуют участники.");
   }
-  orderData.emails = _.unique(emails.filter(Boolean).map(String));
+  orderData.emails = _.unique(emails.filter(Boolean).map(String).map(s => s.toLowerCase()));
 
   if (!user) {
     throw new OrderCreateError("Вы не авторизованы.");

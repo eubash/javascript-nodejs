@@ -1,3 +1,4 @@
+var ucWordStart = require('textUtil/ucWordStart');
 var mongoose = require('mongoose');
 var autoIncrement = require('mongoose-auto-increment');
 var Schema = mongoose.Schema;
@@ -29,11 +30,13 @@ var schema = new Schema({
 
   content: {
     type: String,
+    trim: true,
     required: "Отсутствует текст отзыва."
   },
 
   teacherComment: {
-    type: String
+    type: String,
+    trim: true
   },
 
   participant: {
@@ -76,7 +79,8 @@ var schema = new Schema({
   },
 
   city: {
-    type: String
+    type: String,
+    trim: true
   },
 
   isPublic: {
@@ -90,11 +94,13 @@ var schema = new Schema({
   },
 
   aboutLink: {
-    type: String
+    type: String,
+    trim: true
   },
 
   occupation: {
-    type: String
+    type: String,
+    trim: true
   },
 
   created: {
@@ -123,6 +129,14 @@ schema.pre('save', function(next) {
     });
   }
 });
+
+schema.pre('save', function(next) {
+  if (this.city) {
+    this.city = ucWordStart(this.city);
+  }
+  next();
+});
+
 
 schema.plugin(autoIncrement.plugin, {model: 'CourseFeedback', field: 'number', startAt: 1});
 

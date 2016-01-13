@@ -11,7 +11,7 @@ exports.post = function* (next) {
 
   var verifyEmailToken = Math.random().toString(36).slice(2, 10);
   var user = new User({
-    email: this.request.body.email,
+    email: this.request.body.email.toLowerCase(),
     displayName: this.request.body.displayName,
     password: this.request.body.password,
     verifiedEmail: false,
@@ -39,7 +39,7 @@ exports.post = function* (next) {
 
 
   // We're here if no errors happened
-  
+
   try {
 
     yield sendMail({

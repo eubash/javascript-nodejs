@@ -7,7 +7,7 @@ var sendMail = require('mailer').send;
 // Регистрация пользователя.
 exports.post = function* (next) {
 
-  var email = this.request.body.email;
+  var email = this.request.body.email.toLowerCase();
   if (!email) {
     this.throw(404, 'Не указан email пользователя.');
   }

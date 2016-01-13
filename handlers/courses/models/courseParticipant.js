@@ -1,5 +1,6 @@
 'use strict';
 
+var ucWordStart = require('textUtil/ucWordStart');
 var mongoose = require('lib/mongoose');
 var Schema = mongoose.Schema;
 var config = require('config');
@@ -46,11 +47,13 @@ var schema = new Schema({
   },
 
   notes: {
-    type: String
+    type: String,
+    trim: true
   },
 
   firstName:  {
     type:      String,
+    trim: true,
     validate:  [
       {validator: /\S/, msg: "Имя отсутствует."},
       {validator: validate.patterns.singleword, msg: "Имя дожно состоять из одного слова."}
@@ -60,6 +63,7 @@ var schema = new Schema({
   },
   surname:    {
     type:      String,
+    trim: true,
     validate:  [
       {validator: /\S/, msg: "Фамилия отсутствует."},
       {validator: validate.patterns.singleword, msg: "Фамилия должна состоять из одного слова."}
@@ -81,6 +85,7 @@ var schema = new Schema({
   },
   aboutLink:  {
     type:      String,
+    trim: true,
     validate:  [
       function(value) {
         return value ? validate.patterns.webpageUrl.test(value) : true;
@@ -91,15 +96,18 @@ var schema = new Schema({
   },
   occupation: {
     type:      String,
+    trim: true,
     maxlength: 2 * 1024
   },
   purpose:    {
     type:      String,
+    trim: true,
     maxlength: 16 * 1024
   },
 
   wishes:     {
     type:      String,
+    trim: true,
     maxlength: 16 * 1024
   },
 
@@ -131,6 +139,10 @@ schema.virtual('fullName').get(function () {
 
 schema.pre('save', function(next) {
   var self = this;
+
+  if (this.city) {
+    this.city = ucWordStart(this.city);
+  }
 
   if (this.group.course) {
     if (this.group.course._id) {

@@ -12,6 +12,7 @@ exports.init = function(app) {
 
 let Newsletter = exports.Newsletter = require('./models/newsletter');
 let Subscription = exports.Subscription = require('./models/subscription');
+exports.SubscriptionAction = require('./models/subscriptionAction');
 
 exports.populateContext = function* (context) {
 

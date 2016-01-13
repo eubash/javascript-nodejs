@@ -34,7 +34,8 @@ var schema = new Schema({
   // Every mon and thu at 19:00 GMT+3
   timeDesc: {
     type:     String,
-    required: true
+    required: true,
+    trim: true
   },
 
   // currently available places
@@ -80,11 +81,13 @@ var schema = new Schema({
   // room jid AND gotowebinar id
   // an offline group may not have this
   webinarId: {
-    type: String
+    type: String,
+    trmi: true
   },
 
   skypeLink: {
-    type: String
+    type: String,
+    trim: true
   },
 
   course:       {
@@ -97,7 +100,8 @@ var schema = new Schema({
   // a user-friendly group title
   title: {
     type:     String,
-    required: true
+    required: true,
+    trim: true
   },
 
   created: {

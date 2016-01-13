@@ -18,7 +18,8 @@ var schema = new Schema({
   },
 
   comment: {
-    type: String
+    type: String,
+    trim: true
   },
 
   created: {

@@ -33,11 +33,13 @@ var schema = new Schema({
 
   title:       {
     type:     String,
-    required: true
+    required: true,
+    trim: true
   },
 
   description: {
-    type: String
+    type: String,
+    trim: true
   },
 
   status:      {
@@ -49,6 +51,8 @@ var schema = new Schema({
   // order can be bound to either an email or a user
   email: {
     type:  String,
+    lowercase: true,
+    trim: true,
     index: true
   },
 
@@ -76,10 +80,13 @@ var schema = new Schema({
 
 schema.pre('save', function(next) {
   this.modified = new Date();
-  try {
-    this.usdAmount = money.convert(this.amount, {from: this.currency, to: 'USD'});
-  } catch(e) {
-    return next(typeof e == 'string' ? new Error(e) : e);
+
+  if (this.isModified('amount')) {
+    try {
+      this.usdAmount = money.convert(this.amount, {from: this.currency, to: 'USD'});
+    } catch (e) {
+      return next(typeof e == 'string' ? new Error(e) : e);
+    }
   }
   next();
 });
