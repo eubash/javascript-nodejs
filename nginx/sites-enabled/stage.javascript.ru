@@ -12,6 +12,9 @@ server {
   listen 80;
   listen 443 ssl;
 
+  access_log  /var/log/nginx/stage.javascript.ru.log main;
+  error_log /var/log/nginx/stage.javascript.ru.error.log;
+
   server_name stage.javascript.ru;
 
   location / {

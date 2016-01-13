@@ -16,6 +16,12 @@ module.exports = {
       purse:        secret.yandexmoney.purse
     },
 
+    yakassa: {
+      shopId: secret.yakassa.shopId,
+      scid: secret.yakassa.scid,
+      secret: secret.yakassa.secret
+    },
+
     payanyway: {
       id:     secret.payanyway.id,
       secret: secret.payanyway.secret

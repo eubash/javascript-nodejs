@@ -9,6 +9,7 @@ module.exports = {
   yandexmoney: {},
   paypal:      {},
   payanyway:   {},
+  yakassa:   {},
   banksimple:  {},
   banksimpleua:  {},
   interkassa:  {},
