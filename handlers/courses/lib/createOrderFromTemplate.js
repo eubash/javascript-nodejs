@@ -70,7 +70,7 @@ module.exports = function*(orderTemplate, user, requestBody) {
     currency: 'RUB',
     data:   orderData,
     email:  user.email,
-    user:   user._id
+    user:   user
   });
 
   yield order.persist();

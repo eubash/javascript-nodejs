@@ -8,7 +8,7 @@ module.exports = function* (transaction, order) {
     amount: transaction.amount,
     number: transaction.number,
     cps_email: order.email || order.user.email,
-    customerNumber: order.user ? order.user.id : 0,
+    customerNumber: order.user ? String(order.user._id) : 0,
     yakassa:  config.payments.modules.yakassa,
     shopSuccessURL: process.env.SITE_HOST + '/payments/yakassa/success?transactionNumber=' + transaction.number,
     shopFailURL: process.env.SITE_HOST + '/payments/yakassa/fail?transactionNumber=' + transaction.number
