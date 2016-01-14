@@ -109,7 +109,10 @@ var config = module.exports = {
     appId: secret.openexchangerates.appId
   },
 
-  jb:      secret.jb,
+  jb:      {
+    email: env.NODE_ENV == 'production' ? secret.jb.email : 'iliakan@gmail.com'
+  },
+
   lang:    lang,
   elastic: {
     host: 'http://localhost:9200'
