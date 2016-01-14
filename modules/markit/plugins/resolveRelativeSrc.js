@@ -8,7 +8,7 @@ const tokenUtils = require('../utils/token');
 
 module.exports = function(md) {
 
-  md.core.ruler.push('img_resolve_relative_src', function(state) {
+  md.core.ruler.push('resolve_relative_src', function(state) {
 
     let methods = {
       link_open,

@@ -50,7 +50,7 @@ TaskRenderer.prototype.addContentPlunkLink = function*(task, content) {
 
     var title = hasTest ? t('tutorial.task.open_task.sandbox.tests') : t('tutorial.task.open_task.sandbox.no_tests');
 
-    content += `<a href="${sourcePlunk.getUrl()}" target="_blank" data-plunk-id="${sourcePlunk.plunkId}">${title}</a>`;
+    content += `<p><a href="${sourcePlunk.getUrl()}" target="_blank" data-plunk-id="${sourcePlunk.plunkId}">${title}</a></p>`;
   }
 
   return content;
@@ -151,7 +151,7 @@ TaskRenderer.prototype.addSolutionPlunkLink = function*(task, solution) {
 
     let title = hasTest ? t('tutorial.task.open_solution.sandbox.tests') : t('tutorial.task.open_solution.sandbox.no_tests');
 
-    solution += `<a href="${solutionPlunk.getUrl()}" target="_blank" data-plunk-id="${solutionPlunk.plunkId}">${title}</a>`;
+    solution += `<p><a href="${solutionPlunk.getUrl()}" target="_blank" data-plunk-id="${solutionPlunk.plunkId}">${title}</a></p>`;
   }
 
   return solution;

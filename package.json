@@ -71,7 +71,7 @@
     "koa-send": "*",
     "koa-session-mongoose": "git://github.com/iliakan/koa-session-mongoose#mongoose-4.0",
     "koa-views": "*",
-    "lodash": "*",
+    "lodash": "^3",
     "lru-cache": "*",
     "mandrill-api": "*",
     "map-stream": "*",

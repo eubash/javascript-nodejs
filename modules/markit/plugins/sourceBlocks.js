@@ -70,11 +70,11 @@ module.exports = function(md) {
     }
 
     if (attrs.refresh) {
-      token.attrPush(['data-refresh', 1]);
+      token.attrPush(['data-refresh', '1']);
     }
 
     if (options.html && attrs.demo) {
-      attrs['data-demo'] = '1';
+      token.attrPush(['data-demo', '1']);
     }
 
     // strip first empty lines

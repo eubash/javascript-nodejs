@@ -22,10 +22,12 @@ class SrcError extends Error {
 
 module.exports = function* (tokens, options) {
 
+
   for (let idx = 0; idx < tokens.length; idx++) {
     let token = tokens[idx];
 
     if (token.type == 'figure') {
+
       yield* processImageOrFigure(token);
       continue;
     }
@@ -34,7 +36,8 @@ module.exports = function* (tokens, options) {
 
     for (let i = 0; i < token.children.length; i++) {
       let inlineToken = token.children[i];
-      if (inlineToken.type != 'image') continue;
+      // <td><figure></td> gives figure inside inline token
+      if (inlineToken.type != 'image' && inlineToken.type != 'figure') continue;
 
       yield* processImageOrFigure(inlineToken);
     }
