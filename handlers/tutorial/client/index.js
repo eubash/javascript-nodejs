@@ -82,7 +82,7 @@ function initSidebarHighlight() {
     }
     i--; // we need the one before it (currently reading)
 
-    if (i>=0) {
+    if (i >= 0) {
       var href = h2s[i].firstElementChild && h2s[i].firstElementChild.getAttribute('href');
       var li = document.querySelector('.sidebar__navigation-link a[href="' + href + '"]');
       if (href && li) {
@@ -138,13 +138,13 @@ window.runDemo = function(button) {
   var parent = button;
 
   /* jshint -W084 */
-  while(parent = parent.parentElement) {
+  while (parent = parent.parentElement) {
     demoElem = parent.querySelector('[data-demo]');
     if (demoElem) break;
   }
 
   if (!demoElem) {
-    alert("Ошибка, нет элемента с демо");
+    alert("Error, no demo element");
   } else {
     /* jshint -W061 */
     eval(demoElem.textContent);

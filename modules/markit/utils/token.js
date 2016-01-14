@@ -52,8 +52,15 @@ function attrGet(token, name) {
   return token.attrs[idx][1];
 }
 
+function attrDel(token, name) {
+  let idx = token.attrIndex(name);
+  if (idx == -1) return null;
+  token.attrs.splice(idx, 1);
+}
+
 exports.attrReplace = attrReplace;
 
 exports.attrGet = attrGet;
+exports.attrDel = attrDel;
 exports.addClass = addClass;
 

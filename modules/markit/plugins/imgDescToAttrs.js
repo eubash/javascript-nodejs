@@ -35,7 +35,14 @@ function readImgAttrs(state) {
     let lastTextToken = imgToken.children[imgToken.children.length - 1];
 
     let parts = lastTextToken.content.split('|');
-    if (parts.length != 2) return; // no | or many || (invalid)
+    if (parts.length != 2) { // no | or many || (invalid)
+      // try ', ' for tables
+      parts = lastTextToken.content.split(', ');
+      if (parts.length != 2) {
+        // still invalid
+        return;
+      }
+    }
 
     lastTextToken.content = parts[0];
 

@@ -21,18 +21,25 @@ function imgFigures(state) {
     // child is image
     if (token.children[0].type !== 'image') continue;
     // prev token is paragraph open
-    if (state.tokens[idx - 1].type !== 'paragraph_open') continue;
-    // next token is paragraph close
-    if (state.tokens[idx + 1].type !== 'paragraph_close') continue;
+
+    let isInParagraph = state.tokens[idx - 1].type == 'paragraph_open' &&
+        state.tokens[idx + 1].type == 'paragraph_close';
+
+    let hasFigureAttr = tokenUtils.attrGet(token.children[0], 'figure');
+
+    tokenUtils.attrDel(token.children[0], 'figure'); // this attr is not needed any more
+
+    if (!isInParagraph && !hasFigureAttr) continue;
 
     // we have a figure!
-
     // replace <p><img></p> with figure
     let figureToken = token.children[0];
     figureToken.type = 'figure';
     figureToken.tag = 'figure';
 
-    state.tokens.splice(idx - 1, 3, figureToken);
+    if (isInParagraph) {
+      state.tokens.splice(idx - 1, 3, figureToken);
+    }
   }
 
 }
@@ -51,7 +58,8 @@ module.exports = function(md) {
     }
 
     // here we assume a figure <img> has no "class" attribute
-    // if it had, it would refer to figure?
+    // so we put our own class on it
+    // (if it had, it would refer to figure?)
 
     return `<figure><div class="image" style="width:${width}px">
       <div class="image__ratio" style="padding-top:${height / width * 100}%"></div>
