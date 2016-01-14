@@ -6,7 +6,7 @@ const schema = new Schema({
   product: {
     type: String,
     enum: {
-      values:  ["WebStorm", "PhpStorm", "RubyMine", "IntelliJ IDEA", "ReSharper", "PyCharm", "AppCode", "CLion"],
+      values:  ["WebStorm", "PhpStorm", "RubyMine", "IntelliJ IDEA", "ReSharper", "PyCharm", "AppCode", "CLion", "DataGrip", "All Products"],
       message: 'Такой продукт недоступен'
     },
     required: 'Укажите продукт'
@@ -16,6 +16,11 @@ const schema = new Schema({
     type: String,
     enum: Object.keys(countries.all),
     required: "Страна не указана."
+  },
+
+  comment: {
+    type: String,
+    trim: true
   },
 
   email: {

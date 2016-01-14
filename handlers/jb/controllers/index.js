@@ -12,7 +12,9 @@ var products = {
   "ReSharper":     "ReSharper (C#)",
   "PyCharm":       "PyCharm (Python)",
   "AppCode":       "AppCode (OSX, Objective-C, C/C++)",
-  "CLion":         "CLion (C/C++)"
+  "CLion":         "CLion (C/C++)",
+  "DataGrip":       "DataGrip (БД)",
+  "All Products":  "Все продукты"
 };
 
 
@@ -41,6 +43,7 @@ exports.post = function*() {
     name: this.request.body.name,
     product: this.request.body.product,
     country: country,
+    comment: this.request.body.comment,
     countryName: countries.all[country].na
   };
 
@@ -48,6 +51,7 @@ exports.post = function*() {
     email: this.request.body.email.toLowerCase(),
     product: this.request.body.product,
     country: this.request.body.country,
+    comment: this.request.body.comment,
     name: this.request.body.name,
     created: {
       $gt: fewDaysAgo
@@ -66,6 +70,7 @@ exports.post = function*() {
     email: this.request.body.email.toLowerCase(),
     product: this.request.body.product,
     country: this.request.body.country,
+    comment: this.request.body.comment,
     name: this.request.body.name
   });
 

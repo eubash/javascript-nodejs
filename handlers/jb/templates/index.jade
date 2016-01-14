@@ -29,7 +29,7 @@ block content
       | Если ещё какой-то язык – выберите из селекта ниже.
     +e.form
       +e.line
-        +e("label").label(for="name") Имя и фамилия (англ.):
+        +e("label").label(for="name") Имя Фамилия (англ.):
         +b("span")(class=['text-input', errors && errors.name && '_invalid'])
           +e("input").control(type="text", pattern="^\\s*[a-zA-Z ]+\\s+[a-zA-Z ]+\\s*$", required, name="name", id="name", value=form && form.name, placeholder="John Smith" autofocus)
 
@@ -51,6 +51,10 @@ block content
             +e('option')(value=value selected=(form && form.product == value))= title
 
       +e.line
+        +e("label").label(for="comment") Вопрос или комментарий по лицензии:
+        +b('textarea').textarea-input#comment(name="comment" cols="80", rows="5")
+
+      +e.line
         +b("button").button._action(type="submit")
           +e("span").text Отправить
 
@@ -58,11 +62,15 @@ block content
 
     document.forms.jb.onsubmit = function() {
       var elems = this.elements;
+      var select = elems.product;
+      var selectValue = elems.product.querySelector('option[value="' + select.value + '"]').innerHTML;
+
       return confirm('Ваш запрос на лицензию:' +
-      '\nРедактор: ' + elems.product.value +
+      '\nРедактор: ' + selectValue +
       '\nEmail:    ' + elems.email.value +
       '\nИмя:      ' + elems.name.value +
       '\nСтрана:   ' + [].slice.call(elems.country.options).filter(function(o) { return o.value == elems.country.value }, this)[0].innerHTML +
+      '\nКомментарий:      ' + elems.comment.value +
       '\nВсё верно, отправлять?');
     };
 
