@@ -14,7 +14,7 @@ var products = {
   "AppCode":       "AppCode (OSX, Objective-C, C/C++)",
   "CLion":         "CLion (C/C++)",
   "DataGrip":       "DataGrip (БД)",
-  "All Products":  "Все продукты"
+  "All Products Pack":  "Все продукты вместе"
 };
 
 
