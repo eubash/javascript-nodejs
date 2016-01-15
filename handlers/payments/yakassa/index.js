@@ -20,7 +20,7 @@ exports.createTransaction = function*(order) {
 };
 
 exports.info = {
-  title:   "Карты Visa/MasterCard",
+  title:   "Visa/MasterCard",
   name:    path.basename(__dirname),
   cards:    ['visa-mastercard'],
   currency: 'RUB'
