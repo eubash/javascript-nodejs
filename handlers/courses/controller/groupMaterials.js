@@ -106,6 +106,10 @@ exports.post = function*() {
 
   var filePath = `${config.downloadRoot}/courses/${group.slug}/${material.filename}`;
 
+  if (! (yield fs.exists(path.dirname(filePath))) ) {
+    yield fs.mkdir(path.dirname(filePath));
+  }
+
   yield fs.rename(file.path, filePath);
 
   group.materials.unshift(material);
