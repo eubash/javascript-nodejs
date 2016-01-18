@@ -15,7 +15,7 @@ router.get('/orders/user/:userById', ordersByUser.get);
 
 // form for invoices (after generating the transaction) submits here to go back to order,
 // without any external service
-router.post('/redirect/order/:orderNumber', function*() {
+router.get('/redirect/order/:orderNumber', function*() {
   yield this.loadOrder();
   this.redirectToOrder();
 });
