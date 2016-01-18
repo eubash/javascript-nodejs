@@ -32,5 +32,5 @@ exports.info = {
   title:    "Интеркасса",
   name:     path.basename(__dirname),
   hasIcon:  false,
-  subtitle: "дополнительные методы оплаты"
+  subtitle: "резервный метод оплаты"
 };

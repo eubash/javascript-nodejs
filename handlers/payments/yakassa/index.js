@@ -1,3 +1,4 @@
+'use strict';
 
 const path = require('path');
 const Transaction = require('../models/transaction');
@@ -7,10 +8,10 @@ exports.renderForm = require('./renderForm');
 exports.createTransaction = function*(order) {
 
   var transaction = new Transaction({
-    order:  order._id,
-    currency: 'RUB',
-    amount: order.convertAmount('RUB'),
-    status: Transaction.STATUS_PENDING,
+    order:         order._id,
+    currency:      'RUB',
+    amount:        order.convertAmount('RUB'),
+    status:        Transaction.STATUS_PENDING,
     paymentMethod: path.basename(__dirname)
   });
 
@@ -20,9 +21,10 @@ exports.createTransaction = function*(order) {
 };
 
 exports.info = {
-  title:   "Visa/MasterCard",
-  name:    path.basename(__dirname),
+  title:    "Visa/MasterCard",
+  name:     path.basename(__dirname),
   cards:    ['visa-mastercard'],
-  currency: 'RUB'
+  currency: 'RUB',
+  subtitle: "самый предпочтительный метод"
 };
 
