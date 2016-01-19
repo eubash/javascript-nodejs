@@ -7,6 +7,7 @@ let User = require('users').User;
 let _ = require('lodash');
 let getOrderInfo = require('payments').getOrderInfo;
 let paymentMethods = require('./paymentMethods');
+let allPaymentMethods = require('payments').methods;
 
 module.exports = function* formatCourseOrder(order) {
 
@@ -58,7 +59,7 @@ module.exports = function* formatCourseOrder(order) {
   orderToShow.orderInfo = _.pick(orderInfo, ['status', 'statusText', 'descriptionProfile']);
 
   if (orderInfo.transaction) {
-    orderToShow.paymentMethod = paymentMethods[orderInfo.transaction.paymentMethod].title;
+    orderToShow.paymentMethod = allPaymentMethods[orderInfo.transaction.paymentMethod].info.title;
   }
 
   return orderToShow;
