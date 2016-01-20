@@ -56,7 +56,8 @@ module.exports = function*() {
     // create a new emails list
     // first, take participants from the order:
     let newEmails = this.order.data.emails.filter(function keepParticipantsInOrder(email) {
-      return participatingEmails.indexOf(email) == -1;
+      // if participant, keep
+      return participatingEmails.indexOf(email) != -1;
     });
 
     this.log.debug("Order participant emails", newEmails);
