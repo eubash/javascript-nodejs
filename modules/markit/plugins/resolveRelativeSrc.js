@@ -42,7 +42,9 @@ module.exports = function(md) {
       let href = tokenUtils.attrGet(token, 'href');
 
       // don't touch info:tutorial link protocol
-      if (!href.match(/^\w+:/) && href[0] != '/') {
+      // don't touch absolute links
+      // don't touch in-page #hash
+      if (!href.match(/^\w+:/) && href[0] != '/' && href[0] != '#') {
         href = state.md.options.resourceWebRoot + '/' + href;
         tokenUtils.attrReplace(token, 'href', href);
       }

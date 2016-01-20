@@ -19,6 +19,7 @@ const imgDescToAttrsPlugin = require('./plugins/imgDescToAttrs');
 
 // must be before imgFiguresPlugin that transforms img token to figure
 // must be before plugins that rely on correct src
+// (also resolves links)
 const resolveRelativeSrcPlugin = require('./plugins/resolveRelativeSrc');
 
 const imgFiguresPlugin = require('./plugins/imgFigures');
