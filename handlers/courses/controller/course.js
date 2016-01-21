@@ -1,4 +1,5 @@
 var moment = require('momentWithLocale');
+var User = require('users').User;
 var Course = require('../models/course');
 var CourseGroup = require('../models/courseGroup');
 var money = require('money');
@@ -22,6 +23,10 @@ exports.get = function*() {
       return letter.toUpperCase();
     });
   };
+
+  this.locals.teachers = yield User.find({
+    teachesCourses: this.locals.course._id
+  });
 
   this.locals.groups = yield CourseGroup.find({
     isListed: true,
