@@ -1,0 +1,7 @@
+p
+  | Этот курс #{teachers.length > 1 ? 'ведут:' : 'ведёт'}&nbsp;
+  each teacher, i in teachers
+    a(href=teacher.getProfileUrl())= teacher.displayName
+    if i < teachers.length - 1
+      | ,&nbsp;
+  | .
