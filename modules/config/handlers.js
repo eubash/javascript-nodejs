@@ -48,7 +48,7 @@ var handlers = [
 
   'users', 'auth', 'ebook', 'donate', 'cache', 'search',
   'staticPage', // must be before courses & other arbitrary url stuff
-  'profile', 'jb', 'play', 'nodejsScreencast', 'webpackScreencast', 'about', 'imgur',
+  'profile', 'jb', 'play', 'screencast', 'about', 'imgur',
   'profileGuest', 'quiz', 'currencyRate', 'payments', 'downloadByLink',
   'newsletter', 'mailer', 'courses'
 ];

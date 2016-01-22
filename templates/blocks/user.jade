@@ -2,20 +2,20 @@
   //- делаем пользователя кнопкой, так как она только раскрывает меню
   //- и никуда не ведет. Если предполагается функциональность ссылки
   //- потребуются минимальные доработки
-  +e('button').user(title=user.displayName, onclick="document.querySelector('.sitetoolbar').classList.toggle('sitetoolbar_user_open')")
+  +e('button').user(title=user.displayName, data-dropdown-toggler)
     +e('img').userpic(src=user.getPhotoUrl(36,36), alt=user.displayName, width="36", height="36")
     +e('span').user-text= user.displayName
-  +e.usermenu-wrap
-    +e.usermenu
-      +e('ul').usermenu-items
-        +e('li').usermenu-item
-          +e('a').secondary-link.__usermenu-link(href=user.getProfileUrl()) Публичный профиль
-        +e('li').usermenu-item
-          +e('a').secondary-link.__usermenu-link(href=user.getProfileUrl() + "/account") Аккаунт
-        +e('li').usermenu-item
-          +e('a').secondary-link.__usermenu-link(href=user.getProfileUrl() + "/subscriptions") Уведомления
+  +e.dropdown-wrap
+    +e.dropdown-body
+      +e('ul').dropdown-items
+        +e('li').dropdown-item
+          +e('a').secondary-link.__dropdown-link(href=user.getProfileUrl()) Публичный профиль
+        +e('li').dropdown-item
+          +e('a').secondary-link.__dropdown-link(href=user.getProfileUrl() + "/account") Аккаунт
+        +e('li').dropdown-item
+          +e('a').secondary-link.__dropdown-link(href=user.getProfileUrl() + "/subscriptions") Уведомления
         each tab in user.profileTabsEnabled
-          +e('li').usermenu-item
-            +e('a').secondary-link.__usermenu-link(href=user.getProfileUrl() + "/" + tab)= profileTabNames[tab]
-        +e('li').usermenu-item
-          +e('a').secondary-link.__usermenu-link(href="#" data-action-user-logout) Выйти
+          +e('li').dropdown-item
+            +e('a').secondary-link.__dropdown-link(href=user.getProfileUrl() + "/" + tab)= profileTabNames[tab]
+        +e('li').dropdown-item
+          +e('a').secondary-link.__dropdown-link(href="#" data-action-user-logout) Выйти
