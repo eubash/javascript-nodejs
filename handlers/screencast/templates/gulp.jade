@@ -1,0 +1,37 @@
+extends /layouts/main
+
+block append variables
+  - var headTitle = 'Скринкаст по Gulp [в процессе]';
+  - var sitetoolbar = true
+  - var header = true
+  - var layout_page_class = "page_contains_header"
+  - var mainclass = "main-headered"
+
+block append head
+  script window.SCREENCAST_SLUG='#{slug}';
+  !=js("screencast", {defer: true})
+
+block content
+  +b.screencast-header._style_nodejs
+
+    +e("h1").title Скринкаст
+      //- two spaces! one is consumed, one remains
+      +e("strong").title-accent  Gulp
+
+    +e("p").description
+      | Детальный скринкаст про gulp и рецепты его использования.
+
+    +b.share-icons
+      +e('span').title= t('site.share')
+      include /blocks/social-icons
+
+    +e("p").foot Ниже вы можете ознакомиться более детально с содержанием скринкаста
+
+  .main(class='main_width-limit-wide').screencast-content
+
+    include:markit gulp.md
+
+    include /blocks/subscriptionsForm
+
+    include /blocks/comments
+

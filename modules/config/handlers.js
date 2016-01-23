@@ -53,6 +53,10 @@ var handlers = [
   'newsletter', 'mailer', 'courses'
 ];
 
+if (process.env.NODE_ENV == 'development') {
+  handlers.push('qa');
+}
+
 var extraHandlersRoot = path.join(process.cwd(), 'extra/handlers');
 
 if (fs.existsSync(extraHandlersRoot)) {
@@ -70,7 +74,7 @@ handlers = handlers.filter(handler => {
   try {
     require.resolve(handler);
     return true;
-  } catch(e) {
+  } catch (e) {
     return false;
   }
 });

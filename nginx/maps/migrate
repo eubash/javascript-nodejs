@@ -1,4 +1,6 @@
 map $uri $migrate {
+  /webpack-screencast /screencast/webpack;
+  /nodejs-screencast /screencast/nodejs;
   /content/uchebnik-pdf-dlya-chteniya-i-pechati https://learn.javascript.ru/ebook;
   /node/5 https://learn.javascript.ru/intro;
   "~^/node/5/.*" https://learn.javascript.ru/intro;

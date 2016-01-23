@@ -22,7 +22,7 @@ module.exports = {
     },
     mgrinko: {
       fromEmail: 'm.grinko@javascript.ru',
-      fromName:  'Мизаил Гринько (JavaScript.ru)',
+      fromName:  'Михаил Гринько (JavaScript.ru)',
       signature: "<em>Успешной разработки!<br>Михаил Гринько</em>"
     },
     ikantor: {

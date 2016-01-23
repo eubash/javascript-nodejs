@@ -13,7 +13,7 @@ div(style="color:red;text-align:center")= t("site.sorry_old_browser")
 
 if lang=='ru'
   +b(class = 'sitetoolbar' + (bookChildNumber ? '_tutorial' : ''))
-    include ./notification-stripe
+    //-include ./notification-stripe
 
     +e.content
       +e.logo-wrap
@@ -68,7 +68,7 @@ if lang=='ru'
                   +e('li').dropdown-item
                     +e('a').secondary-link.__dropdown-link(href="/screencast/webpack") Webpack
                   +e('li').dropdown-item
-                    +e('a').secondary-link.__dropdown-link(href="/screencast/gulp") Gulp
+                    +e('a').secondary-link.__dropdown-link(href="/screencast/gulp") Gulp [in progress]
 
 
       if siteToolbarCurrentSection == 'tutorial'
