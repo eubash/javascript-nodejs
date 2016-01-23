@@ -1,10 +1,20 @@
 
 document.addEventListener('click', onSearchClick);
+document.addEventListener('click', onDropdownTogglerClick);
 
-var initialized = false;
+var searchInitialized = false;
 
 var sitetoolbarClassName = document.documentElement.lang === 'ru' ? 'sitetoolbar' : 'sitetoolbar-light';
 var sitetoolbarSelector = '.' + sitetoolbarClassName;
+
+
+function onDropdownTogglerClick(event) {
+  if (!event.target.closest) return; // svg
+  var toggler = event.target.closest('[data-dropdown-toggler]');
+  if (!toggler) return;
+  toggler.nextElementSibling.style.display = toggler.nextElementSibling.offsetWidth ? 'none' : 'block';
+}
+
 
 // toggle search on/off, autofocus on input when "on"
 function onSearchClick(event) {
@@ -14,12 +24,12 @@ function onSearchClick(event) {
   var searchToggle = event.target.closest(sitetoolbarSelector + '__search-toggle');
 
   if (searchToggle) {
-    if (!initialized) initialize();
+    if (!searchInitialized) searchInitialize();
     toggle();
   }
 }
 
-function initialize() {
+function searchInitialize() {
 
   var sitetoolbar = document.querySelector(sitetoolbarSelector);
 
@@ -43,7 +53,7 @@ function initialize() {
     !possibleSubmit && toggle()
   };
 
-  initialized = true;
+  searchInitialized = true;
 }
 
 function toggle() {

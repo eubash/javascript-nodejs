@@ -81,8 +81,8 @@ module.exports = function(config) {
       coursesFrontpage:          'courses/client/frontpage',
       profileGuestAboutMe:       'profileGuest/client/aboutMe',
       footer:                    'client/footer',
-      nodejsScreencast:          'nodejsScreencast/client',
-      webpackScreencast:         'webpackScreencast/client'
+      screencast:                'screencast/client',
+      qa:                        'qa/client'
     },
 
     externals: {

@@ -48,10 +48,14 @@ var handlers = [
 
   'users', 'auth', 'ebook', 'donate', 'cache', 'search',
   'staticPage', // must be before courses & other arbitrary url stuff
-  'profile', 'jb', 'play', 'nodejsScreencast', 'webpackScreencast', 'about', 'imgur',
+  'profile', 'jb', 'play', 'screencast', 'about', 'imgur',
   'profileGuest', 'quiz', 'currencyRate', 'payments', 'downloadByLink',
   'newsletter', 'mailer', 'courses'
 ];
+
+if (process.env.NODE_ENV == 'development') {
+  handlers.push('qa');
+}
 
 var extraHandlersRoot = path.join(process.cwd(), 'extra/handlers');
 
@@ -70,7 +74,7 @@ handlers = handlers.filter(handler => {
   try {
     require.resolve(handler);
     return true;
-  } catch(e) {
+  } catch (e) {
     return false;
   }
 });

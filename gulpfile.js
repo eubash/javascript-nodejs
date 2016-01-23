@@ -149,7 +149,7 @@ gulp.task("client:sync-resources", lazyRequireTask('./tasks/syncResources', {
 
 gulp.task("videoKey:load", lazyRequireTask('videoKey/tasks/load'));
 
-// Show errors if encountered
+// show errors if encountered
 gulp.task('client:compile-css',
   lazyRequireTask('./tasks/compileCss', {
     src: './styles/base.styl',
@@ -165,7 +165,7 @@ gulp.task('client:minify', lazyRequireTask('./tasks/minify'));
 gulp.task('client:resize-retina-images', lazyRequireTask('./tasks/resizeRetinaImages'));
 
 gulp.task('client:webpack', lazyRequireTask('./tasks/webpack'));
-//gulp.task('client:webpack-dev-server', lazyRequireTask('./tasks/webpackDevServer'));
+// gulp.task('client:webpack-dev-server', lazyRequireTask('./tasks/webpackDevServer'));
 
 
 gulp.task('build', function(callback) {
