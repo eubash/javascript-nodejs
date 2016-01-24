@@ -82,10 +82,11 @@ exports.get = function *get(next) {
 
     var hits = result[searchType].hits.hits;
 
-
     // will show these results
     for (var i = 0; i < hits.length; i++) {
       var hit = hits[i];
+      this.log.debug(hit);
+
 
       // if no highlighted words in title, hit.highlight.title would be empty
       var title = hit.highlight.title ? hit.highlight.title.join('… ') : hit.fields.title[0];
