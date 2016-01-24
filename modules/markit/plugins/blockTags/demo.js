@@ -13,7 +13,6 @@ module.exports = function(md) {
     let src = tokens[idx].blockTagAttrs.src;
 
     if (src) {
-      console.log(src, options);
       let href = (src[0] == '/') ? src : options.staticHost + options.resourceWebRoot + '/' + src;
       href += '/';
 
