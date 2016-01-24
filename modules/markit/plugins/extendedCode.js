@@ -14,6 +14,14 @@ module.exports = function(md) {
 
     if (content.indexOf('key:') == 0) {
       return renderKey(content.slice(4));
+    } else {
+      let codePrefixes = ['pattern', 'match', 'subject'];
+      for (var i = 0; i < codePrefixes.length; i++) {
+        var prefix = codePrefixes[i];
+        if (content.startsWith(prefix + ':')) {
+          return `<code class="${prefix}">${md.utils.escapeHtml(content.slice('pattern'))}</code>`;
+        }
+      }
     }
 
     return '<code>' + md.utils.escapeHtml(content) + '</code>';
@@ -33,7 +41,7 @@ module.exports = function(md) {
 
     for (var i = 0; i < keys.length; i++) {
       var key = keys[i];
-      results.push((key == plusLabel) ? '+' : key);
+      results.push((key == plusLabel) ? '+' : md.utils.escapeHtml(key));
       if (i < keys.length - 1) {
         results.push('<span class="shortcut__plus">+</span>');
       }

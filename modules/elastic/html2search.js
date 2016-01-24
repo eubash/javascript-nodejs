@@ -14,5 +14,5 @@ module.exports = function prepareHtml(html) {
     .replace(/<pre class="line-numbers[\s\S]*?<\/pre>/gim, '') // remove code
     .replace(/<style(\s|>)[\s\S]*?<\/style>/gim, '')  // remove styles
     .replace(/<script(\s|>)[\s\S]*?<\/script>/gim, '') // remove inline scripts
-    .replace(/<\/?[a-z].*?>/gim, ''); // strip all tags
+    .replace(/<\/?[a-z][\s\S]*?>/gim, ''); // strip all tags including multiline tags
 };
