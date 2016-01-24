@@ -1,48 +1,32 @@
-// from mongoose-troop
-//  (c) 2012 Beau Sorensen
-//  MIT Licensed
-//  For all details and documentation:
-//  https://github.com/tblobaum/mongoose-troop
+'use strict';
 
-// Timestamp
-// ---------
-
-// Plugin
-function timestamp (schema, options) {
-  options || (options = {})
+module.exports = function(schema, options) {
+  options || (options = {});
 
   // Options
-  var fields = {}
-    , createdPath = options.createdPath || 'created'
-    , modifiedPath = options.modifiedPath || 'modified'
-    , useVirtual = (options.useVirtual !== undefined)
-    ? options.useVirtual
-    : true
+  let fields = {};
+  let createdPath = options.createdPath || 'created';
+  let modifiedPath = options.modifiedPath || 'modified';
 
   // Add paths to schema if not present
+  if (!schema.paths[modifiedPath]) {
+    fields[modifiedPath] = {
+      type:  Date,
+      index: true
+    };
+  }
   if (!schema.paths[createdPath]) {
-    fields[modifiedPath] = { type: Date }
+    fields[createdPath] = {
+      type:    Date,
+      default: Date.now,
+      index:   true
+    };
   }
-  if (useVirtual) {
-    // Use the ObjectID for extracting the created time
-    schema.virtual(createdPath).get(function () {
-      return new Date(this._id.generationTime * 1000)
-    })
-  } else {
-    if (!schema.paths[createdPath]) {
-      fields[createdPath] = {
-        type: Date
-        , default: Date.now
-      }
-    }
-  }
-  schema.add(fields)
+  schema.add(fields);
 
   // Update the modified timestamp on save
-  schema.pre('save', function (next) {
-    this[modifiedPath] = new Date
-    next()
-  })
-}
-
-module.exports = timestamp;
+  schema.pre('save', function(next) {
+    this[modifiedPath] = new Date();
+    next();
+  });
+};

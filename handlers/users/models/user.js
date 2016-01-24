@@ -20,7 +20,7 @@ var ProviderSchema = new mongoose.Schema({
 var UserSchema = new mongoose.Schema({
   displayName:   {
     type:     String,
-    trim: true,
+    trim:     true,
     default:  "", // need a value for validator to run
     validate: [
       {
@@ -40,12 +40,12 @@ var UserSchema = new mongoose.Schema({
     ]
   },
   email:         {
-    type:     String,
+    type:      String,
     lowercase: true,
-    trim: true,
-    default:  "", // need a value for validator to run
+    trim:      true,
+    default:   "", // need a value for validator to run
     // если посетитель удалён, то у него нет email!
-    validate: [
+    validate:  [
       {
         validator: function checkNonEmpty(value) {
           return this.deleted ? true : (value.length > 0);
@@ -168,10 +168,10 @@ var UserSchema = new mongoose.Schema({
     type: String
   },
   publicEmail:               {
-    type: String,
+    type:      String,
     lowercase: true,
-    trim: true,
-    validate: [
+    trim:      true,
+    validate:  [
       {
         validator: function checkEmail(value) {
           return !value ? true : validate.patterns.email.test(value);
@@ -191,7 +191,7 @@ var UserSchema = new mongoose.Schema({
   aboutMe:                   {
     type:      String,
     maxlength: 600,
-    trim: true
+    trim:      true
   },
   deleted:                   { // private & login data is deleted
     type:    Boolean,
@@ -199,6 +199,10 @@ var UserSchema = new mongoose.Schema({
   },
   readOnly:                  Boolean,  // data is not deleted, just flagged as banned
   isAdmin:                   Boolean,
+  roles:                     { // qaModerator?
+    type: [String],
+    default: []
+  },
   lastActivity:              Date
   /* created, modified from plugin */
 });
