@@ -1,7 +1,5 @@
 'use strict';
 
-let tokenUtils = require('../../utils/token');
-
 const t = require('i18n');
 
 const LANG = require('config').lang;
@@ -12,13 +10,14 @@ module.exports = function(md) {
 
   md.renderer.rules.blocktag_demo = function(tokens, idx, options, env, slf) {
 
-    let src = tokenUtils.attrGet(tokens[idx], 'src');
+    let src = tokens[idx].blockTagAttrs.src;
 
     if (src) {
-      let href = src[0] == '/' ? src : options.staticHost + options.resourceRoot + '/' + src;
+      console.log(src, options);
+      let href = (src[0] == '/') ? src : options.staticHost + options.resourceWebRoot + '/' + src;
       href += '/';
 
-      return `<a href="${href}" target="blank'>${t('markit.demo.window')}</a>`;
+      return `<a href="${href}" target="blank">${t('markit.demo.window')}</a>`;
     }
 
 
