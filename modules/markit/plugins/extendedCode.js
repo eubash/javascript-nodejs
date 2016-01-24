@@ -19,7 +19,7 @@ module.exports = function(md) {
       for (var i = 0; i < codePrefixes.length; i++) {
         var prefix = codePrefixes[i];
         if (content.startsWith(prefix + ':')) {
-          return `<code class="${prefix}">${md.utils.escapeHtml(content.slice('pattern'))}</code>`;
+          return `<code class="${prefix}">${md.utils.escapeHtml(content.slice(prefix.length + 1))}</code>`;
         }
       }
     }
