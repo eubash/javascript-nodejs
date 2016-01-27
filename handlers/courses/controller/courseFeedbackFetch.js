@@ -29,10 +29,16 @@ exports.get = function*() {
   }
 
   if (this.query.course) {
-    if (!mongoose.Types.ObjectId.isValid(this.query.course)) {
-      this.throw(400, "course is malformed");
+
+    var course = yield Course.findOne({
+      slug: this.query.course
+    });
+
+    if (!course) {
+      this.throw(404);
     }
-    filter.courseCache = new mongoose.Types.ObjectId(this.query.course);
+
+    filter.courseCache = course._id;
   }
 
   if (this.query.teacherId) {

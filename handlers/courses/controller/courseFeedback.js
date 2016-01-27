@@ -52,7 +52,8 @@ function* getFeedbackStats(course) {
       $match: {
         group: {
           $in: groupIds
-        }
+        },
+        isPublic: true
       }
     },
     {

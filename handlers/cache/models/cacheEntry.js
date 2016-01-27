@@ -65,13 +65,13 @@ schema.statics.get = function* (key) {
 // or get it from db (if someone else has generated it)
 //   --> never runs generators in parallel
 //   --> never returns stale values
-schema.statics.getOrGenerate = function* (doc, generator) {
+schema.statics.getOrGenerate = function* (doc, generator, skipCache) {
   var CacheEntry = this;
   // try to find it
   var result;
 
   // disable cache for development
-  if (process.env.NODE_ENV == 'development' && !process.env.CACHEENTRY_ENABLED) {
+  if (process.env.NODE_ENV == 'development' && !process.env.CACHEENTRY_ENABLED || skipCache) {
     return yield generator();
   }
 
