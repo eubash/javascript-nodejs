@@ -9,6 +9,7 @@ block append variables
 
 block append head
   script window.SCREENCAST_SLUG='#{slug}';
+  !=css("screencast")
   !=js("screencast", {defer: true})
 
 block content

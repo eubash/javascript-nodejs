@@ -1,3 +1,5 @@
+require('./styles');
+
 var Modal = require('client/head/modal');
 var clientRender = require('client/clientRender');
 var newsletter = require('newsletter/client');
