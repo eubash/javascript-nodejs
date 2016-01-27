@@ -19,7 +19,6 @@ block append head
 block content
 
   script var feedbackStats = !{escapeJSON(stats)};
-
   +b.feedback-stat
     +e('ul').list
       +e('li').item(data-stars-title=5) Отлично
@@ -92,7 +91,7 @@ block content
           +e('option').option(value="5") с оценкой 5
           +e('option').option(value="4") с оценкой 4
           +e('option').option(value="3") с оценкой 3
-          +e('option').option(value="2") с оценкой 4
+          +e('option').option(value="2") с оценкой 2
           +e('option').option(value="1") с оценкой 1
 
     +e.feedbacks-list(data-feedback-container)
