@@ -54,6 +54,11 @@ sudo port install nginx +debug+gzip_static+realip+geoip
 sudo port load nginx
 ```
 
+Под brew nginx ставить так:
+```
+brew install nginx-full --with-debug --with-geoip --with-realip --with-mp4
+```
+
 ## 6. Конфигурация Nginx с нуля
 
 Если в системе ранее не стоял nginx, то поставьте его.
