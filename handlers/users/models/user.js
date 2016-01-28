@@ -201,6 +201,7 @@ var UserSchema = new mongoose.Schema({
   isAdmin:                   Boolean,
   roles:                     { // qaModerator?
     type: [String],
+    index: true,
     default: []
   },
   lastActivity:              Date

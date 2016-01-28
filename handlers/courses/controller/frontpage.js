@@ -22,9 +22,8 @@ exports.get = function*() {
   }
 
   let teachers = yield User.find({
-    teachesCourses: {$exists: true, $not: {$size: 0}}
-  });
-
+    roles: 'teacher'
+  }).sort({created: 1});
 
   this.locals.formatGroupDate = function(date) {
     return moment(date).format('D MMM YYYY').replace(/[а-я]/, function(letter) {
