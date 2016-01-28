@@ -30,6 +30,7 @@ block content
     h2 Транзакция
     table
       tr
+        th number
         th modified
         th created
         th paymentMethod
@@ -39,6 +40,7 @@ block content
         th statusMessage
       each transaction in transactions
         tr
+          td= transaction.number
           td= moment(transaction.modified).format('DD.MM.YYYY HH:mm:ss')
           td= moment(transaction.created).format('DD.MM.YYYY HH:mm:ss')
           td= transaction.paymentMethod
@@ -48,7 +50,7 @@ block content
           td= transaction.statusMessage
         if transaction.paymentMethod == 'invoice'
           tr
-            td(colspan=7)
+            td(colspan=8)
               | Скачать <a href="/payments/invoice/#{transaction.number}/invoice.docx">счёт</a>
               if transaction.paymentDetails.agreementRequired
                 | &nbsp;и <a href="/payments/invoice/#{transaction.number}/agreement.docx">договор с актом</a>.
