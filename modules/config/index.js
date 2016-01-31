@@ -95,6 +95,7 @@ var config = module.exports = {
   },
   payments: require('./payments'),
 
+  iprotect: secret.iprotect,
   imgur:    secret.imgur,
   adminKey: secret.adminKey,
 
@@ -158,6 +159,7 @@ var config = module.exports = {
   publicRoot:            path.join(process.cwd(), 'public'),
   // private files, for expiring links, not directly accessible
   downloadRoot:          path.join(process.cwd(), 'download'),
+  archiveRoot:           path.join(process.cwd(), 'archive'),
   courseRoot:            path.join(process.cwd(), 'course'),
   tmpRoot:               path.join(process.cwd(), 'tmp'),
   localesRoot:           path.join(process.cwd(), 'locales'),

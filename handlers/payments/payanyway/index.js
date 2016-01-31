@@ -25,7 +25,7 @@ exports.createTransaction = function*(order) {
 exports.info = {
   title:    "Payanyway",
   name:     path.basename(__dirname),
-  subtitle: "банковские карты для стран СНГ",
+  subtitle: "банковские карты, резервный метод",
   cards:    ['visa-mastercard'],
   hasIcon:  false,
   currency: 'RUB'

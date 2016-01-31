@@ -1,3 +1,5 @@
+'use strict';
+
 // adapted koa-logger for bunyan
 const Counter = require('passthrough-counter');
 const clsNamespace = require("continuation-local-storage").getNamespace("app");
