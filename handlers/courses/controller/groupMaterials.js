@@ -217,6 +217,8 @@ function* processFiles(name, files) {
     fse.ensureDir(workingDir, cb);
   };
 
+  let jobs = [];
+
   for (let i = 0; i < files.length; i++) {
     let file = files[i];
 
@@ -226,33 +228,28 @@ function* processFiles(name, files) {
       // extract directly to workingdir
       //let extractDir = path.join(workingDir, originalFilename.replace(/\.zip$/, ''));
       //yield fs.mkdir(extractDir);
-      let output = yield function(callback) {
-        exec(`unzip -nq ${file.path} -d ${workingDir}`, function(error, stdout, stderr) {
-          if (stderr) callback(new Error(stderr));
-          else callback(null, stdout);
-        });
-      };
-      this.log.debug(output);
+       jobs.push((callback) => {
+         exec(`unzip -nq ${file.path} -d ${workingDir}`, (error, stdout, stderr) => {
+           if (stderr) {
+             callback(new Error(stderr));
+           } else {
+             this.log.debug(stdout);
+             callback(null, stdout);
+           }
+         });
+       });
     } else if (originalFilename.match(/\.mp4$/)) {
-
-      let protectedFile = yield* iprotect.protect(originalFilename.replace(/\.mp4$/, ''), file.path);
-
-      let output = yield function(callback) {
-        exec(`unzip -nq ${protectedFile} -d ${workingDir}`, function(error, stdout, stderr) {
-          if (stderr) callback(new Error(stderr));
-          else callback(null, stdout);
-        });
-      };
-      this.log.debug(output);
-      fs.unlinkSync(protectedFile); // strange bluebird/cls warning if I yield unlink
+      jobs.push(iprotect.protect(originalFilename.replace(/\.mp4$/, ''), file.path, workingDir));
     } else {
       let filePath = path.join(workingDir, originalFilename);
-      yield function(callback) {
+      jobs.push(function(callback) {
         fse.copy(file.path, filePath, callback);
-      };
+      });
     }
 
   }
+
+  yield jobs;
 
   yield function(callback) {
     exec(`chmod -R 777 ${workingDir}`, callback);
