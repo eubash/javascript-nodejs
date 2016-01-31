@@ -4,12 +4,12 @@ let config = require('config');
 let request = require('request-promise');
 let fs = require('fs');
 let log = require('log')();
-
+let exec = require('child_process').exec;
 let tmpRoot = config.tmpRoot + '/iprotect';
 if (!fs.existsSync(tmpRoot)) fs.mkdirSync(tmpRoot);
 
 // protect("/path/to/record.mp4")
-function* protect(name, filePath) {
+function* protect(name, filePath, targetDir) {
 
   validateName(name);
 
@@ -53,7 +53,7 @@ function* protect(name, filePath) {
       // wow downloaded!
       yield* del(name);
 
-      return protectedPath;
+      break;
 
     } catch (e) {
 
@@ -87,6 +87,18 @@ function* protect(name, filePath) {
 
   }
 
+  yield function(callback) {
+    exec(`unzip -nq ${protectedPath} -d ${targetDir}`, function(error, stdout, stderr) {
+      log.debug(arguments);
+      if (stderr) {
+        callback(new Error(stderr));
+      } else {
+        callback(null, stdout);
+      }
+    });
+  };
+
+  fs.unlinkSync(protectedPath); // strange bluebird/cls warning if I yield unlink
 
 }
 
