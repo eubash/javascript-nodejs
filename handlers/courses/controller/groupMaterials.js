@@ -10,6 +10,12 @@ var _ = require('lodash');
 var multiparty = require('multiparty');
 var config = require('config');
 var fs = require('mz/fs');
+var fse = require('fs-extra');
+var transliterate = require('textUtil/transliterate');
+var exec = require('child_process').exec;
+var glob = require('glob');
+var iprotect = require('iprotect');
+var moment = require('momentWithLocale');
 
 // Group info for a participant, with user instructions on how to login
 exports.get = function*() {
@@ -43,40 +49,41 @@ exports.get = function*() {
 
 exports.post = function*() {
 
-  var self = this;
-
+  this.res.setTimeout(3600 * 1e3, () => {
+    this.res.end("Timeout");
+  });
   var group = this.groupBySlug;
 
-  self.files = {};
-  yield new Promise(function(resolve, reject) {
+  let files = [];
+  yield new Promise((resolve, reject) => {
 
     var form = new multiparty.Form({
-      autoFields: true,
-      autoFiles: true,
-      maxFilesSize: 512*1024*1024 // 512MB max file size
+      autoFields:   true,
+      autoFiles:    true,
+      maxFilesSize: 512 * 1024 * 1024 // 512MB max file size
     });
 
     // multipart file must be the last
-    form.on('file', function(name, file) {
-      self.files[name] = file;
+    form.on('file', (name, file) => {
+      if (!file.originalFilename) return; // empty file field
+      // name is "materials" always
+      files.push(file);
     });
 
     form.on('error', reject);
 
-
-    form.on('field', function(name, value) {
-      self.request.body[name] = value;
+    form.on('field', (name, value) => {
+      this.request.body[name] = value;
     });
 
     form.on('close', resolve);
 
-    form.parse(self.req);
+    form.parse(this.req);
   });
 
-  var file = this.files.materials;
   /*
-    file example: (@see multiparty)
-  { fieldName: 'materials',
+   file example: (@see multiparty)
+   { fieldName: 'materials',
    originalFilename: '10_types_intro_protected.zip',
    path: '/var/folders/41/nsmzxxxn0fx7c656wngnq_wh0000gn/T/3o-PzBrAMsX5W35KZ5JH0HKw.zip',
    headers:
@@ -85,32 +92,75 @@ exports.post = function*() {
    size: 14746520 }
    */
 
+
+  // now process files
+
+  let materialsFileBasenameStem = this.request.body.filename ?
+    transliterate(this.request.body.filename).replace(/[^-_\w\d]/gim, '') :
+    moment().format('YYYY_MM_DD_HHmm');
+
+  let materialsFileBasename = materialsFileBasenameStem + '.zip';
+
+  let processedMaterialsZip;
+  try {
+    processedMaterialsZip = yield* processFiles.call(this, materialsFileBasenameStem, files);
+  } catch (e) {
+    this.log.debug(e);
+    // error, so delete all tmp files
+    for (var i = 0; i < files.length; i++) {
+      var file = files[i];
+      fs.unlinkSync(file.path);
+    }
+    this.addFlashMessage('error', e.message);
+    this.redirect(this.originalUrl);
+    return;
+  }
+
+
+  // store uploaded files in archive under the title chosen by uploader
+  let archiveDir = config.archiveRoot + '/groupMaterials/' + Date.now() + '/' + materialsFileBasenameStem;
+  yield function(callback) {
+    fse.ensureDir(archiveDir, callback);
+  };
+
+  // use original names
+  for (let i = 0; i < files.length; i++) {
+    let file = files[i];
+    let originalFilename = transliterate(file.originalFilename).replace(/[^\d\w_.-]/gim, '');
+    fs.renameSync(file.path, path.join(archiveDir, originalFilename));
+    this.log.debug("Moved to archive", file.path, '->', path.join(archiveDir, originalFilename));
+  }
+
+  // move zipped materials to download dir
+  let filePath = `${config.downloadRoot}/courses/${group.slug}/${materialsFileBasename}`;
+
+  yield function(callback) {
+    fse.ensureDir(path.dirname(filePath), callback);
+  };
+
+  fs.renameSync(processedMaterialsZip, filePath);
+
+  this.log.debug("Moved zipped result to", filePath);
+
+  // update the database
   var participants = yield CourseParticipant.find({
-    isActive: true,
+    isActive:              true,
     shouldNotifyMaterials: true,
-    group: group._id
+    group:                 group._id
   }).populate('user');
 
   // remove old material with the same name (Adding the same file replaces it)
-  for(let i=0; i<group.materials.length; i++) {
-    if (group.materials[i].filename == file.originalFilename) {
+  for (let i = 0; i < group.materials.length; i++) {
+    if (group.materials[i].filename == materialsFileBasename) {
       group.materials.splice(i--, 1);
     }
   }
 
   var material = {
-    title:    file.originalFilename,
-    filename: file.originalFilename,
-    comment: this.request.body.comment
+    title:    materialsFileBasenameStem,
+    filename: materialsFileBasename,
+    comment:  this.request.body.comment
   };
-
-  var filePath = `${config.downloadRoot}/courses/${group.slug}/${material.filename}`;
-
-  if (! (yield fs.exists(path.dirname(filePath))) ) {
-    yield fs.mkdir(path.dirname(filePath));
-  }
-
-  yield fs.rename(file.path, filePath);
 
   group.materials.unshift(material);
 
@@ -139,3 +189,83 @@ exports.post = function*() {
   this.redirect(this.originalUrl);
 };
 
+function* clean() {
+
+  let entries = [];
+  yield function(callback) {
+    let g = new glob.Glob(config.tmpRoot + '/groupMaterials/*', {stat: true}, callback);
+    g.on('stat', function(dir, stat) {
+      // get entries modified more than 1 day ago
+      if (stat.mtime < Date.now() - 86400 * 1e3) entries.push(dir);
+    });
+  };
+
+  this.log.debug("clean", entries);
+  for (let i = 0; i < entries.length; i++) {
+    yield function(callback) {
+      fse.remove(entries[i], callback);
+    };
+  }
+}
+
+function* processFiles(name, files) {
+
+  yield* clean.call(this);
+
+  let workingDir = config.tmpRoot + '/groupMaterials/' + Date.now() + '/' + name;
+  yield function(cb) {
+    fse.ensureDir(workingDir, cb);
+  };
+
+  for (let i = 0; i < files.length; i++) {
+    let file = files[i];
+
+    let originalFilename = transliterate(file.originalFilename).replace(/[^\d\w_.-]/gim, '');
+
+    if (originalFilename.match(/\.zip$/)) {
+      // extract directly to workingdir
+      //let extractDir = path.join(workingDir, originalFilename.replace(/\.zip$/, ''));
+      //yield fs.mkdir(extractDir);
+      let output = yield function(callback) {
+        exec(`unzip -nq ${file.path} -d ${workingDir}`, function(error, stdout, stderr) {
+          if (stderr) callback(new Error(stderr));
+          else callback(null, stdout);
+        });
+      };
+      this.log.debug(output);
+    } else if (originalFilename.match(/\.mp4$/)) {
+
+      let protectedFile = yield* iprotect.protect(originalFilename.replace(/\.mp4$/, ''), file.path);
+
+      let output = yield function(callback) {
+        exec(`unzip -nq ${protectedFile} -d ${workingDir}`, function(error, stdout, stderr) {
+          if (stderr) callback(new Error(stderr));
+          else callback(null, stdout);
+        });
+      };
+      this.log.debug(output);
+      fs.unlinkSync(protectedFile); // strange bluebird/cls warning if I yield unlink
+    } else {
+      let filePath = path.join(workingDir, originalFilename);
+      yield function(callback) {
+        fse.copy(file.path, filePath, callback);
+      };
+    }
+
+  }
+
+  yield function(callback) {
+    exec(`chmod -R 777 ${workingDir}`, callback);
+  };
+
+  yield function(callback) {
+    exec(`zip -r ${name} ${name}`, {cwd: path.dirname(workingDir)}, callback);
+  };
+
+  yield function(callback) {
+    fse.remove(workingDir, callback);
+  };
+
+  return workingDir + '.zip';
+
+}

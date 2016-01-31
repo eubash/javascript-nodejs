@@ -22,10 +22,17 @@ block content
         | &nbsp;Уведомлять меня по email о появлении материалов.
   else if teacher
 
-    +b('form')(method="POST" action="?_csrf=" + csrf() enctype="multipart/form-data").courses-materials-add
-      +e('h2').title Добавление материала
+    +b('form')(method="POST" action="?_csrf=" + csrf() enctype="multipart/form-data" data-teacher-form).courses-materials-add
+      +e('h2').title Добавление материалов
       +e.line
-        input(name="materials" type="file" accept="application/zip" required)
+        +e('label').name
+          | Имя файла, по времени занятия:&nbsp;&nbsp;
+          +e('input').input(name="filename" value=moment().format('YYYY_MM_DD_HHmm') autofocus required)
+          | .zip
+      +e('div')(data-materials-fields)
+        +e.line._empty
+          +e('input')(type="button" value="x" data-materials-remove).remove
+          +e('input')(name="materials" type="file" multiple)
       +e.line
         +b('span').text-input.__input
           +e('input').control(name="comment" placeholder='Комментарий (опционально)')
