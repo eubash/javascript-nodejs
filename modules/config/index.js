@@ -110,7 +110,7 @@ var config = module.exports = {
     appId: secret.openexchangerates.appId
   },
 
-  jb:      {
+  jb: {
     email: env.NODE_ENV == 'production' ? secret.jb.email : 'iliakan@gmail.com'
   },
 
@@ -159,8 +159,8 @@ var config = module.exports = {
   publicRoot:            path.join(process.cwd(), 'public'),
   // private files, for expiring links, not directly accessible
   downloadRoot:          path.join(process.cwd(), 'download'),
+  jabberLogsRoot:        path.join(process.cwd(), 'jabber-logs'),
   archiveRoot:           path.join(process.cwd(), 'archive'),
-  courseRoot:            path.join(process.cwd(), 'course'),
   tmpRoot:               path.join(process.cwd(), 'tmp'),
   localesRoot:           path.join(process.cwd(), 'locales'),
   // js/css build versions
