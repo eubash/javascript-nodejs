@@ -3,6 +3,7 @@
 const config = require('config');
 const iprotect = require('..');
 const should = require('should');
+const fse = require('fs-extra');
 const fs = require('fs');
 
 describe('iprotect', function() {
@@ -11,15 +12,14 @@ describe('iprotect', function() {
   describe('when invalid file', function() {
     it('fails', function*() {
 
-      let result;
+      let err;
       try {
-        result = yield* iprotect.protect('file' + Math.random() * 1e8 ^ 0, __filename);
+        yield* iprotect.protect('file' + Math.random() * 1e8 ^ 0, __filename, '/tmp');
       } catch (e) {
-        return;
+        err = e;
       }
 
-      should(result).not.exist;
-
+      err.should.exist;
     });
   });
 
@@ -27,28 +27,29 @@ describe('iprotect', function() {
 
     it('fails', function*() {
 
-      let result;
+      let err;
       try {
-        result = yield* iprotect.protect('no-such-file', '/tmp/no/such/file');
+        yield* iprotect.protect('no-such-file', 'no-such-file', '/tmp/no/such/file');
       } catch (e) {
-        console.log(e);
+        err = e;
         return;
       }
 
-      should(result).not.exist;
+      err.should.exist;
     });
   });
 
 
   describe('when valid video', function() {
 
-    it.only('succeeds', function*() {
+    it('succeeds', function*() {
 
-      let protectedPath = yield* iprotect.protect('test', __dirname + '/fixture/mp4.mp4');
+      let targetDir = config.tmpRoot + '/test';
+      yield* iprotect.protect('result', __dirname + '/fixture/mp4.mp4', targetDir);
 
-      fs.existsSync(protectedPath).should.be.true;
+      fs.existsSync(targetDir + '/result').should.be.true;
 
-      fs.unlinkSync(protectedPath);
+      fse.removeSync(targetDir);
     });
 
   });
