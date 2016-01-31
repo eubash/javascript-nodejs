@@ -44,6 +44,21 @@ exports.get = function*() {
     });
   }
 
+  let logs;
+  try {
+    logs = yield fs.readdir(config.jabberLogsRoot + '/' + group.webinarId);
+  } catch(e) { // no logs
+    logs = [];
+  }
+
+  logs = logs.sort().map(file => ({
+    title: file,
+    link: `/courses/groups/${group.slug}/logs/${file.replace(/\.html$/, '')}`
+  }));
+
+  this.locals.chatLogs = logs;
+
+
   this.body = this.render('groupMaterials');
 };
 
