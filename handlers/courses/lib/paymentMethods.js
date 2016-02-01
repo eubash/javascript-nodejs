@@ -2,7 +2,7 @@
 
 const payments = require('payments');
 const config = require('config');
-var paymentMethods = {};
+const paymentMethods = {};
 
 const methodsEnabled = [ 'yakassa', 'paypal', 'webmoney', 'yandexmoney', 'banksimple', 'banksimpleua', 'invoice', 'payanyway', 'interkassa'];
 
