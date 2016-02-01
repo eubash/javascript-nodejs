@@ -60,8 +60,15 @@ exports.paymentAviso = function* (next) {
     return;
   }
 
+  yield this.transaction.logRequest('aviso', this.request);
+
   // if should not be needed, if responce is corect
   if (this.transaction.status != Transaction.STATUS_SUCCESS) {
+    yield this.transaction.persist({
+      paymentDetails: {
+        invoiceId: this.request.body.requestId
+      }
+    });
     this.log.debug("will call order onPaid module=" + this.order.module);
     yield* this.order.onPaid(this.transaction);
   }

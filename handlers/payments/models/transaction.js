@@ -44,6 +44,7 @@ var schema = new Schema({
       processing: Boolean, // for Ya.Money processPayments & Paypal PDT/IPN locking not to onPaid twice,
       oauthToken: String, // for Ya.Money processPayments
       requestId: String, //  for Ya.Money processPayments,
+      invoiceId: Number, // for YaKassa internal number, used for refunds
 
       // for invoices
       companyName: String,

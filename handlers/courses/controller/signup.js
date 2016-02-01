@@ -106,7 +106,8 @@ exports.get = function*() {
   // control manually is he correct or not
   // approve manually.
   if (pastParticipant.length == 1) {
-    this.locals.paymentMethods.free = payments.methods.free.info;
+    // copy, so that we won't alter paymentMethods module globally
+    this.locals.paymentMethods = Object.assign({}, this.locals.paymentMethods, {free: payments.methods.free.info});
   }
 
   // .. same group participant
