@@ -25,11 +25,23 @@
         color white
         text-shadow 0px 2px 2px #000000
 
-    &_style_gulp .share-icons .share
+    &_style_gulp .share-icons .share,
+    &_style_gulp .donate-links__link
         color #8DD792
 
-    &_style_gulp .share-icons .share:hover
+    &_style_gulp .share-icons__title,
+    &_style_gulp .donate-links__title
+        color white
+
+    &_style_gulp .share-icons .share:hover,
+    &_style_gulp .donate-links__link:hover
         color hoverize(#8DD792)
+
+    &_style_gulp &__button .simple-button__text
+        color #8DD792
+
+    &_style_gulp &__button .simple-button__description
+        color white
 
     &_style_gulp &__foot
         color white
