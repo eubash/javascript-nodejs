@@ -1,0 +1,25 @@
+| BEGIN:VCALENDAR
+| VERSION:2.0
+| METHOD:PUBLISH
+| X-WR-CALNAME:Courses
+| X-WR-RELCALID:Courses
+| PRODID:-//javascript//NONSGML v1.0//EN
+| BEGIN:VTIMEZONE
+| TZID:Europe/Moscow
+| X-LIC-LOCATION:Europe/Moscow
+| BEGIN:STANDARD
+| TZOFFSETFROM:+0300
+| TZOFFSETTO:+0300
+| TZNAME:MSK
+| DTSTART:19700101T000000
+| END:STANDARD
+| END:VTIMEZONE
+| BEGIN:VEVENT
+| UID:#{group.slug}
+| DTSTART;TZID=Europe/Moscow:#{moment(group.dateStart).format('YYYYMMDDTHHmmss')}
+| DURATION:PT#{group.duration/60^0}H#{group.duration % 60 }M
+| RRULE:UNTIL=#{moment(group.dateEnd).utcOffset(0).format('YYYYMMDDTHHmmss')}Z;WKST=MO;FREQ=#{group.rrule.freq};BYDAY=#{group.rrule.byday.join(',')}
+| ORGANIZER;CN=Ilya Kantor:MAILTO:iliakan@javascript.ru
+| SUMMARY:#{group.teacher.displayName} - #{group.course.titleShort}
+| END:VEVENT
+| END:VCALENDAR

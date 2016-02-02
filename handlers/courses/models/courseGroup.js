@@ -19,6 +19,22 @@ var schema = new Schema({
     required: true
   },
 
+  duration: { // duration in minutes
+    type: Number
+  },
+  rrule: {
+    freq:  {
+      type:    String,
+      uppercase: true,
+      default: 'WEEKLY'
+    },
+    byday: [{
+      type: String,
+      uppercase: true,
+      enum: ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU']
+    }]
+  },
+
   // like "nodejs-0402", for urls
   slug: {
     type:     String,
@@ -35,7 +51,7 @@ var schema = new Schema({
   timeDesc: {
     type:     String,
     required: true,
-    trim: true
+    trim:     true
   },
 
   // currently available places
@@ -45,14 +61,14 @@ var schema = new Schema({
     required: true
   },
 
-  teacher:       {
+  teacher: {
     type:     Schema.Types.ObjectId,
     ref:      'User',
     required: true
   },
 
   videoKeyTagCached: {
-    type: String,
+    type:  String,
     index: true
   },
 
@@ -66,16 +82,16 @@ var schema = new Schema({
   // is this group in the open course list (otherwise hidden)?
   // even if not, the group is accessible by a direct link
   isListed: {
-    type: Boolean,
+    type:     Boolean,
     required: true,
-    default: false
+    default:  false
   },
 
   // is it possible to register?
   isOpenForSignup: {
-    type: Boolean,
+    type:     Boolean,
     required: true,
-    default: false
+    default:  false
   },
 
   // room jid AND gotowebinar id
@@ -90,7 +106,7 @@ var schema = new Schema({
     trim: true
   },
 
-  course:       {
+  course: {
     type:     Schema.Types.ObjectId,
     ref:      'Course',
     required: true
@@ -101,7 +117,7 @@ var schema = new Schema({
   title: {
     type:     String,
     required: true,
-    trim: true
+    trim:     true
   },
 
   created: {

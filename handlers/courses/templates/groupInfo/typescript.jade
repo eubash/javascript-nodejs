@@ -1,0 +1,35 @@
+extends /layouts/main
+
+
+block append variables
+
+  - var layout_main_class = "main_width-limit"
+  - var title = 'Онлайн-курс: настройка окружения';
+  - var sitetoolbar = true
+  - var siteToolbarCurrentSection = "courses"
+
+block append head
+  !=js("courses", {defer: true})
+
+
+block content
+
+  include block/intro.jade
+  include block/chat.jade
+  include block/gotowebinar.jade
+
+  h2 Node.JS, Git
+
+  p Со второго занятия нам понадобится Git и Node.JS.
+
+  ul
+    li.
+      <a href="http://nodejs.org">Node.JS</a> поставьте после просмотра первых выпусков <a href="http://learn.javascript.ru/screencast/nodejs">скринкаста</a>, проверьте работу на скрипте с <code>console.log("Hello world")</code>.
+    li.
+      <a href="https://git-scm.com/">Git</a> – если у вас не стоит, то поставьте, причём если у вас Windows и раньше с Git не работали, то во избежание "подводных камней" выбрать при установке опции, как указано на скриншотах:
+      <a href="/courses/git-win-1.png">скриншот 1</a> и <a href="/courses/git-win-2.png">скриншот 2</a>.
+
+  include block/questions.jade
+  include block/misc.jade
+  include block/problems.jade
+  include block/support.jade
