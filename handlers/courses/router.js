@@ -33,6 +33,10 @@ router.post('/groups/:groupBySlug/materials', mustBeTeacher, require('./controll
 
 router.get('/groups/:groupBySlug/logs/:logName', mustBeParticipantOrTeacher, require('./controller/groupLogs').get);
 
+router.get('/groups/:groupBySlug/ical', require('./controller/groupIcal').get);
+
+
+
 // not groups/:groupBySlug/* url,
 // because the prefix /course/download must be constant for nginx to proxy *.zip to node
 router.get('/download/:groupBySlug/:filename', mustBeParticipantOrTeacher, require('./controller/groupMaterialsDownload').get);
