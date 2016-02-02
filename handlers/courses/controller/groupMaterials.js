@@ -124,7 +124,7 @@ exports.post = function*() {
     // error, so delete all tmp files
     for (var i = 0; i < files.length; i++) {
       var file = files[i];
-      fs.unlinkSync(file.path);
+      yield fs.unlink(file.path);
     }
     this.addFlashMessage('error', e.message);
     this.redirect(this.originalUrl);
@@ -142,7 +142,7 @@ exports.post = function*() {
   for (let i = 0; i < files.length; i++) {
     let file = files[i];
     let originalFilename = transliterate(file.originalFilename).replace(/[^\d\w_.-]/gim, '');
-    fs.renameSync(file.path, path.join(archiveDir, originalFilename));
+    yield* move(file.path, path.join(archiveDir, originalFilename));
     this.log.debug("Moved to archive", file.path, '->', path.join(archiveDir, originalFilename));
   }
 
@@ -153,7 +153,7 @@ exports.post = function*() {
     fse.ensureDir(path.dirname(filePath), callback);
   };
 
-  fs.renameSync(processedMaterialsZip, filePath);
+  yield* move(processedMaterialsZip, filePath);
 
   this.log.debug("Moved zipped result to", filePath);
 
@@ -280,4 +280,11 @@ function* processFiles(name, files) {
 
   return workingDir + '.zip';
 
+}
+
+function* move(src, dst) {
+  yield function(callback) {
+    fse.copy(src, dst, callback);
+  };
+  yield fs.unlink(src);
 }
