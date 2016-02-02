@@ -19,7 +19,7 @@ Mongo – можно 2.6+. Линукс-пакет или, если у вас Ma
 Если через MacPorts, то:
 ```
 sudo port install mongodb
-sudo port load mondogb
+sudo port load mongodb
 ```
 
 ## 3. Клонируйте репозитарий 
@@ -54,12 +54,15 @@ sudo port install nginx +debug+gzip_static+realip+geoip
 sudo port load nginx
 ```
 
-Под brew nginx ставить так:
+## 6. npm install
+
+В директории, в которую клонировали, запустите:
+
 ```
-brew install nginx-full --with-debug --with-geoip --with-realip --with-mp4
+npm install
 ```
 
-## 6. Конфигурация Nginx с нуля
+## 7. Конфигурация Nginx с нуля
 
 Если в системе ранее не стоял nginx, то поставьте его.
 
@@ -90,7 +93,7 @@ gulp config:nginx --prefix /opt/local/etc/nginx --root /js/javascript-nodejs --e
 
 Такое имя хоста стоит в конфигурации Nginx.
  
-## 6.1. Если Nginx у вас уже стоит
+## 7.1. Если Nginx у вас уже стоит
 
 Если уже есть nginx, то сделайте резервную копию всех его конфигов.
  
@@ -107,13 +110,6 @@ gulp config:nginx --prefix /opt/local/etc/nginx --root /js/javascript-nodejs --e
  
 Перезапустите Nginx. Проверьте, что ваши предыдущие проекты работают.
  
-## 7. `npm install`
-
-В директории, в которую клонировали, запустите:
-
-```
-npm install
-```
 
 ## 8. База
 
@@ -157,5 +153,4 @@ PLUNK_REMOTE_OFF=1 gulp tutorial:import --root /js/javascript-tutorial
 # TroubleShooting
 
 Если что-то не работает -- [пишите issue](https://github.com/iliakan/javascript-nodejs/issues/new).
-
 
