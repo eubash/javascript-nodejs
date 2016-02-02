@@ -27,6 +27,8 @@ module.exports = function(md) {
 
     let src = token.blockTagAttrs.src;
 
+    let iframeId = options.html && token.blockTagAttrs.id ? ` id="${token.blockTagAttrs.id}"` : '';
+
     if (!src) {
       return `<div class="markdown-error">${t('markit.error.attr_required', {attr: 'src'})}</div>`;
     }
@@ -69,7 +71,7 @@ module.exports = function(md) {
 
     return `<div class="code-result">
     <div class="code-result__toolbar toolbar">${toolbarHtml}</div>
-    <iframe class="code-result__iframe" data-trusted="${trusted}" style="height:${height}px" src="${src}"></iframe>
+    <iframe${iframeId} class="code-result__iframe" data-trusted="${trusted}" style="height:${height}px" src="${src}"></iframe>
   </div>`;
 
   };
