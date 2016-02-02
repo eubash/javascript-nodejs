@@ -18,7 +18,10 @@
 | UID:#{group.slug}
 | DTSTART;TZID=Europe/Moscow:#{moment(group.dateStart).format('YYYYMMDDTHHmmss')}
 | DURATION:PT#{group.duration/60^0}H#{group.duration % 60 }M
-| RRULE:UNTIL=#{moment(group.dateEnd).utcOffset(0).format('YYYYMMDDTHHmmss')}Z;WKST=MO;FREQ=#{group.rrule.freq};BYDAY=#{group.rrule.byday.join(',')}
+if group.rrule
+  = '\n'
+  | RRULE:FREQ=#{group.rrule.freq};UNTIL=#{moment(group.dateEnd).utcOffset(0).format('YYYYMMDDTHHmmss')}Z;WKST=MO;BYDAY=#{group.rrule.byday.join(',')}
+  = '\n'
 | ORGANIZER;CN=Ilya Kantor:MAILTO:iliakan@javascript.ru
 | SUMMARY:#{group.teacher.displayName} - #{group.course.titleShort}
 | END:VEVENT
