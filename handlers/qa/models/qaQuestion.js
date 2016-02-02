@@ -9,21 +9,22 @@ const mongooseTimestamp = require('lib/mongooseTimestamp');
 const schema = new Schema({
   title:      {
     type:      String,
-    required:  true,
+    required:  "У вопроса должно быть название.",
     trim:      true,
-    minlength: 10
+    minlength: [10, 'Название должно содержать минимум 10 символов']
   },
   content:    {
-    type:     String,
-    required: true,
-    trim:     true
+    type:      String,
+    required:  "У вопроса должен быть текст",
+    trim:      true,
+    minlength: [10, 'Текст должен содержать минимум 10 символов']
   },
   // how to count views?
   // we need no google/yandex/etc bots
   viewsCount: {
     type:     Number,
     required: true,
-    default: 0
+    default:  0
   },
   slug:       { // makeAnchor.js
     type:     String,
@@ -31,8 +32,8 @@ const schema = new Schema({
     unique:   true
   },
   user:       {
-    type: Schema.ObjectId,
-    ref:  'User',
+    type:     Schema.ObjectId,
+    ref:      'User',
     required: true
   },
   created:    {
