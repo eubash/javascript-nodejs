@@ -40,7 +40,7 @@ Gulp -- замечательная система сборки и задач,
 </ol>
 </div>
  
-Код примеров -- в репозитарии <https://github.com/iliakan/gulp-screencast>.
+Код примеров -- в репозитории <https://github.com/iliakan/gulp-screencast>.
  
 Дальше планируются выпуски:
 
