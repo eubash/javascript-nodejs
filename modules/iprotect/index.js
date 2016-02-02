@@ -2,7 +2,7 @@
 
 let config = require('config');
 let request = require('request-promise');
-let fs = require('fs');
+let fs = require('mz/fs');
 let log = require('log')();
 let exec = require('child_process').exec;
 let tmpRoot = config.tmpRoot + '/iprotect';
@@ -87,6 +87,8 @@ function* protect(name, filePath, targetDir) {
 
   }
 
+  log.debug("unzipping", protectedPath, filePath);
+
   yield function(callback) {
     exec(`unzip -nq ${protectedPath} -d ${targetDir}`, function(error, stdout, stderr) {
       log.debug(arguments);
@@ -98,9 +100,13 @@ function* protect(name, filePath, targetDir) {
     });
   };
 
+  log.debug("unzipped", protectedPath, filePath);
+
   yield* del(name);
 
   yield fs.unlink(protectedPath); // strange bluebird/cls warning if I yield unlink
+
+  log.debug("done", protectedPath, targetDir);
 
 }
 
