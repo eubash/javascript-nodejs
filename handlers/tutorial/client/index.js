@@ -1,3 +1,5 @@
+'use strict';
+
 var delegate = require('client/delegate');
 var prism = require('client/prism');
 var xhr = require('client/xhr');

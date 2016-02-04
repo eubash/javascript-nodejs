@@ -1,3 +1,5 @@
+'use strict';
+
 const app = require('app');
 
 const TaskRenderer = require('../../renderer/taskRenderer');
@@ -43,7 +45,7 @@ describe("TaskRenderer", function() {
     const result = yield renderer.renderSolution(task, {});
 
     result.should.be.eql([{title: 'Part 1', content: '<p>Content 1</p>\n'},
-      {title: 'Part 2', content: '<p>Content 2</p>\n'}])
+      {title: 'Part 2', content: '<p>Content 2</p>\n'}]);
 
   });
 });

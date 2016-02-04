@@ -1,3 +1,5 @@
+'use strict';
+
 var xhr = require('client/xhr');
 
 var delegate = require('client/delegate');

@@ -1,3 +1,5 @@
+'use strict';
+
 var TutorialImporter = require('../tutorialImporter');
 var co = require('co');
 var fs = require('fs');

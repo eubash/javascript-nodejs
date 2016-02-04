@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Import tutorial into DB
  * @type {TutorialImporter|exports}
