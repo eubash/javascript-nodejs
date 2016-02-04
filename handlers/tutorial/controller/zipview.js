@@ -1,3 +1,5 @@
+'use strict';
+
 const Plunk = require('plunk').Plunk;
 const mongoose = require('mongoose');
 

@@ -13,9 +13,9 @@ function* protect(name, filePath, targetDir) {
 
   validateName(name);
 
-  yield* del(name);
+  let uniqueName = Date.now().toString();
 
-  log.debug("submit for protect", name, filePath);
+  log.debug("submit for protect", name, uniqueName, filePath);
 
   let options = {
     json:     true,
@@ -23,13 +23,15 @@ function* protect(name, filePath, targetDir) {
       file: {
         value:   fs.createReadStream(filePath),
         options: {
-          filename:    name + '.mp4',
+          filename:    uniqueName + '.mp4',
           contentType: 'video/mp4'
         }
       }
     },
     url:      config.iprotect.url.upload
   };
+
+  //console.log(options);
 
   let response = yield request.post(options);
 
@@ -38,11 +40,11 @@ function* protect(name, filePath, targetDir) {
 
   let date = Date.now();
 
-  let protectedPath = `${tmpRoot}/${name}.zip`;
+  let protectedPath = `${tmpRoot}/${uniqueName}.zip`;
 
   while (Date.now() < date + 120 * 1e3) { // wait 120 secounds
 
-    let req = request(config.iprotect.url.files + '/' + name + '_protected.zip');
+    let req = request(config.iprotect.url.files + '/' + uniqueName + '_protected.zip');
     req.pipe(fs.createWriteStream(protectedPath));
 
     log.debug(req.path);
@@ -51,7 +53,7 @@ function* protect(name, filePath, targetDir) {
       let res = yield req;
 
       // wow downloaded!
-      yield* del(name);
+      yield* del(uniqueName);
 
       break;
 
@@ -61,7 +63,7 @@ function* protect(name, filePath, targetDir) {
       // otherwise, error
       if (e.statusCode != 404) {
         // ouch! strange error!
-        log.error("iprotect upload", name, e);
+        log.error("iprotect upload", name, uniqueName, e);
         throw new Error("iprotect upload check failed: " + e.statusCode + '\n' + e.message);
       }
     }
@@ -69,11 +71,11 @@ function* protect(name, filePath, targetDir) {
     // check for name.err file, to see if the conversion failed
     let errorDescription;
     try {
-      errorDescription = yield request(config.iprotect.url.files + '/' + name + '.err');
+      errorDescription = yield request(config.iprotect.url.files + '/' + uniqueName + '.err');
     } catch (e) {
       if (e.statusCode != 404) {
         // ouch! strange error!
-        log.error("iprotect upload", name, e);
+        log.error("iprotect upload", name, uniqueName, e);
         throw new Error("iprotect err check failed: " + e.statusCode + '\n' + e.message);
       }
     }
@@ -95,6 +97,9 @@ function* protect(name, filePath, targetDir) {
       if (stderr) {
         callback(new Error(stderr));
       } else {
+        fs.renameSync(targetDir + '/' + uniqueName + '.app', targetDir + '/' + name + '.app');
+        fs.renameSync(targetDir + '/' + uniqueName + '.exe', targetDir + '/' + name + '.exe');
+        fs.renameSync(targetDir + '/data/' + uniqueName + '.ipr', targetDir + '/data/' + name + '.ipr');
         callback(null, stdout);
       }
     });
@@ -102,7 +107,7 @@ function* protect(name, filePath, targetDir) {
 
   log.debug("unzipped", protectedPath, filePath);
 
-  yield* del(name);
+  yield* del(uniqueName);
 
   yield fs.unlink(protectedPath); // strange bluebird/cls warning if I yield unlink
 

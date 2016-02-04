@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Import figures.sketch into tutorial
  * @type {FiguresImporter|exports}

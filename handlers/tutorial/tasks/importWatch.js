@@ -1,3 +1,5 @@
+'use strict';
+
 var TutorialImporter = require('../tutorialImporter');
 var FiguresImporter = require('../figuresImporter');
 var co = require('co');

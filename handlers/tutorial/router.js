@@ -1,3 +1,5 @@
+'use strict';
+
 var Router = require('koa-router');
 
 var task = require('./controller/task');

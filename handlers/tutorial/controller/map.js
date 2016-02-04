@@ -1,3 +1,5 @@
+'use strict';
+
 const mongoose = require('mongoose');
 const Article = require('../models/article');
 const Task = require('../models/task');
