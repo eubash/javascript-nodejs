@@ -30,6 +30,7 @@ router.get('/groups/:groupBySlug/info', mustBeParticipantOrTeacher, require('./c
 router.get('/groups/:groupBySlug/materials', mustBeParticipantOrTeacher, require('./controller/groupMaterials').get);
 router.get('/groups/:groupBySlug/participants-info', mustBeTeacherOrAdmin, require('./controller/participantsInfo').get);
 router.post('/groups/:groupBySlug/materials', mustBeTeacher, require('./controller/groupMaterials').post);
+router.del('/groups/:groupBySlug/materials', mustBeTeacher, require('./controller/groupMaterials').del);
 
 router.get('/groups/:groupBySlug/logs/:logName', mustBeParticipantOrTeacher, require('./controller/groupLogs').get);
 

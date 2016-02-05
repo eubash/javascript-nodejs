@@ -8,8 +8,36 @@ function init() {
   initShouldNotifyMaterials();
 
   initTeacherForm();
+  initDeleteForm();
 }
 
+function initDeleteForm() {
+  document.addEventListener('submit', e => {
+    if (e.target.hasAttribute('data-action-delete')) {
+      e.preventDefault();
+      if (confirm(`Удалить файл ${e.target.elements.filename.value}?`)) {
+        onDelFormSubmit(e.target);
+      }
+    }
+  });
+
+  function onDelFormSubmit(form) {
+
+    let request = xhr({
+      method: 'DELETE',
+      url:    form.action,
+      body:   {
+        filename: form.elements.filename.value
+      }
+    });
+
+    request.addEventListener('success', function(event) {
+      new notification.Success("Файл удалён.");
+      form.closest('tr').remove();
+    });
+  }
+
+}
 
 function initTeacherForm() {
   var form = document.querySelector('[data-teacher-form]');
@@ -57,7 +85,7 @@ function initShouldNotifyMaterials() {
       method: 'PATCH',
       url:    form.action,
       body:   {
-        id: form.elements.id.value,
+        id:                    form.elements.id.value,
         shouldNotifyMaterials: form.elements.shouldNotifyMaterials.checked
       }
     });

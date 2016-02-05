@@ -13,7 +13,7 @@ function* protect(name, filePath, targetDir) {
 
   validateName(name);
 
-  let uniqueName = Date.now().toString();
+  let uniqueName = Math.random().toString(36).slice(2);
 
   log.debug("submit for protect", name, uniqueName, filePath);
 

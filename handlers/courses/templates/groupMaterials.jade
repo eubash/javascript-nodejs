@@ -60,6 +60,8 @@ block content
           +e('th').name Название
           +e('th').size Размер
           +e('th').added Добавлено
+          if teacher
+            +e('th')= ' '
         for material in materials
           +e('tr').line
             +e('td').num
@@ -69,6 +71,12 @@ block content
                 +e('p').note!= material.comment
             +e('td').size= material.size
             +e('td').added= moment(material.created).format('DD.MM.YYYY')
+            if teacher
+              +e('td')
+                form(method="POST" action='' data-action-delete)
+                  button x
+                  input(type="hidden" name="filename" value=material.filename)
+
     else
       +b.notification._message._info
         +e.content Материалов пока нет, будут доступны позже.

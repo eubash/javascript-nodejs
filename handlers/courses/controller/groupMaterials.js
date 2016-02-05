@@ -38,6 +38,7 @@ exports.get = function*() {
     materials.push({
       title:   material.title,
       created: material.created,
+      filename: material.filename,
       comment: material.comment || '',
       url:     group.getMaterialUrl(material),
       size:    bytes(yield* group.getMaterialFileSize(material))
@@ -47,13 +48,13 @@ exports.get = function*() {
   let logs;
   try {
     logs = yield fs.readdir(config.jabberLogsRoot + '/' + group.webinarId);
-  } catch(e) { // no logs
+  } catch (e) { // no logs
     logs = [];
   }
 
   logs = logs.sort().map(file => ({
     title: file,
-    link: `/courses/groups/${group.slug}/logs/${file.replace(/\.html$/, '')}`
+    link:  `/courses/groups/${group.slug}/logs/${file.replace(/\.html$/, '')}`
   }));
 
   this.locals.chatLogs = logs;
@@ -62,9 +63,32 @@ exports.get = function*() {
   this.body = this.render('groupMaterials');
 };
 
+exports.del = function*() {
+
+  let group = this.groupBySlug;
+  let found = false;
+
+  for (let i = 0; i < group.materials.length; i++) {
+    console.log(group.materials[i].filename, this.request.body.filename);
+    if (group.materials[i].filename == this.request.body.filename) {
+      found = true;
+      group.materials.splice(i--, 1);
+      break;
+    }
+  }
+
+  if (!found) {
+    this.throw(404, 'No such file');
+  }
+
+  yield group.persist();
+  this.body = 'ok';
+
+};
+
 exports.post = function*() {
 
-  this.res.setTimeout(3600 * 1e3, () => {
+  this.res.setTimeout(3600 * 1e3, () => { // default timeout is too small
     this.res.end("Timeout");
   });
   var group = this.groupBySlug;
@@ -243,16 +267,16 @@ function* processFiles(name, files) {
       // extract directly to workingdir
       //let extractDir = path.join(workingDir, originalFilename.replace(/\.zip$/, ''));
       //yield fs.mkdir(extractDir);
-       jobs.push((callback) => {
-         exec(`unzip -nq ${file.path} -d ${workingDir}`, (error, stdout, stderr) => {
-           if (stderr) {
-             callback(new Error(stderr));
-           } else {
-             this.log.debug(stdout);
-             callback(null, stdout);
-           }
-         });
-       });
+      jobs.push((callback) => {
+        exec(`unzip -nq ${file.path} -d ${workingDir}`, (error, stdout, stderr) => {
+          if (stderr) {
+            callback(new Error(stderr));
+          } else {
+            this.log.debug(stdout);
+            callback(null, stdout);
+          }
+        });
+      });
     } else if (originalFilename.match(/\.mp4$/)) {
       jobs.push(iprotect.protect(originalFilename.replace(/\.mp4$/, ''), file.path, workingDir));
     } else {
@@ -282,6 +306,8 @@ function* processFiles(name, files) {
 
 }
 
+
+// fs.rename does not work across devices/mount points
 function* move(src, dst) {
   yield function(callback) {
     fse.copy(src, dst, callback);

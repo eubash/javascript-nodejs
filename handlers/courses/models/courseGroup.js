@@ -1,3 +1,5 @@
+'use strict';
+
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var config = require('config');
@@ -22,16 +24,16 @@ var schema = new Schema({
   duration: { // duration in minutes
     type: Number
   },
-  rrule: {
+  rrule:    {
     freq:  {
-      type:    String,
+      type:      String,
       uppercase: true,
-      default: 'WEEKLY'
+      default:   'WEEKLY'
     },
     byday: [{
-      type: String,
+      type:      String,
       uppercase: true,
-      enum: ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU']
+      enum:      ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU']
     }]
   },
 
@@ -139,9 +141,17 @@ schema.methods.getMaterialFileRelativePath = function(material) {
   return `courses/${this.slug}/${material.filename}`;
 };
 
+schema.methods.getMaterialFilePath = function(material) {
+  return path.join(config.downloadRoot, this.getMaterialFileRelativePath(material));
+};
+
 schema.methods.getMaterialFileSize = function* (material) {
-  var stat = yield fs.stat(path.join(config.downloadRoot, this.getMaterialFileRelativePath(material)));
-  return stat.size;
+  try {
+    let stat = yield fs.stat(this.getMaterialFilePath(material));
+    return stat.size;
+  } catch (e) {
+    return 0;
+  }
 };
 
 schema.methods.decreaseParticipantsLimit = function(count) {

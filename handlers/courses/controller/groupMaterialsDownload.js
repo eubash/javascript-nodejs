@@ -1,3 +1,5 @@
+'use strict';
+
 var bytes = require('bytes');
 var Course = require('../models/course');
 var CourseGroup = require('../models/courseGroup');
@@ -13,7 +15,9 @@ exports.get = function*() {
 
   // ensure the path to material is valid
   if (!material) {
-    this.throw(404);
+    this.throw(404, {
+      info: 'Ссылка неверна. Возможно, этот материал был добавлен по ошибке и позже удалён из преподавателем.'
+    });
   }
 
   // materials may be updated with the same name
