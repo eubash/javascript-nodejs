@@ -9,8 +9,8 @@ block content
     +e('h1').type Доступ запрещён
     +e.code 403
     +e.text
-      if error.description
-        != error.description
+      if error.info
+        != error.info
       else if user
         | Возможно, вы не под тем пользователем?
       else

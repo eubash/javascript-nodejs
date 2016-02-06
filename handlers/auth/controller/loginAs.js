@@ -14,7 +14,7 @@ exports.get = function* () {
 
   if (!user) {
     user = yield User.findOne({
-      email: this.params.profileNameOrEmailOrId
+      email: this.params.profileNameOrEmailOrId.replace('--', '.')
     }).exec();
   }
 

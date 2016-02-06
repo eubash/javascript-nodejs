@@ -1,3 +1,5 @@
+'use strict';
+
 var config = require('config');
 var path = require('path');
 var assert = require('assert');

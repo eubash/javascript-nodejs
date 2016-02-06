@@ -4,10 +4,16 @@ var _ = require('lodash');
 var Order = require('payments').Order;
 var Transaction = require('payments').Transaction;
 var User = require('users').User;
-var CourseParticipant = require('../models/courseParticipant');
-var CourseGroup = require('../models/courseGroup');
+var CourseParticipant = require('../../models/courseParticipant');
+var CourseInvite = require('../../models/courseInvite');
+var CourseGroup = require('../../models/courseGroup');
 
 exports.get = function*() {
+
+  if (!this.params.orderNumber && !this.query.orderNumber) {
+    this.body = this.render('admin/orders');
+    return;
+  }
 
   yield* loadOrderAdmin.call(this);
 
@@ -33,27 +39,39 @@ exports.get = function*() {
   this.locals.order = this.order;
   this.locals.transactions = transactions;
 
+  this.locals.invites = yield CourseInvite.find({
+    order: this.order._id
+  }).populate('group participant');
+
+/*
+  let group = yield CourseGroup.findById(this.order.data.group);
+  if (!group) {
+    this.throw(new Error("No group for order " + this.order._id));
+  }
+*/
+  this.locals.groupsAvailable = yield CourseGroup.find({
+    dateEnd: {
+      $gt: Date.now()
+    }
+  }).populate('course teacher').sort({dateStart: -1})
+
   this.body = this.render('admin/order');
 };
 
 function* loadOrderAdmin() {
 
-  yield* this.loadOrder({
-    skipPermissionCheck: true
-  });
+  yield* this.loadOrder();
 
   if (!this.order) {
-    this.throw(404, 'Нет такого заказа.');
+    this.throw(404, {
+      info: 'Нет такого заказа.'
+    });
   }
 
   if (!this.order.data.group) {
-    this.throw(404, 'Нет такого заказа на курс');
-  }
-
-  let group = yield CourseGroup.findById(this.order.data.group);
-
-  if (!this.isAdmin && !this.user._id.equals(group.teacher)) {
-    this.throw(403, 'Недостаточно прав');
+    this.throw(404, {
+      info: 'Нет такого заказа на курс'
+    });
   }
 
 }
