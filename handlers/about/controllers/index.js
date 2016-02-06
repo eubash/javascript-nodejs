@@ -1,6 +1,4 @@
-var sendMail = require('mailer').send;
-var path = require('path');
-var config = require('config');
+'use strict';
 
 exports.get = function*() {
   this.locals.siteToolbarCurrentSection = "about";

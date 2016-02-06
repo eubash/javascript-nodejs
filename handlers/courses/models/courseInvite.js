@@ -31,6 +31,13 @@ var schema = new Schema({
     }
   },
 
+  // for history how this participant was created
+  participant: {
+    type: Schema.Types.ObjectId,
+    ref:  'CourseParticipant'
+    // should be required, but added after participants w/o it existed already
+  },
+
   email: {
     type: String,
     lowercase: true,
@@ -57,8 +64,9 @@ var schema = new Schema({
 });
 
 
-schema.methods.accept = function*() {
+schema.methods.accept = function*(participant) {
   yield this.persist({
+    participant: participant,
     accepted: true
   });
 };

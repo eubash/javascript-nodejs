@@ -55,7 +55,8 @@ block content
               if transaction.paymentDetails.agreementRequired
                 | &nbsp;и <a href="/payments/invoice/#{transaction.number}/agreement.docx">договор с актом</a>.
 
-    p Действия
+    h3 Действия:
+
     ul
       li
         +b('button').button._action(name="action" value="save" type="submit")
@@ -89,3 +90,38 @@ block content
             +e('span').text Отменить и отчислить участников
 
 
+  h2 Инвайты
+
+  table
+    thead
+      tr
+        th email
+        th участник
+        th группа
+        th действия
+    tbody
+      each invite in invites
+        tr
+          td= invite.email
+          td
+            if invite.participant
+              | #{invite.participant.firstName} #{invite.participant.surname}
+            else
+              | '—'
+          td= invite.group.title
+          td
+            div
+              b Перевод
+            form(action="/courses/admin/invites" method="POST")
+              input(type="hidden", name="_csrf", value=csrf())
+              input(type="hidden", name="id", value=invite.id)
+              div
+                select(name="group")
+                  each group in groupsAvailable
+                    option(value=group.id) #{group.title} #{group.timeDesc} #{group.teacher.displayName}
+              div
+                label
+                  input(type="checkbox" checked name="notify")
+                  | Уведомить о переводе по почте
+              div
+                input(type="submit" value="Перевести")

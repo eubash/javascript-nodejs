@@ -1,3 +1,5 @@
+'use strict';
+
 const Course = require('../models/course');
 const CourseInvite = require('../models/courseInvite');
 const config = require('config');
@@ -149,10 +151,8 @@ function* askParticipantDetails(invite) {
     var participantData = _.pick(this.request.body,
       'photoId firstName surname country city aboutLink occupation purpose wishes'.split(' ')
     );
-    participantData.user = this.user._id;
+    participantData.user = this.user;
     participantData.group = invite.group._id;
-
-    participantData.invite = invite;
 
     if (participantData.photoId) {
       var photo = yield ImgurImage.findOne({imgurId: this.request.body.photoId}).exec();
@@ -175,7 +175,7 @@ function* askParticipantDetails(invite) {
     } catch (e) {
       this.log.debug("Participant persist error", e);
       if (e.errors.group) {
-        log.error(`group error (not unique?) for (${participant.group}, ${participant.user})`);
+        log.error(`group error (not unique?) for (${participant.group}, ${participant.user._id})`);
         throw e;
       }
 
@@ -196,7 +196,7 @@ function* askParticipantDetails(invite) {
 
     // make the new picture user avatar
     if (participant.photo && !this.user.photo) {
-      yield this.user.persist({
+      yield participant.user.persist({
         photo: participant.photo
       });
     }
@@ -219,12 +219,12 @@ function* askParticipantDetails(invite) {
 
 }
 
-function* acceptParticipant(invite) {
+function* acceptParticipant(invite, participant) {
 
-  this.user.profileTabsEnabled.addToSet('courses');
-  yield this.user.persist();
+  participant.user.profileTabsEnabled.addToSet('courses');
+  yield participant.user.persist();
 
-  yield invite.accept();
+  yield invite.accept(participant);
 
   invite.group.decreaseParticipantsLimit();
 
