@@ -24,7 +24,7 @@ var schema = new Schema({
   created: {
     type:    Date,
     default: Date.now,
-    expires: '300d' // link must die in 3 days
+    expires: '60d' // link will die in 60 days
   }
 });
 

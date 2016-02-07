@@ -29,14 +29,14 @@ Gulp -- замечательная система сборки и задач,
   
 <div class="lessons-list lessons-list_screencast">
 <ol class="lessons-list__lessons">
-<li class="lessons-list__lesson" data-mnemo="what-is-gulp"><a href="#" data-video-id="uPk6lQoTThE">Что такое Gulp? Сравнение с Grunt и Webpack</a></li>
-<li class="lessons-list__lesson" data-mnemo="basics"><a href="#" data-video-id="xptUdO3GuG8">Установка и запуск задач</a></li>
-<li class="lessons-list__lesson" data-mnemo="vinyl"><a href="#" data-video-id="NBdKplKl_3Q">Потоки Vinyl-FS</a></li>
-<li class="lessons-list__lesson" data-mnemo="stylus"><a href="#" data-video-id="_BFWG82mMkw">Начальная сборка стилей</a></li>
-<li class="lessons-list__lesson" data-mnemo="watch"><a href="#" data-video-id="jocvHauHcA4">Инкрементальная сборка, watch</a></li>
-<li class="lessons-list__lesson" data-mnemo="watch-perf"><a href="#" data-video-id="Dhrhoe6fFD0">Инкрементальность и производительность</a></li>
-<li class="lessons-list__lesson" data-mnemo="browsersync"><a href="#" data-video-id="oiMJNIG-yvg">Автоперезагрузка браузера: browser-sync</a></li>
-<li class="lessons-list__lesson" data-mnemo="errors"><a href="#" data-video-id="otkXzef2wQY">Обработка ошибок</a></li>
+<li class="lessons-list__lesson" data-mnemo="01-what-is-gulp"><a href="#" data-video-id="uPk6lQoTThE">Что такое Gulp? Сравнение с Grunt и Webpack</a></li>
+<li class="lessons-list__lesson" data-mnemo="02-basics"><a href="#" data-video-id="xptUdO3GuG8">Установка и запуск задач</a></li>
+<li class="lessons-list__lesson" data-mnemo="03-vinyl"><a href="#" data-video-id="NBdKplKl_3Q">Потоки Vinyl-FS</a></li>
+<li class="lessons-list__lesson" data-mnemo="04-stylus"><a href="#" data-video-id="_BFWG82mMkw">Начальная сборка стилей</a></li>
+<li class="lessons-list__lesson" data-mnemo="05-watch"><a href="#" data-video-id="jocvHauHcA4">Инкрементальная сборка, watch</a></li>
+<li class="lessons-list__lesson" data-mnemo="06-watch-perf"><a href="#" data-video-id="Dhrhoe6fFD0">Инкрементальность и производительность</a></li>
+<li class="lessons-list__lesson" data-mnemo="07-browsersync"><a href="#" data-video-id="oiMJNIG-yvg">Автоперезагрузка браузера: browser-sync</a></li>
+<li class="lessons-list__lesson" data-mnemo="08-errors"><a href="#" data-video-id="otkXzef2wQY">Обработка ошибок</a></li>
 </ol>
 </div>
  
