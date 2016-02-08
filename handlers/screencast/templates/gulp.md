@@ -34,7 +34,7 @@ Gulp -- замечательная система сборки и задач,
 <li class="lessons-list__lesson" data-mnemo="03-vinyl"><a href="#" data-video-id="NBdKplKl_3Q">Потоки Vinyl-FS</a></li>
 <li class="lessons-list__lesson" data-mnemo="04-stylus"><a href="#" data-video-id="_BFWG82mMkw">Начальная сборка стилей</a></li>
 <li class="lessons-list__lesson" data-mnemo="05-watch"><a href="#" data-video-id="jocvHauHcA4">Инкрементальная сборка, watch</a></li>
-<li class="lessons-list__lesson" data-mnemo="06-watch-perf"><a href="#" data-video-id="Dhrhoe6fFD0">Инкрементальность и производительность</a></li>
+<li class="lessons-list__lesson" data-mnemo="06-watch-perf"><a href="#" data-video-id="uYZPNrT-e-8">Инкрементальность и производительность</a></li>
 <li class="lessons-list__lesson" data-mnemo="07-browsersync"><a href="#" data-video-id="oiMJNIG-yvg">Автоперезагрузка браузера: browser-sync</a></li>
 <li class="lessons-list__lesson" data-mnemo="08-errors"><a href="#" data-video-id="otkXzef2wQY">Обработка ошибок</a></li>
 </ol>
