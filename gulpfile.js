@@ -56,6 +56,7 @@ gulp.task('migrate:down', lazyRequireTask('migrate/tasks/down'));
 gulp.task('migrate:create', lazyRequireTask('migrate/tasks/create'));
 
 gulp.task('courses:material:add', lazyRequireTask('courses/tasks/materialAdd'));
+gulp.task('courses:webinar:add', lazyRequireTask('courses/tasks/webinarAdd'));
 gulp.task('courses:group:send', lazyRequireTask('courses/tasks/groupSend'));
 gulp.task('courses:invite:remind', lazyRequireTask('courses/tasks/inviteRemind'));
 

@@ -110,6 +110,8 @@ var config = module.exports = {
     appId: secret.openexchangerates.appId
   },
 
+  gotowebinar: secret.gotowebinar,
+
   jb: {
     email: env.NODE_ENV == 'production' ? secret.jb.email : 'iliakan@gmail.com'
   },
