@@ -36,7 +36,7 @@ module.exports = {
       signature: "<em>Успешной разработки!<br>Роман Якобчук</em>"
     },
     amezin: {
-      fromEmail: 'a.mezin',
+      fromEmail: 'a.mezin@javascript.ru',
       fromName: 'Артём Мезин (JavaScript.ru)',
       signature: "<em>Успешной разработки!<br>Артём Мезин</em>"
     },
