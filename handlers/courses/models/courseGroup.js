@@ -8,6 +8,8 @@ var path = require('path');
 var log = require('log')();
 var validate = require('validate');
 var CourseMaterial = require('./courseMaterial');
+require('./course'); // ensure Course exists
+require('users'); // ensure User exists
 
 var schema = new Schema({
   // 01.01.2015
@@ -97,10 +99,13 @@ var schema = new Schema({
   },
 
   // room jid AND gotowebinar id
-  // an offline group may not have this
+  // an offline or unconfigured group may not have this
   webinarId: {
     type: String,
-    trmi: true
+    trim: true
+  },
+  webinarKey: {
+    type: String
   },
 
   skypeLink: {
