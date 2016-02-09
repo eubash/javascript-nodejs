@@ -16,6 +16,7 @@ var exec = require('child_process').exec;
 var glob = require('glob');
 var iprotect = require('iprotect');
 var moment = require('momentWithLocale');
+var stripTags = require('textUtil/stripTags');
 
 // Group info for a participant, with user instructions on how to login
 exports.get = function*() {
@@ -52,12 +53,30 @@ exports.get = function*() {
     logs = [];
   }
 
-  logs = logs.sort().map(file => ({
-    title: file,
-    link:  `/courses/groups/${group.slug}/logs/${file.replace(/\.html$/, '')}`
-  }));
+  logs = logs.sort();
 
-  this.locals.chatLogs = logs;
+  let contents = yield logs.map(file => fs.readFile(config.jabberLogsRoot + '/' + group.webinarId + '/' + file, {encoding: 'utf8'}));
+
+  this.locals.chatLogs = [];
+  for (let i = 0; i < logs.length; i++) {
+    let log = logs[i];
+    let content = contents[i]
+        .match(/<body>([\s\S]*?)(<\/body>|$)/)[0]
+        .replace(/<font[\s\S]*?<\/font>/gim, '')
+        .replace(/<a[\s\S]*?<\/a>/gim, '')
+        .replace(/<div[\s\S]*?<\/div>/gim, '')
+        .replace(/<br.*?>/gim, '');
+    content = stripTags(content);
+
+    content = content.replace(/\s+/gim, ' ');
+
+    if (content.length > 1000) {
+      this.locals.chatLogs.push({
+        title: log,
+        link:  `/courses/groups/${group.slug}/logs/${log.replace(/\.html$/, '')}`
+      });
+    }
+  }
 
 
   this.body = this.render('groupMaterials');
