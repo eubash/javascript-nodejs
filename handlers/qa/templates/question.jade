@@ -10,4 +10,33 @@ block append variables
   - var layout_header_class = "main__header_center"
 
 block content
-  p= question.title
+  +b.question
+    h1.main__header-title Редактировать вопрос
+    +e('form').form(action="/question/", method="POST")
+      +e.group._current
+        +e('h4').title Вопрос
+        +e('p') Формулировка должна быть емкой и подразумевать конкретный ответ
+          +e.input-wrap._text
+            +b.text-input
+              +e('input').control(type="text", name="", placeholder="Формулировка вопроса", required)
+        +e('h4').title Описание
+        +e('p') Укажите здесь любую информацию, которая может уточнить или помочь в решении вопроса
+        +b.editor
+          +e.editor-body
+            include blocks/question-editor
+        +e('h4').title Предпросмотр
+        +e('p') То как ваше описание будет выглядеть после публикации
+          +e('div').preview._text-marked
+        +e('h4').title Теги
+        +e('p') Укажите теги для того чтобы ваш вопрос было легче найти и категоризировать
+        +b.tags
+          +e.tags-preview
+            include blocks/question-tags
+        +e.input-wrap._submit
+          +b("button").button._action(type="submit")
+            +e("span").text Опубликовать
+          +b("button").question-form._cancel(type="submit")
+            +e("span").text_cancel Отмена
+          +b("button").question-form._remove(type="submit")
+            +e("span").text_remove Удалить вопрос
+
