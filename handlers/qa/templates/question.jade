@@ -15,15 +15,16 @@ block content
     +e('form').form(action="/question/", method="POST")
       +e('h4').header-title Вопрос
       +e('p') Формулировка должна быть емкой и подразумевать конкретный ответ
-      +e.input-wrap._text
-        +b.text-input
-          +e('input').control(type="text", name="", placeholder="Формулировка вопроса", required)
+      +b.text-input-button
+        +e.input
+          +b.text-input
+            +e('input').control(type="text", name="", placeholder="Формулировка вопроса", required)
       +e('h4').header-title Описание
       +e('p') Укажите здесь любую информацию, которая может уточнить или помочь в решении вопроса
-      +e.editor-wrap
-        +b.editor
-          +e.editor-body
-            include blocks/question-editor
+        +e.editor-wrap
+          +b.editor
+            +e.editor-body
+              include blocks/question-editor
       +e('h4').header-title Предпросмотр
       +e('p') То как ваше описание будет выглядеть после публикации
       +e.preview-wrap
@@ -34,11 +35,11 @@ block content
         +b.tags
           +e.tags-input
             include blocks/question-tags
-      +e.input-wrap._submit
-        +b("button").button._action(type="submit")
-          +e("span").text Опубликовать
-        +b("button").alternate-button._cancel(type="submit")
-          +e("span").text._cancel Отмена
-        +b("button").alternate-button._remove(type="submit")
-          +e("span").text._remove Удалить вопрос
+        +e.input-wrap._submit
+          +b("button").button._action(type="submit")
+            +e("span").text Опубликовать
+          +b("button").alternate-button._cancel(type="submit")
+            +e("span").text._cancel Отмена
+          +b("button").alternate-button._remove(type="submit")
+            +e("span").text._remove Удалить вопрос
 
